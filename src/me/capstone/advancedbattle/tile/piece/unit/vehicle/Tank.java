@@ -5,8 +5,8 @@ import me.capstone.advancedbattle.tile.piece.unit.Vehicle;
 
 public class Tank extends Vehicle {
 
-	protected Tank(int row, int column, TileType type) {
-		super(row, column, type, 6, 70, 6, 3);
+	protected Tank(int row, int column) {
+		super(row, column, TileType.TANK, 6, 70, 6, 3);
 	}
 
 }

@@ -11,6 +11,7 @@ public class TileType {
 	public static final TileType OCEAN = new TileType("Ocean", "/AW1/Images/Terrain/ocean.bmp");
 	public static final TileType PLAIN = new TileType("Plain", "/AW1/Images/Terrain/plains.bmp");
 	public static final TileType RECON = new TileType("Recon", "");
+	public static final TileType TANK = new TileType("Tank", "");
 	private final String name;
 	private final String path;
 	
