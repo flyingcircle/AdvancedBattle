@@ -7,7 +7,7 @@ import me.capstone.advancedbattle.tile.piece.unit.Vehicle;
 public class Battleship extends Vehicle {
 
 	public Battleship(int row, int column) {
-		super(row, column, TileType.BATTLESHIP, 5, 6);
+		super(row, column, TileType.BATTLESHIP, 6, 99, 5, 3);
 	}
 
 }

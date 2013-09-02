@@ -6,7 +6,7 @@ import me.capstone.advancedbattle.tile.piece.unit.Soldier;
 public class Mech extends Soldier {
 	
 	public Mech(int row, int column) {
-		super(row, column, TileType.MECH, 2, 3);
+		super(row, column, TileType.MECH, 3, 70, 2, 2);
 	}
 
 }

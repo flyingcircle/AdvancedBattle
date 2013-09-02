@@ -7,6 +7,6 @@ import me.capstone.advancedbattle.tile.piece.unit.Vehicle;
 public class Recon extends Vehicle {
 
 	public Recon(int row, int column) {
-		super(row, column, TileType.RECON, 8, -1);
+		super(row, column, TileType.RECON, -1, 80, 8, 5);
 	}
 }

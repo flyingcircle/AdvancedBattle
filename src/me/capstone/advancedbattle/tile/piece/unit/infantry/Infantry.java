@@ -7,7 +7,7 @@ import me.capstone.advancedbattle.tile.piece.unit.Soldier;
 public class Infantry extends Soldier {
 
 	public Infantry(int row, int column) {
-		super(row, column, TileType.INFANTRY, 3, -1);
+		super(row, column, TileType.INFANTRY, -1, 99, 3, 2);
 	}
 
 }
