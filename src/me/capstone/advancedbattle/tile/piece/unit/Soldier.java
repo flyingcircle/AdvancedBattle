@@ -7,6 +7,7 @@ public abstract class Soldier extends Piece{
 	
 	protected Soldier(int row, int column, TileType type) {
 		super(row, column, type);
+		canLiberate = true;
 	}
 
 }

@@ -8,5 +8,6 @@ public abstract class Vehicle extends Piece{
 	
 	protected Vehicle(int row, int column, TileType type) {
 		super(row, column, type);
+		canLiberate = false;
 	}
 }
