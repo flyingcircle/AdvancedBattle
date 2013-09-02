@@ -19,6 +19,7 @@ public abstract class Piece extends Tile {
 		this.ammo = ammo;
 		this.fuel = fuel;
 		this.movement = movement;
+		this.vision = vision;
 		this.canLiberate = canLiberate;
 	}
 
