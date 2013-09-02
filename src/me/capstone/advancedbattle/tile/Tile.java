@@ -1,5 +1,7 @@
 package me.capstone.advancedbattle.tile;
 
+import me.capstone.advancedbattle.data.tile.TileType;
+
 // A general Tile object. This object stores row, column, and tile type (name and image).
 public abstract class Tile {
 	private int row;
