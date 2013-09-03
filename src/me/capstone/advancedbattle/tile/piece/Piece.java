@@ -1,26 +1,35 @@
 package me.capstone.advancedbattle.tile.piece;
 
 import me.capstone.advancedbattle.data.tile.TileType;
+import me.capstone.advancedbattle.player.Player;
 import me.capstone.advancedbattle.tile.Tile;
 
 // Piece represents a general game piece tile (land, air, or sea), not a terrain tile.
 public abstract class Piece extends Tile {
 	
 	private int health;
+	private final int MAX_HEALTH;
 	private int ammo;
+	private final int MAX_AMMO;
 	private int fuel;
+	private final int MAX_FUEL;
 	private int movement;
 	private int vision;
 	private boolean canLiberate;
+	private Player owner;
 
-	protected Piece(int row, int column, TileType type, int ammo, int fuel, int movement, int vision, boolean canLiberate) {
+	protected Piece(int row, int column, TileType type, int ammo, int fuel, int movement, int vision, boolean canLiberate, Player owner) {
 		super(row, column, type);
 		this.health = 10;
+		this.MAX_HEALTH = 10;
 		this.ammo = ammo;
+		this.MAX_AMMO = ammo;
 		this.fuel = fuel;
+		this.MAX_FUEL = fuel;
 		this.movement = movement;
 		this.vision = vision;
 		this.canLiberate = canLiberate;
+		this.owner = owner;
 	}
 
 	protected int getHealth() {
@@ -28,7 +37,10 @@ public abstract class Piece extends Tile {
 	}
 
 	protected void setHealth(int health) {
-		this.health = health;
+		if(health > MAX_HEALTH)
+			this.health = MAX_HEALTH;
+		else
+			this.health = health;
 	}
 
 	protected int getAmmo() {
@@ -36,7 +48,10 @@ public abstract class Piece extends Tile {
 	}
 
 	protected void setAmmo(int ammo) {
-		this.ammo = ammo;
+		if(ammo > MAX_AMMO)
+			this.ammo = MAX_AMMO;
+		else
+			this.ammo = ammo;
 	}
 	
 	protected int getFuel() {
@@ -44,31 +59,26 @@ public abstract class Piece extends Tile {
 	}
 	
 	protected void setFuel(int fuel) {
-		this.fuel = fuel;
+		if(fuel > MAX_FUEL)
+			this.fuel = MAX_FUEL;
+		else
+			this.fuel = fuel;
 	}
 	
 	protected int getMovement() {
 		return movement;
 	}
 	
-	protected void setMovement(int movement) {
-		this.movement = movement;
-	}
-	
 	protected int getVision() {
 		return vision;
-	}
-	
-	protected void setVision(int vision) {
-		this.vision = vision;
 	}
 	
 	protected boolean isCanLiberate() {
 		return canLiberate;
 	}
-
-	protected void setCanLiberate(boolean canLiberate) {
-		this.canLiberate = canLiberate;
+	
+	protected Player getPlayer(){
+		return this.owner;
 	}
 	
 }
