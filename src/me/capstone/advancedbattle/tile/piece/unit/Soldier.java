@@ -25,5 +25,9 @@ public abstract class Soldier extends Piece {
 		else
 			currentBuildingHealth = newHealth;
 	}
+	
+	public void resetBuildingHealth(){
+		this.currentBuildingHealth = MAX_BUILDING_HEALTH;
+	}
 
 }
