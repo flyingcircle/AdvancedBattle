@@ -29,7 +29,7 @@ public class ListenerRegistration {
 	}
 
 	/**
-	 * Gets the {@link Object} for this registration
+	 * Gets the Object for this registration
 	 *
 	 * @return Registered owner
 	 */
