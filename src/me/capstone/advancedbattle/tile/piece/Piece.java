@@ -4,28 +4,27 @@ import me.capstone.advancedbattle.data.tile.TileType;
 import me.capstone.advancedbattle.player.Player;
 import me.capstone.advancedbattle.tile.Tile;
 
-// Piece represents a general game piece tile (land, air, or sea), not a terrain tile.
 public abstract class Piece extends Tile {
 	
-	private int health;
 	private final int MAX_HEALTH;
-	private int ammo;
+	private int health;
 	private final int MAX_AMMO;
-	private int fuel;
+	private int ammo;
 	private final int MAX_FUEL;
+	private int fuel;
 	private int movement;
 	private int vision;
 	private boolean canLiberate;
 	private Player owner;
 
-	protected Piece(int row, int column, TileType type, int ammo, int fuel, int movement, int vision, boolean canLiberate, Player owner) {
+	protected Piece(int row, int column, TileType type, int maxAmmo, int maxFuel, int movement, int vision, boolean canLiberate, Player owner) {
 		super(row, column, type);
-		this.health = 10;
 		this.MAX_HEALTH = 10;
-		this.ammo = ammo;
-		this.MAX_AMMO = ammo;
-		this.fuel = fuel;
-		this.MAX_FUEL = fuel;
+		this.health = MAX_HEALTH;
+		this.MAX_AMMO = maxAmmo;
+		this.ammo = MAX_AMMO;
+		this.MAX_FUEL = maxFuel;
+		this.fuel = MAX_FUEL;
 		this.movement = movement;
 		this.vision = vision;
 		this.canLiberate = canLiberate;
@@ -33,7 +32,7 @@ public abstract class Piece extends Tile {
 	}
 
 	protected int getHealth() {
-		return health;
+		return this.health;
 	}
 
 	protected void setHealth(int health) {
@@ -44,7 +43,7 @@ public abstract class Piece extends Tile {
 	}
 
 	protected int getAmmo() {
-		return ammo;
+		return this.ammo;
 	}
 
 	protected void setAmmo(int ammo) {
@@ -55,7 +54,7 @@ public abstract class Piece extends Tile {
 	}
 	
 	protected int getFuel() {
-		return fuel;
+		return this.fuel;
 	}
 	
 	protected void setFuel(int fuel) {
@@ -66,15 +65,15 @@ public abstract class Piece extends Tile {
 	}
 	
 	protected int getMovement() {
-		return movement;
+		return this.movement;
 	}
 	
 	protected int getVision() {
-		return vision;
+		return this.vision;
 	}
 	
 	protected boolean isCanLiberate() {
-		return canLiberate;
+		return this.canLiberate;
 	}
 	
 	protected Player getPlayer(){
