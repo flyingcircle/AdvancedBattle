@@ -6,27 +6,28 @@ import me.capstone.advancedbattle.player.Player;
 //Everything that all soldiers should have in common.
 public abstract class Soldier extends Piece {
 	
-	private int currentBuildingHealth;
 	private final int MAX_BUILDING_HEALTH;
+	private int currentBuildingHealth;
 	
-	protected Soldier(int row, int column, TileType type, int ammo, int fuel, int movement, int vision, Player owner) {
-		super(row, column, type, ammo, fuel, movement, vision, true, owner);
-		currentBuildingHealth = 10;
+	protected Soldier(int row, int column, TileType type, int maxAmmo, int maxFuel, int movement, int vision, Player owner) {
+		super(row, column, type, maxAmmo, maxFuel, movement, vision, true, owner);
 		this.MAX_BUILDING_HEALTH = 10;
+		this.currentBuildingHealth = MAX_BUILDING_HEALTH;
 	}
 	
-	public int getCurrentBuildingHealth(){
+	public int getCurrentBuildingHealth() {
 		return this.currentBuildingHealth;
 	}
 	
-	public void setCurrentBuildingHealth(int newHealth){
-		if(newHealth > MAX_BUILDING_HEALTH)
-			currentBuildingHealth = MAX_BUILDING_HEALTH;
-		else
-			currentBuildingHealth = newHealth;
+	public void setCurrentBuildingHealth(int newHealth) {
+		if(newHealth > MAX_BUILDING_HEALTH) {
+			this.currentBuildingHealth = MAX_BUILDING_HEALTH;
+		} else {
+			this.currentBuildingHealth = newHealth;
+		}
 	}
 	
-	public void resetBuildingHealth(){
+	public void resetBuildingHealth() {
 		this.currentBuildingHealth = MAX_BUILDING_HEALTH;
 	}
 

@@ -7,7 +7,7 @@ import me.capstone.advancedbattle.player.Player;
 //some sort of subclass for land, sea, and air.
 public abstract class Vehicle extends Piece {
 	
-	protected Vehicle(int row, int column, TileType type, int ammo, int fuel, int movement, int vision, Player owner) {
-		super(row, column, type, ammo, fuel, movement, vision, false, owner);
+	protected Vehicle(int row, int column, TileType type, int maxAmmo, int maxFuel, int movement, int vision, Player owner) {
+		super(row, column, type, maxAmmo, maxFuel, movement, vision, false, owner);
 	}
 }
