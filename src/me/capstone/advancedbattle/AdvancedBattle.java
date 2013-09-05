@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 // Main class - Not sure how this is done in Android
 public class AdvancedBattle extends Activity {
@@ -15,8 +16,12 @@ public class AdvancedBattle extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		
+		setContentView(R.layout.advancedbattle);
+		 
+        TextView text = new TextView(this);
+        text.setText("Inside Battle Activity");
+        setContentView(text);
+		/*
 		RelativeLayout rl = (RelativeLayout) findViewById(R.id.relative_layout);
 		ImageView iv = new ImageView(this);
 		try {
@@ -29,7 +34,7 @@ public class AdvancedBattle extends Activity {
 		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(32, 32);
 		params.leftMargin = 0;
 		params.rightMargin = 0;
-		rl.addView(iv, params);
+		rl.addView(iv, params);*/
 	}
 	
 }
