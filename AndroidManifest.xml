@@ -13,10 +13,13 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@android:style/Theme.NoTitleBar" >
+        
+        <meta-data android:name="com.google.android.gms.games.APP_ID"
+            android:value="@string/app_id" />
+        
         <activity
-            android:name="me.capstone.advancedbattle.MainActivity"
-            android:label="@string/app_name" >
+            android:name="me.capstone.advancedbattle.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

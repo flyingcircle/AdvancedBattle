@@ -1,42 +1,59 @@
 package me.capstone.advancedbattle;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Button;
-import android.view.View;
+import com.google.example.games.basegameutils.BaseGameActivity;
 
-public class MainActivity extends Activity {
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+
+public class MainActivity extends BaseGameActivity implements MainMenuFragment.Listener {
+	MainMenuFragment mmFrag;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.mainscreen);
+		setContentView(R.layout.activity_main);
 		
-		final Button button = (Button) findViewById(R.id.beginBattle);
-		button.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				Intent goToBattle = new Intent(MainActivity.this,AdvancedBattle.class);
-				startActivity(goToBattle);
-			}
-		});
+		mmFrag = new MainMenuFragment();
+		mmFrag.setListener(this);
+		
+		getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mmFrag).commit();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+	public void switchToFragment(Fragment newFrag) {
+		getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, newFrag).commit();
 	}
 	
-	public boolean onOptionsItemSelected(MenuItem item){
-		switch (item.getItemId()) {
-		case R.id.help:
-	        return true;
+	boolean verifyPlaceholderIdsReplaced() {
+		if (getString(R.string.app_id).equalsIgnoreCase("ReplaceMe")) {
+			return false;
 		}
-		return false;
+        return true;
+    }
+
+	@Override
+	public void onSignInFailed() {
+		mmFrag.setShowSignIn(true);
+	}
+
+	@Override
+	public void onSignInSucceeded() {
+		mmFrag.setShowSignIn(false);
+	}
+
+	@Override
+	public void onSignInButtonClicked() {
+		if (!verifyPlaceholderIdsReplaced()) {
+            showAlert("App ID is not valid.");
+            return;
+        }
+		
+		beginUserInitiatedSignIn();
+	}
+
+	@Override
+	public void onSignOutButtonClicked() {
+		signOut();
+		mmFrag.setShowSignIn(true);
 	}
 
 }
