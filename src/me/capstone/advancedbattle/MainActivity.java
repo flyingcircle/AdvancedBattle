@@ -1,7 +1,6 @@
 package me.capstone.advancedbattle;
 
 import com.google.example.games.basegameutils.BaseGameActivity;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 

@@ -19,6 +19,8 @@
 *.rar
 *.tar
 *.zip
+.classpath
+.project
 /.metadata
 /.settings
 /bin

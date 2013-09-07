@@ -18,8 +18,8 @@ It can be found at <android-sdk>/extras/google/google_play_services/libproject/g
 Don't forget to then add that library as a dependency for the project!
 You can do that via Project -> Properties -> Android.
 You may first need to label the library project as a library by following the same steps and checking "Is Library".
-
 You will also need the BaseGameUtils library. It can be found here: https://github.com/playgameservices/android-samples .
+
 Fork the project and download it to your local machine.
 Then import it and set it up as a library the same way you did for the Google Play Services library.
 
