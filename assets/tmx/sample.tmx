@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="20" tilewidth="16" tileheight="16">
+ <tileset firstgid="1" name="GBA_Advance_Wars" tilewidth="16" tileheight="16">
+  <image source="../../../../Downloads/GBA_Advance_Wars.png" width="240" height="160"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJyLYWBgiBnFo3gQ4QYi8EC7cRSP4lHMwAAACdmRBQ==
+  </data>
+ </layer>
+</map>
