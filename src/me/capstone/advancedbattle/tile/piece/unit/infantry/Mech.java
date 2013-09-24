@@ -1,13 +1,14 @@
 package me.capstone.advancedbattle.tile.piece.unit.infantry;
 
-import me.capstone.advancedbattle.data.tile.TileType;
+import org.andengine.opengl.texture.region.ITextureRegion;
+
 import me.capstone.advancedbattle.tile.piece.unit.Soldier;
 import me.capstone.advancedbattle.player.Player;
 
 public class Mech extends Soldier {
 	
-	public Mech(int row, int column, Player owner) {
-		super(row, column, TileType.MECH, 3, 70, 2, 2, owner);
+	public Mech(final int id, final int column, final int row, final ITextureRegion region, Player owner) {
+		super(id, column, row, 16, 16, region, 3, 70, 2, 2, owner);
 	}
 
 }

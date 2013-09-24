@@ -1,10 +1,11 @@
 package me.capstone.advancedbattle.tile.piece;
 
-import me.capstone.advancedbattle.data.tile.TileType;
-import me.capstone.advancedbattle.player.Player;
-import me.capstone.advancedbattle.tile.Tile;
+import org.andengine.extension.tmx.TMXTile;
+import org.andengine.opengl.texture.region.ITextureRegion;
 
-public abstract class Piece extends Tile {
+import me.capstone.advancedbattle.player.Player;
+
+public abstract class Piece extends TMXTile {
 	
 	private final int MAX_HEALTH;
 	private int health;
@@ -17,8 +18,8 @@ public abstract class Piece extends Tile {
 	private boolean canLiberate;
 	private Player owner;
 
-	protected Piece(int row, int column, TileType type, int maxAmmo, int maxFuel, int movement, int vision, boolean canLiberate, Player owner) {
-		super(row, column, type);
+	protected Piece(final int id, final int column, final int row, final int width, final int height, final ITextureRegion region, int maxAmmo, int maxFuel, int movement, int vision, boolean canLiberate, Player owner) {
+		super(id, column, row, width, height, region);
 		this.MAX_HEALTH = 10;
 		this.health = MAX_HEALTH;
 		this.MAX_AMMO = maxAmmo;

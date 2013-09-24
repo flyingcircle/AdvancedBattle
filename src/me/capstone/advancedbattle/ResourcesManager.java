@@ -42,7 +42,7 @@ public class ResourcesManager
     private static final ResourcesManager INSTANCE = new ResourcesManager();
     
     public Engine engine;
-    public BattleActivity activity;
+    public AdvancedBattleActivity activity;
     public Camera camera;
     public VertexBufferObjectManager vbom;
     
@@ -154,7 +154,7 @@ public class ResourcesManager
      * We use this method at beginning of game loading, to prepare Resources Manager properly,
      * setting all needed parameters, so we can latter access them from different classes (eg. scenes)
      */
-    public static void prepareManager(Engine engine, BattleActivity activity, Camera camera, VertexBufferObjectManager vbom)
+    public static void prepareManager(Engine engine, AdvancedBattleActivity activity, Camera camera, VertexBufferObjectManager vbom)
     {
         getInstance().engine = engine;
         getInstance().activity = activity;

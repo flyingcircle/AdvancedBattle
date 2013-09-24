@@ -16,7 +16,7 @@ import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 
 import android.view.KeyEvent;
 
-public class BattleActivity extends BaseGameActivity {
+public class AdvancedBattleActivity extends BaseGameActivity {
 
 	private Camera camera;
 	private ResourcesManager resourcesManager;

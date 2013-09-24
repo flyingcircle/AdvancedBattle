@@ -1,5 +1,7 @@
 package me.capstone.advancedbattle.tile.piece.unit;
-import me.capstone.advancedbattle.data.tile.TileType;
+
+import org.andengine.opengl.texture.region.ITextureRegion;
+
 import me.capstone.advancedbattle.tile.piece.Piece;
 import me.capstone.advancedbattle.player.Player;
 
@@ -7,7 +9,7 @@ import me.capstone.advancedbattle.player.Player;
 //some sort of subclass for land, sea, and air.
 public abstract class Vehicle extends Piece {
 	
-	protected Vehicle(int row, int column, TileType type, int maxAmmo, int maxFuel, int movement, int vision, Player owner) {
-		super(row, column, type, maxAmmo, maxFuel, movement, vision, false, owner);
+	protected Vehicle(final int id, final int column, final int row, final int width, final int height, final ITextureRegion region, int maxAmmo, int maxFuel, int movement, int vision, Player owner) {
+		super(id, column, row, width, height, region, maxAmmo, maxFuel, movement, vision, false, owner);
 	}
 }
