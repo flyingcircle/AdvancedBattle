@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="15" height="10" tilewidth="16" tileheight="16">
+ <tileset firstgid="1" source="../Tiled/Static.tsx"/>
+ <layer name="Static Terrain Layer" width="15" height="10">
+  <data encoding="base64" compression="zlib">
+   eJx9kb0KAjEQhFN4EZFDrtETxcZCFn+w8brTTlvf/2mchQkMy8XiYzObTDa7sZTSHGwCNpFTFvT1YEn24AJGxgPznZxxWrAS7fsPxrNo3/swHiter3kHM745i3cAL9HRW2q20kvJPf94S01fr+lzz419F06VupFOZuR9NOANvuxpy1zmmWuIOtc+aJM7ssxkCP8yTtxlwd9UsKB34AcbAw4X
+  </data>
+ </layer>
+</map>

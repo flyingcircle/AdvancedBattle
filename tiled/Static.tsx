@@ -98,7 +98,7 @@
  <tile id="8" terrain="46,46,46,46"/>
  <tile id="9" terrain="26,26,26,26"/>
  <tile id="10" terrain="1,1,1,1"/>
- <tile id="11" terrain="22,22,,22"/>
+ <tile id="11" terrain="22,22,22,22"/>
  <tile id="12" terrain="16,16,16,16"/>
  <tile id="13" terrain="17,17,17,17"/>
  <tile id="14" terrain="12,12,12,12"/>
