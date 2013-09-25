@@ -58,7 +58,7 @@ h6 { font-size: 14px; margin: 0 0 5px; padding: 0; }
 
 #templatemo_body_wrapper {
 	width: 100%;
-	background: url(images/templatemo_wrapper.jpg) repeat-x top
+	background: #212121
 }
 
 #templatemo_wrapper {
@@ -71,7 +71,6 @@ h6 { font-size: 14px; margin: 0 0 5px; padding: 0; }
 	width: 800px;
 	height: 50px;
 	padding: 40px 4px 20px;
-	overflow: hidden;
 	position: relative;
 }
 .templatemo_link{
@@ -87,12 +86,12 @@ h6 { font-size: 14px; margin: 0 0 5px; padding: 0; }
 	background: transparent;
 }
 #site_title { float: left; }
-#site_title h1 { margin: 0; padding: 0 }
-#site_title h1 a { display: block; width: 168px; height: 45px; background: url(images/templatemo_logo.png)  no-repeat top left; color: #fff; font-size: 40px; font-weight: 400; outline: none; text-indent: -10000px; }
+#site_title h1 { margin: -5px; padding: 0 }
+#site_title h1 a { display: block; width: 250px; height: 75px; background: url(images/templatemo_logo.png)  no-repeat top left; color: #fff; font-size: 40px; font-weight: 400; outline: none; text-indent: -10000px; }
 
 /* menu */
 
-#templatemo_menu { float: right; margin-top: 20px; }
+#templatemo_menu { float: right; margin-top: 35px; }
 #templatemo_menu ul { padding: 0; margin: 0; list-style: none; }
 #templatemo_menu ul li { margin: 0; padding: 0; display: inline-block }
 #templatemo_menu ul li a {
@@ -127,7 +126,7 @@ h6 { font-size: 14px; margin: 0 0 5px; padding: 0; }
 .content_ctf {  background: url(images/templatemo_ctf.png) }
 .content_ct {  background: url(images/templatemo_ct.png) }
 .content { padding: 40px 40px 10px; background: url(images/templatemo_content.png) repeat-y }
-.content_bottom { width: 808px; height: 30px; padding-top: 5px; }
+.content_bottom { width: 808px; height: 30px; padding-top: 10px; }
 .content_cbf { background: url(images/templatemo_cbl.png) }
 .content_cb { background: url(images/templatemo_cb.png) }
 
