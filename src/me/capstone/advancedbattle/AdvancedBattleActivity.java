@@ -17,9 +17,19 @@ import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import android.view.KeyEvent;
 
 public class AdvancedBattleActivity extends BaseGameActivity {
-
+	
+	private static final int CAMERA_WIDTH = 800;
+	private static final int CAMERA_HEIGHT = 480;
+	
+	private static AdvancedBattleActivity instance;
+		
 	private Camera camera;
+
 	private ResourcesManager resourcesManager;
+	
+	public AdvancedBattleActivity() {
+		instance = this;
+	}
 	
 	@Override
 	public Engine onCreateEngine(EngineOptions pEngineOptions){
@@ -27,8 +37,9 @@ public class AdvancedBattleActivity extends BaseGameActivity {
 	}
 	
 	public EngineOptions onCreateEngineOptions(){
-		camera = new Camera(0, 0, 720, 480);
-	    EngineOptions engineOptions = new EngineOptions(true, ScreenOrientation.LANDSCAPE_FIXED, new RatioResolutionPolicy(720, 480), this.camera);
+		this.camera = new Camera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
+		
+	    EngineOptions engineOptions = new EngineOptions(true, ScreenOrientation.LANDSCAPE_FIXED, new RatioResolutionPolicy(CAMERA_WIDTH, CAMERA_HEIGHT), this.camera);
 	    engineOptions.getAudioOptions().setNeedsMusic(true).setNeedsSound(true);
 	    engineOptions.setWakeLockOptions(WakeLockOptions.SCREEN_ON);
 	    return engineOptions;
@@ -72,5 +83,9 @@ public class AdvancedBattleActivity extends BaseGameActivity {
 	{
 		super.onDestroy();
 	    System.exit(0);	
+	}
+	
+	public static AdvancedBattleActivity getInstance() {
+		return instance;
 	}
 }

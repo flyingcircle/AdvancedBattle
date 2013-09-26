@@ -1,49 +1,36 @@
 package me.capstone.advancedbattle;
 
-import org.andengine.engine.camera.hud.HUD;
-import org.andengine.entity.scene.background.Background;
-import org.andengine.entity.text.Text;
-import org.andengine.entity.text.TextOptions;
-import org.andengine.util.HorizontalAlign;
-import org.andengine.util.color.Color;
+import org.andengine.extension.tmx.TMXLayer;
+import org.andengine.extension.tmx.TMXLoader;
+import org.andengine.extension.tmx.TMXTiledMap;
+import org.andengine.extension.tmx.util.exception.TMXLoadException;
+import org.andengine.util.debug.Debug;
 
 import me.capstone.advancedbattle.SceneManager.SceneType;
 
 public class GameScene extends BaseScene
 {
-	private HUD gameHUD;
-	private Text scoreText;
-	private int score = 0;
+	private TMXTiledMap map;
 	
     @Override
     public void createScene()
     {
     	createBackground();
-        createHUD();
-    }
-    
-    private void addToScore(int i)
-    {
-        score += i;
-        scoreText.setText("Score: " + score);
-    }
-    
-    private void createHUD()
-    {
-        gameHUD = new HUD();
-        
-        // CREATE SCORE TEXT
-        scoreText = new Text(20, 420, resourcesManager.font, "Score: 0123456789", new TextOptions(HorizontalAlign.LEFT), vbom);
-        //scoreText.setAnchorCenter(0, 0);    
-        scoreText.setText("Score: 0");
-        gameHUD.attachChild(scoreText);
-        
-        camera.setHUD(gameHUD);
     }
     
     private void createBackground()
     {
-        setBackground(new Background(Color.BLUE));
+    	try {
+    		AdvancedBattleActivity instance = AdvancedBattleActivity.getInstance();
+    		final TMXLoader tmxLoader = new TMXLoader(instance.getAssets(), engine.getTextureManager(), engine.getVertexBufferObjectManager());
+    		map = tmxLoader.loadFromAsset("gfx/map.tmx");
+    	} catch (final TMXLoadException tmxle) {
+    		Debug.e(tmxle);
+    	}
+
+    	for(TMXLayer tmxLayer : map.getTMXLayers()) {
+    		this.getChildByIndex(1).attachChild(tmxLayer);
+    	}    	
     }
 
     @Override
