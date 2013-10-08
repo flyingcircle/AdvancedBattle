@@ -1,4 +1,6 @@
 package me.capstone.advancedbattle;
+import me.capstone.advancedbattle.touchhandlers.GameTouchHandler;
+
 import org.andengine.engine.Engine;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
@@ -108,6 +110,7 @@ public class SceneManager
                 mEngine.unregisterUpdateHandler(pTimerHandler);
                 ResourcesManager.getInstance().loadGameResources();
                 gameScene = new GameScene();
+                gameScene.setOnSceneTouchListener(new GameTouchHandler());
                 setScene(gameScene);
             }
         }));

@@ -1,7 +1,11 @@
 package me.capstone.advancedbattle;
 
 import org.andengine.engine.Engine;
+import org.andengine.engine.camera.BoundCamera;
 import org.andengine.engine.camera.Camera;
+import org.andengine.extension.tmx.TMXLoader;
+import org.andengine.extension.tmx.TMXTiledMap;
+import org.andengine.extension.tmx.util.exception.TMXLoadException;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.ITexture;
@@ -13,6 +17,7 @@ import org.andengine.opengl.texture.atlas.bitmap.source.IBitmapTextureAtlasSourc
 import org.andengine.opengl.texture.atlas.buildable.builder.BlackPawnTextureAtlasBuilder;
 import org.andengine.opengl.texture.atlas.buildable.builder.ITextureAtlasBuilder.TextureAtlasBuilderException;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.debug.Debug;
 
@@ -35,6 +40,8 @@ public class ResourcesManager
 	public ITextureRegion menu_background_region;
 	public ITextureRegion play_region;
 	public ITextureRegion options_region;
+	
+	public TMXTiledMap game_background_tmx;
 	    
 	private BuildableBitmapTextureAtlas menuTextureAtlas;
 	public Font font;
@@ -43,7 +50,7 @@ public class ResourcesManager
     
     public Engine engine;
     public AdvancedBattleActivity activity;
-    public Camera camera;
+    public BoundCamera camera;
     public VertexBufferObjectManager vbom;
     
     //---------------------------------------------
@@ -113,7 +120,12 @@ public class ResourcesManager
 
     private void loadGameGraphics()
     {
-        
+    	try{
+    		final TMXLoader tmxLoader = new TMXLoader(activity.getAssets(), engine.getTextureManager(), engine.getVertexBufferObjectManager());
+    		game_background_tmx = tmxLoader.loadFromAsset("tmx/RainOfFire.tmx");
+    	} catch(final TMXLoadException tmxle) {
+    		Debug.e(tmxle);
+    	}
     }
     
     private void loadGameFonts()
@@ -142,7 +154,8 @@ public class ResourcesManager
     
     public void unloadGameTextures()
     {
-        // TODO (Since we did not create any textures for game scene yet)
+        
+        
     }
     
     /**
@@ -158,7 +171,7 @@ public class ResourcesManager
     {
         getInstance().engine = engine;
         getInstance().activity = activity;
-        getInstance().camera = camera;
+        getInstance().camera = (BoundCamera) camera;
         getInstance().vbom = vbom;
     }
     

@@ -1,44 +1,33 @@
 package me.capstone.advancedbattle;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
+import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.scene.Scene;
 import org.andengine.extension.tmx.TMXLayer;
-import org.andengine.extension.tmx.TMXLoader;
-import org.andengine.extension.tmx.TMXObject;
-import org.andengine.extension.tmx.TMXObjectGroup;
-import org.andengine.extension.tmx.TMXTiledMap;
-import org.andengine.extension.tmx.util.exception.TMXLoadException;
-import org.andengine.util.debug.Debug;
-
+import org.andengine.input.touch.TouchEvent;
 import me.capstone.advancedbattle.SceneManager.SceneType;
 
 public class GameScene extends BaseScene
 {
-	private TMXTiledMap map;
+	
+	private TMXLayer tmxLayer;
 	
     @Override
     public void createScene()
     {
-    	onLoadScene();
+    	setCamera();
+    	createBackground();
     }
     
-    private void onLoadScene()
-    {    		
-    	final Scene scene = new Scene();
-    	try {
-    		AdvancedBattleActivity instance = AdvancedBattleActivity.getInstance();
-
-    		final TMXLoader tmxLoader = new TMXLoader(instance.getAssets(), engine.getTextureManager(), engine.getVertexBufferObjectManager());
-    		map = tmxLoader.loadFromAsset("tmx/sample.tmx");
-    	} catch (final TMXLoadException tmxle) {
-    		Debug.e(tmxle);
-    	}
-
-    	final TMXLayer tmxLayer = map.getTMXLayers().get(0);
-    	scene.attachChild(tmxLayer);
-    		
+    private void setCamera()
+    {
+    	resourcesManager.camera.setBounds(0, 0, tmxLayer.getHeight(), tmxLayer.getWidth());
+    	resourcesManager.camera.setBoundsEnabled(true);
+    }
+    
+    private void createBackground()
+    {
+    	tmxLayer = resourcesManager.game_background_tmx.getTMXLayers().get(0);
+    	attachChild(tmxLayer);
     }
 
     @Override
