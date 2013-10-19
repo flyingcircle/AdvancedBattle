@@ -33,7 +33,7 @@ public class TouchDistributor implements IOnSceneTouchListener {
         @Override
         public boolean onSceneTouchEvent(Scene pScene, TouchEvent pSceneTouchEvent) {
                 for(int i=0; i < this.touchListeners.size(); i++){
-                        if (((IOnSceneTouchListener)this.touchListeners.get(i)).onSceneTouchEvent(pScene, pSceneTouchEvent))
+                        if (this.touchListeners.get(i).onSceneTouchEvent(pScene, pSceneTouchEvent))
                                 return true;
                 }
                 return false;

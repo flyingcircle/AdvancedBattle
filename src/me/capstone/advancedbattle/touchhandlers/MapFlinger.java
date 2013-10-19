@@ -12,7 +12,8 @@ public class MapFlinger extends SimpleOnGestureListener
                 this.scroller = scroller;
         }
        
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
+        @Override
+		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
         {      
                 scroller.setSpeedX(velocityX * .8f);
                 scroller.setSpeedY(velocityY * .8f);

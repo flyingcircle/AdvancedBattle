@@ -37,7 +37,7 @@ public class MapScroller implements IOnSceneTouchListener, IUpdateHandler
                 }
                 if(this.touchDown)
                 {
-                        this.camera.setCenter((lastX ) / this.camera.getZoomFactor(), (lastY ) / this.camera.getZoomFactor());
+                	this.camera.setCenter(camera.getCenterX() + (lastX - evt.getRawX()) / this.camera.getZoomFactor(), camera.getCenterY() + (lastY - evt.getRawY()) / this.camera.getZoomFactor());
                         this.lastX = evt.getRawX();
                         this.lastY = evt.getRawY();    
                 }

@@ -1,8 +1,6 @@
 package me.capstone.advancedbattle;
 
 import org.andengine.engine.Engine;
-import org.andengine.engine.camera.BoundCamera;
-import org.andengine.engine.camera.Camera;
 import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.extension.tmx.TMXLoader;
 import org.andengine.extension.tmx.TMXTiledMap;

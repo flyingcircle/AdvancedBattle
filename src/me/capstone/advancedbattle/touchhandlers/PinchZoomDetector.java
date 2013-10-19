@@ -4,7 +4,6 @@ import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.input.touch.TouchEvent;
-import android.util.FloatMath;
 import android.view.MotionEvent;
  
 /**

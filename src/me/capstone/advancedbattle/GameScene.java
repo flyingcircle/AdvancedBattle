@@ -1,16 +1,9 @@
 package me.capstone.advancedbattle;
 
 import org.andengine.engine.camera.ZoomCamera;
-import org.andengine.entity.scene.IOnSceneTouchListener;
-import org.andengine.entity.scene.Scene;
 import org.andengine.extension.tmx.TMXLayer;
-import org.andengine.input.touch.TouchEvent;
-
-import android.view.GestureDetector;
 import me.capstone.advancedbattle.SceneManager.SceneType;
-import me.capstone.advancedbattle.touchhandlers.MapFlinger;
 import me.capstone.advancedbattle.touchhandlers.MapScroller;
-import me.capstone.advancedbattle.touchhandlers.MotionForwarder;
 import me.capstone.advancedbattle.touchhandlers.PinchZoomDetector;
 import me.capstone.advancedbattle.touchhandlers.TouchDistributor;
 
@@ -32,7 +25,7 @@ public class GameScene extends BaseScene
     private void setCamera()
     {
 		camera.setBoundsEnabled(true);
-		camera.setBounds(0, 0, AdvancedBattleActivity.CAMERA_HEIGHT, AdvancedBattleActivity.CAMERA_WIDTH);
+		camera.setBounds(0, 0, tmxLayer.getWidth(), tmxLayer.getHeight());
     }
     
     private void createBackground()
