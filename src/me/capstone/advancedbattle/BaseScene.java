@@ -1,6 +1,7 @@
 package me.capstone.advancedbattle;
 import org.andengine.engine.Engine;
 import org.andengine.engine.camera.Camera;
+import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.entity.scene.Scene;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import me.capstone.advancedbattle.SceneManager.SceneType;
@@ -22,7 +23,7 @@ public abstract class BaseScene extends Scene
     protected Activity activity;
     protected ResourcesManager resourcesManager;
     protected VertexBufferObjectManager vbom;
-    protected Camera camera;
+    protected ZoomCamera camera;
     
     //---------------------------------------------
     // CONSTRUCTOR

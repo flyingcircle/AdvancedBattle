@@ -7,6 +7,7 @@ import org.andengine.entity.scene.Scene;
 import org.andengine.engine.Engine;
 import org.andengine.engine.LimitedFPSEngine;
 import org.andengine.engine.camera.Camera;
+import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.engine.options.EngineOptions;
@@ -18,12 +19,12 @@ import android.view.KeyEvent;
 
 public class AdvancedBattleActivity extends BaseGameActivity {
 	
-	private static final int CAMERA_WIDTH = 800;
-	private static final int CAMERA_HEIGHT = 480;
+	public static final int CAMERA_WIDTH = 800;
+	public static final int CAMERA_HEIGHT = 480;
 	
 	private static AdvancedBattleActivity instance;
 		
-	private Camera camera;
+	private ZoomCamera camera;
 
 	private ResourcesManager resourcesManager;
 	
@@ -37,7 +38,7 @@ public class AdvancedBattleActivity extends BaseGameActivity {
 	}
 	
 	public EngineOptions onCreateEngineOptions(){
-		this.camera = new Camera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
+		this.camera = new ZoomCamera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
 		
 	    EngineOptions engineOptions = new EngineOptions(true, ScreenOrientation.LANDSCAPE_FIXED, new RatioResolutionPolicy(CAMERA_WIDTH, CAMERA_HEIGHT), this.camera);
 	    engineOptions.getAudioOptions().setNeedsMusic(true).setNeedsSound(true);

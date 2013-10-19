@@ -3,6 +3,7 @@ package me.capstone.advancedbattle;
 import org.andengine.engine.Engine;
 import org.andengine.engine.camera.BoundCamera;
 import org.andengine.engine.camera.Camera;
+import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.extension.tmx.TMXLoader;
 import org.andengine.extension.tmx.TMXTiledMap;
 import org.andengine.extension.tmx.util.exception.TMXLoadException;
@@ -42,6 +43,7 @@ public class ResourcesManager
 	public ITextureRegion options_region;
 	
 	public TMXTiledMap game_background_tmx;
+	public TiledTextureRegion player_texture_region;
 	    
 	private BuildableBitmapTextureAtlas menuTextureAtlas;
 	public Font font;
@@ -50,7 +52,7 @@ public class ResourcesManager
     
     public Engine engine;
     public AdvancedBattleActivity activity;
-    public BoundCamera camera;
+    public ZoomCamera camera;
     public VertexBufferObjectManager vbom;
     
     //---------------------------------------------
@@ -167,11 +169,11 @@ public class ResourcesManager
      * We use this method at beginning of game loading, to prepare Resources Manager properly,
      * setting all needed parameters, so we can latter access them from different classes (eg. scenes)
      */
-    public static void prepareManager(Engine engine, AdvancedBattleActivity activity, Camera camera, VertexBufferObjectManager vbom)
+    public static void prepareManager(Engine engine, AdvancedBattleActivity activity, ZoomCamera camera, VertexBufferObjectManager vbom)
     {
         getInstance().engine = engine;
         getInstance().activity = activity;
-        getInstance().camera = (BoundCamera) camera;
+        getInstance().camera = camera;
         getInstance().vbom = vbom;
     }
     
