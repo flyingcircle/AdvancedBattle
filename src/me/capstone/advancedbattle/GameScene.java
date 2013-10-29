@@ -37,9 +37,6 @@ public class GameScene extends BaseScene
     private void createTouchListeners()
     {
     	MapScroller mapScroller = new MapScroller(camera);
-    	//MapFlinger mapFlinger = new MapFlinger(mapScroller);
-    	//GestureDetector gestureDetector = new GestureDetector(mapFlinger);
-    	//MotionForwarder motionForwarder = new MotionForwarder(gestureDetector);
         TouchDistributor touchDistributor = new TouchDistributor();
         touchDistributor.addTouchListener(new PinchZoomDetector(camera, mapScroller));
         touchDistributor.addTouchListener(mapScroller);
