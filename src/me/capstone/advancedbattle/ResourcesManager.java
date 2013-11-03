@@ -42,6 +42,7 @@ public class ResourcesManager
 	
 	public TMXTiledMap game_background_tmx;
 	public TiledTextureRegion player_texture_region;
+	public ITextureRegion player_cursor;
 	    
 	private BuildableBitmapTextureAtlas menuTextureAtlas;
 	public Font font;
