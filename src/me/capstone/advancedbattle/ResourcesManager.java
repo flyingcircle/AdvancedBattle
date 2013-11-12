@@ -57,6 +57,9 @@ public class ResourcesManager
     // TEXTURES & TEXTURE REGIONS
     //---------------------------------------------
     
+    public int cursorRow = 0;
+    public int cursorColumn= 0;
+    
     //---------------------------------------------
     // CLASS LOGIC
     //---------------------------------------------
@@ -122,7 +125,7 @@ public class ResourcesManager
     {
     	try{
     		final TMXLoader tmxLoader = new TMXLoader(activity.getAssets(), engine.getTextureManager(), engine.getVertexBufferObjectManager());
-    		game_background_tmx = tmxLoader.loadFromAsset("tmx/RainOfFire.tmx");
+    		game_background_tmx = tmxLoader.loadFromAsset("tmx/Map.tmx");
     	} catch(final TMXLoadException tmxle) {
     		Debug.e(tmxle);
     	}
@@ -142,7 +145,7 @@ public class ResourcesManager
     {
     	BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
     	splashTextureAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
-    	splash_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(splashTextureAtlas, activity, "splash2.png", 0, 0);
+    	splash_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(splashTextureAtlas, activity, "splash.png", 0, 0);
     	splashTextureAtlas.load();
     }
     

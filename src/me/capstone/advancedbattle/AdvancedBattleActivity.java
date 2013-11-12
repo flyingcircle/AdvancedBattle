@@ -18,8 +18,8 @@ import android.view.KeyEvent;
 
 public class AdvancedBattleActivity extends BaseGameActivity {
 	
-	public static final int CAMERA_WIDTH = 480;
-	public static final int CAMERA_HEIGHT = 320;
+	public static final int CAMERA_WIDTH = 800;
+	public static final int CAMERA_HEIGHT = 480;
 	
 	private static AdvancedBattleActivity instance;
 		

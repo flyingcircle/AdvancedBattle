@@ -27,7 +27,7 @@ public class PinchZoomDetector implements IOnSceneTouchListener
         public boolean onSceneTouchEvent(Scene pScene, TouchEvent pSceneTouchEvent)
         {
                 int action = pSceneTouchEvent.getAction();
-                if(action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_1_UP || action == MotionEvent.ACTION_POINTER_2_UP)
+                if(action == MotionEvent.ACTION_UP)
                 {
                         this.lastSpacing = 0;
                         return false;

@@ -2,6 +2,7 @@ package me.capstone.advancedbattle;
 
 import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.extension.tmx.TMXLayer;
+
 import me.capstone.advancedbattle.SceneManager.SceneType;
 import me.capstone.advancedbattle.touchhandlers.MapScroller;
 import me.capstone.advancedbattle.touchhandlers.PinchZoomDetector;
@@ -10,7 +11,6 @@ import me.capstone.advancedbattle.touchhandlers.TouchDistributor;
 public class GameScene extends BaseScene
 {
 	
-	private TMXLayer tmxLayer;
 	private ZoomCamera camera;
 	
     @Override
@@ -25,13 +25,14 @@ public class GameScene extends BaseScene
     private void setCamera()
     {
 		camera.setBoundsEnabled(true);
-		camera.setBounds(0, 0, tmxLayer.getWidth(), tmxLayer.getHeight());
+		camera.setBounds(0, 0, resourcesManager.game_background_tmx.getTMXLayers().get(0).getWidth(), resourcesManager.game_background_tmx.getTMXLayers().get(0).getHeight());
     }
     
     private void createBackground()
     {
-    	tmxLayer = resourcesManager.game_background_tmx.getTMXLayers().get(0);
-    	attachChild(tmxLayer);
+    	for (TMXLayer layer : resourcesManager.game_background_tmx.getTMXLayers()) {
+    		attachChild(layer);
+    	}
     }
     
     private void createTouchListeners()
