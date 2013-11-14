@@ -5,149 +5,169 @@ import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.ui.IGameInterface.OnCreateSceneCallback;
 
-/**
- * @author Mateusz Mysliwiec
- * @author www.matim-dev.com
- * @version 1.0
- */
-public class SceneManager
-{
-    //---------------------------------------------
-    // SCENES
-    //---------------------------------------------
+public class SceneManager {
+	private static  SceneManager instance;
     
     private BaseScene splashScene;
     private BaseScene menuScene;
     private BaseScene gameScene;
     private BaseScene loadingScene;
-    
-    //---------------------------------------------
-    // VARIABLES
-    //---------------------------------------------
-    
-    private static final SceneManager INSTANCE = new SceneManager();
-    
+        
     private SceneType currentSceneType = SceneType.SCENE_SPLASH;
     
     private BaseScene currentScene;
     
-    private Engine engine = ResourcesManager.getInstance().engine;
+    private Engine engine;
     
-    public enum SceneType
-    {
+    public enum SceneType {
         SCENE_SPLASH,
         SCENE_MENU,
         SCENE_GAME,
         SCENE_LOADING,
     }
     
-    //---------------------------------------------
-    // CLASS LOGIC
-    //---------------------------------------------
-    
-    public void setScene(BaseScene scene)
-    {
-        engine.setScene(scene);
-        currentScene = scene;
-        currentSceneType = scene.getSceneType();
+    public SceneManager() {
+    	instance = this;
+    	this.currentSceneType = SceneType.SCENE_SPLASH;
+    	this.engine = ResourcesManager.getInstance().getEngine();
     }
     
-    public void setScene(SceneType sceneType)
-    {
-        switch (sceneType)
-        {
+    public void setScene(BaseScene scene) {
+        getEngine().setScene(scene);
+        setCurrentScene(scene);
+        setCurrentSceneType(scene.getSceneType());
+    }
+    
+    public void setScene(SceneType sceneType) {
+        switch (sceneType) {
             case SCENE_MENU:
-                setScene(menuScene);
+                setScene(getMenuScene());
                 break;
             case SCENE_GAME:
-                setScene(gameScene);
+                setScene(getGameScene());
                 break;
             case SCENE_SPLASH:
-                setScene(splashScene);
+                setScene(getSplashScene());
                 break;
             case SCENE_LOADING:
-                setScene(loadingScene);
+                setScene(getLoadingScene());
                 break;
             default:
                 break;
         }
     }
     
-    public void createSplashScene(OnCreateSceneCallback pOnCreateSceneCallback)
-    {
+    public void createSplashScene(OnCreateSceneCallback pOnCreateSceneCallback) {
         ResourcesManager.getInstance().loadSplashScreen();
-        splashScene = new SplashScene();
-        currentScene = splashScene;
-        pOnCreateSceneCallback.onCreateSceneFinished(splashScene);
+        setSplashScene(new SplashScene());
+        setCurrentScene(getSplashScene());
+        pOnCreateSceneCallback.onCreateSceneFinished(getSplashScene());
     }
     
-    public void createMenuScene()
-    {
+    public void createMenuScene() {
         ResourcesManager.getInstance().loadMenuResources();
-        menuScene = new MainMenuScene();
-        loadingScene = new LoadingScene();
-        SceneManager.getInstance().setScene(menuScene);
+        setMenuScene(new MainMenuScene());
+        setLoadingScene(new LoadingScene());
+        SceneManager.getInstance().setScene(getMenuScene());
         disposeSplashScene();
     }
 
     
-    private void disposeSplashScene()
-    {
+    private void disposeSplashScene() {
         ResourcesManager.getInstance().unloadSplashScreen();
-        splashScene.disposeScene();
-        splashScene = null;
+        getSplashScene().disposeScene();
+        setSplashScene(null);
     }
     
-    public void loadGameScene(final Engine mEngine)
-    {
-        setScene(loadingScene);
+    public void loadGameScene(final Engine mEngine) {
+        setScene(getLoadingScene());
         ResourcesManager.getInstance().unloadMenuTextures();
-        mEngine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback() 
-        {
+        mEngine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback() {
             @Override
-			public void onTimePassed(final TimerHandler pTimerHandler) 
-            {
+			public void onTimePassed(final TimerHandler pTimerHandler) {
                 mEngine.unregisterUpdateHandler(pTimerHandler);
                 ResourcesManager.getInstance().loadGameResources();
-                gameScene = new GameScene();
-                setScene(gameScene);
+                setGameScene(new GameScene());
+                setScene(getGameScene());
             }
         }));
     }
     
-    public void loadMenuScene(final Engine mEngine)
-    {
-        setScene(loadingScene);
-        gameScene.disposeScene();
+    public void loadMenuScene(final Engine mEngine) {
+        setScene(getLoadingScene());
+        getGameScene().disposeScene();
         ResourcesManager.getInstance().unloadGameTextures();
-        mEngine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback() 
-        {
+        mEngine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback() {
             @Override
-			public void onTimePassed(final TimerHandler pTimerHandler) 
-            {
+			public void onTimePassed(final TimerHandler pTimerHandler) {
                 mEngine.unregisterUpdateHandler(pTimerHandler);
                 ResourcesManager.getInstance().loadMenuTextures();
-                setScene(menuScene);
+                setScene(getMenuScene());
             }
         }));
     }
-    
-    //---------------------------------------------
-    // GETTERS AND SETTERS
-    //---------------------------------------------
-    
-    public static SceneManager getInstance()
-    {
-        return INSTANCE;
-    }
-    
-    public SceneType getCurrentSceneType()
-    {
-        return currentSceneType;
-    }
-    
-    public BaseScene getCurrentScene()
-    {
-        return currentScene;
-    }
+
+	public static SceneManager getInstance() {
+		return instance;
+	}
+
+	public static void setInstance(SceneManager instance) {
+		SceneManager.instance = instance;
+	}
+
+	public BaseScene getSplashScene() {
+		return splashScene;
+	}
+
+	public void setSplashScene(BaseScene splashScene) {
+		this.splashScene = splashScene;
+	}
+
+	public BaseScene getMenuScene() {
+		return menuScene;
+	}
+
+	public void setMenuScene(BaseScene menuScene) {
+		this.menuScene = menuScene;
+	}
+
+	public BaseScene getGameScene() {
+		return gameScene;
+	}
+
+	public void setGameScene(BaseScene gameScene) {
+		this.gameScene = gameScene;
+	}
+
+	public BaseScene getLoadingScene() {
+		return loadingScene;
+	}
+
+	public void setLoadingScene(BaseScene loadingScene) {
+		this.loadingScene = loadingScene;
+	}
+
+	public SceneType getCurrentSceneType() {
+		return currentSceneType;
+	}
+
+	public void setCurrentSceneType(SceneType currentSceneType) {
+		this.currentSceneType = currentSceneType;
+	}
+
+	public BaseScene getCurrentScene() {
+		return currentScene;
+	}
+
+	public void setCurrentScene(BaseScene currentScene) {
+		this.currentScene = currentScene;
+	}
+
+	public Engine getEngine() {
+		return engine;
+	}
+
+	public void setEngine(Engine engine) {
+		this.engine = engine;
+	}
 }

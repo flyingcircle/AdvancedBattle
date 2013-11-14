@@ -22,168 +22,240 @@ import org.andengine.util.debug.Debug;
 
 import android.graphics.Color;
 
-/**
- * @author Mateusz Mysliwiec
- * @author www.matim-dev.com
- * @version 1.0
- */
-public class ResourcesManager
-{
-    //---------------------------------------------
-    // VARIABLES
-    //---------------------------------------------
+public class ResourcesManager {
+	private static ResourcesManager instance = new ResourcesManager();
 	
-	public ITextureRegion splash_region;
+	private ITextureRegion splashRegion;
 	private BitmapTextureAtlas splashTextureAtlas;
 	
-	public ITextureRegion menu_background_region;
-	public ITextureRegion play_region;
-	public ITextureRegion options_region;
+	private ITextureRegion menuBackgroundRegion;
+	private ITextureRegion playRegion;
+	private ITextureRegion optionsRegion;
 	
-	public TMXTiledMap game_background_tmx;
-	public TiledTextureRegion player_texture_region;
+	private TMXTiledMap gameMap;
+	private TiledTextureRegion playerTextureRegion;
 	    
 	private BuildableBitmapTextureAtlas menuTextureAtlas;
-	public Font font;
-	
-    private static final ResourcesManager INSTANCE = new ResourcesManager();
+	private Font font;
+	    
+    private Engine engine;
+    private AdvancedBattleActivity activity;
+    private ZoomCamera camera;
+    private VertexBufferObjectManager vbom;
     
-    public Engine engine;
-    public AdvancedBattleActivity activity;
-    public ZoomCamera camera;
-    public VertexBufferObjectManager vbom;
-    
-    //---------------------------------------------
-    // TEXTURES & TEXTURE REGIONS
-    //---------------------------------------------
-    
-    public int cursorRow = 0;
-    public int cursorColumn= 0;
-    
-    //---------------------------------------------
-    // CLASS LOGIC
-    //---------------------------------------------
+    private int cursorRow = 0;
+    private int cursorColumn= 0;
 
-    public void loadMenuResources()
-    {
+    public void loadMenuResources() {
         loadMenuGraphics();
         loadMenuAudio();
         loadMenuFonts();
     }
     
-    public void loadGameResources()
-    {
+    public void loadGameResources() {
         loadGameGraphics();
         loadGameFonts();
         loadGameAudio();
     }
     
-    private void loadMenuGraphics()
-    {
+    private void loadMenuGraphics() {
     	BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/menu/");
-    	menuTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 1024, 1024, TextureOptions.BILINEAR);
-    	menu_background_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "menu_background.png");
-    	play_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "play.png");
-    	options_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "options.png");
+    	setMenuTextureAtlas(new BuildableBitmapTextureAtlas(getActivity().getTextureManager(), 1024, 1024, TextureOptions.BILINEAR));
+    	setMenuBackgroundRegion(BitmapTextureAtlasTextureRegionFactory.createFromAsset(getMenuTextureAtlas(), getActivity(), "menuBackground2.png"));
+    	setPlayRegion(BitmapTextureAtlasTextureRegionFactory.createFromAsset(getMenuTextureAtlas(), getActivity(), "play.png"));
+    	setOptionsRegion(BitmapTextureAtlasTextureRegionFactory.createFromAsset(getMenuTextureAtlas(), getActivity(), "options.png"));
     	       
-    	try 
-    	{
-    	    this.menuTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));
-    	    this.menuTextureAtlas.load();
+    	try {
+    	    getMenuTextureAtlas().build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));
+    	    getMenuTextureAtlas().load();
     	} 
-    	catch (final TextureAtlasBuilderException e)
-    	{
+    	catch (final TextureAtlasBuilderException e) {
     	        Debug.e(e);
     	}
     }
     
-    private void loadMenuFonts()
-    {
+    private void loadMenuFonts() {
         FontFactory.setAssetBasePath("font/");
-        final ITexture mainFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        final ITexture mainFontTexture = new BitmapTextureAtlas(getActivity().getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 
-        font = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture, activity.getAssets(), "font.ttf", 50, true, Color.WHITE, 2, Color.BLACK);
-        font.load();
+        setFont(FontFactory.createStrokeFromAsset(getActivity().getFontManager(), mainFontTexture, getActivity().getAssets(), "font.ttf", 50, true, Color.WHITE, 2, Color.BLACK));
+        getFont().load();
     }
     
-    public void unloadMenuTextures()
-    {
-        menuTextureAtlas.unload();
+    public void unloadMenuTextures() {
+        getMenuTextureAtlas().unload();
     }
         
-    public void loadMenuTextures()
-    {
-        menuTextureAtlas.load();
+    public void loadMenuTextures() {
+        getMenuTextureAtlas().load();
     }
     
-    private void loadMenuAudio()
-    {
-        
+    private void loadMenuAudio() {
+        // TODO : Audio
     }
 
-    private void loadGameGraphics()
-    {
-    	try{
-    		final TMXLoader tmxLoader = new TMXLoader(activity.getAssets(), engine.getTextureManager(), engine.getVertexBufferObjectManager());
-    		game_background_tmx = tmxLoader.loadFromAsset("tmx/Map.tmx");
+    private void loadGameGraphics() {
+    	try {
+    		final TMXLoader tmxLoader = new TMXLoader(getActivity().getAssets(), getEngine().getTextureManager(), getEngine().getVertexBufferObjectManager());
+    		setGameMap(tmxLoader.loadFromAsset("tmx/Map.tmx"));
     	} catch(final TMXLoadException tmxle) {
     		Debug.e(tmxle);
     	}
     }
     
-    private void loadGameFonts()
-    {
-        
+    private void loadGameFonts() {
+        // TODO : Are there any game fonts? Probably?
     }
     
-    private void loadGameAudio()
-    {
-        
+    private void loadGameAudio() {
+    	// TODO : Audio
     }
     
-    public void loadSplashScreen()
-    {
+    public void loadSplashScreen() {
     	BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
-    	splashTextureAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
-    	splash_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(splashTextureAtlas, activity, "splash.png", 0, 0);
-    	splashTextureAtlas.load();
+    	setSplashTextureAtlas(new BitmapTextureAtlas(getActivity().getTextureManager(), 256, 256, TextureOptions.BILINEAR));
+    	setSplashRegion(BitmapTextureAtlasTextureRegionFactory.createFromAsset(getSplashTextureAtlas(), getActivity(), "splash.png", 0, 0));
+    	getSplashTextureAtlas().load();
     }
     
-    public void unloadSplashScreen()
-    {
-    	splashTextureAtlas.unload();
-    	splash_region = null;
+    public void unloadSplashScreen() {
+    	getSplashTextureAtlas().unload();
+    	setSplashRegion(null);
     }
     
-    public void unloadGameTextures()
-    {
-        
-        
+    public void unloadGameTextures() {
+    	// TODO : Are there any game textures?
     }
     
-    /**
-     * @param engine
-     * @param activity
-     * @param camera
-     * @param vbom
-     * <br><br>
-     * We use this method at beginning of game loading, to prepare Resources Manager properly,
-     * setting all needed parameters, so we can latter access them from different classes (eg. scenes)
-     */
-    public static void prepareManager(Engine engine, AdvancedBattleActivity activity, ZoomCamera camera, VertexBufferObjectManager vbom)
-    {
-        getInstance().engine = engine;
-        getInstance().activity = activity;
-        getInstance().camera = camera;
-        getInstance().vbom = vbom;
+    public static void prepareManager(Engine engine, AdvancedBattleActivity activity, ZoomCamera camera, VertexBufferObjectManager vbom) {
+        getInstance().setEngine(engine);
+        getInstance().setActivity(activity);
+        getInstance().setCamera(camera);
+        getInstance().setVbom(vbom);
     }
-    
-    //---------------------------------------------
-    // GETTERS AND SETTERS
-    //---------------------------------------------
     
     public static ResourcesManager getInstance()
     {
-        return INSTANCE;
+        return instance;
     }
+
+	public ITextureRegion getSplashRegion() {
+		return splashRegion;
+	}
+
+	public void setSplashRegion(ITextureRegion splashRegion) {
+		this.splashRegion = splashRegion;
+	}
+
+	public BitmapTextureAtlas getSplashTextureAtlas() {
+		return splashTextureAtlas;
+	}
+
+	public void setSplashTextureAtlas(BitmapTextureAtlas splashTextureAtlas) {
+		this.splashTextureAtlas = splashTextureAtlas;
+	}
+
+	public ITextureRegion getMenuBackgroundRegion() {
+		return menuBackgroundRegion;
+	}
+
+	public void setMenuBackgroundRegion(ITextureRegion menuBackgroundRegion) {
+		this.menuBackgroundRegion = menuBackgroundRegion;
+	}
+
+	public ITextureRegion getPlayRegion() {
+		return playRegion;
+	}
+
+	public void setPlayRegion(ITextureRegion playRegion) {
+		this.playRegion = playRegion;
+	}
+
+	public ITextureRegion getOptionsRegion() {
+		return optionsRegion;
+	}
+
+	public void setOptionsRegion(ITextureRegion optionsRegion) {
+		this.optionsRegion = optionsRegion;
+	}
+
+	public TMXTiledMap getGameMap() {
+		return gameMap;
+	}
+
+	public void setGameMap(TMXTiledMap gameMap) {
+		this.gameMap = gameMap;
+	}
+
+	public TiledTextureRegion getPlayerTextureRegion() {
+		return playerTextureRegion;
+	}
+
+	public void setPlayerTextureRegion(TiledTextureRegion playerTextureRegion) {
+		this.playerTextureRegion = playerTextureRegion;
+	}
+
+	public BuildableBitmapTextureAtlas getMenuTextureAtlas() {
+		return menuTextureAtlas;
+	}
+
+	public void setMenuTextureAtlas(BuildableBitmapTextureAtlas menuTextureAtlas) {
+		this.menuTextureAtlas = menuTextureAtlas;
+	}
+
+	public Font getFont() {
+		return font;
+	}
+
+	public void setFont(Font font) {
+		this.font = font;
+	}
+
+	public Engine getEngine() {
+		return engine;
+	}
+
+	public void setEngine(Engine engine) {
+		this.engine = engine;
+	}
+
+	public AdvancedBattleActivity getActivity() {
+		return activity;
+	}
+
+	public void setActivity(AdvancedBattleActivity activity) {
+		this.activity = activity;
+	}
+
+	public ZoomCamera getCamera() {
+		return camera;
+	}
+
+	public void setCamera(ZoomCamera camera) {
+		this.camera = camera;
+	}
+
+	public VertexBufferObjectManager getVbom() {
+		return vbom;
+	}
+
+	public void setVbom(VertexBufferObjectManager vbom) {
+		this.vbom = vbom;
+	}
+
+	public int getCursorRow() {
+		return cursorRow;
+	}
+
+	public void setCursorRow(int cursorRow) {
+		this.cursorRow = cursorRow;
+	}
+
+	public int getCursorColumn() {
+		return cursorColumn;
+	}
+
+	public void setCursorColumn(int cursorColumn) {
+		this.cursorColumn = cursorColumn;
+	}
 }

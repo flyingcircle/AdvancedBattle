@@ -6,20 +6,12 @@ import org.andengine.opengl.util.GLState;
 
 import me.capstone.advancedbattle.SceneManager.SceneType;
 
-/**
- * @author Mateusz Mysliwiec
- * @author www.matim-dev.com
- * @version 1.0
- */
-public class SplashScene extends BaseScene
-{
+public class SplashScene extends BaseScene {
 	private Sprite splash;
 	
     @Override
-	public void createScene()
-    {
-    	splash = new Sprite(0, 0, resourcesManager.splash_region, vbom)
-    	{
+	public void createScene() {
+    	this.splash = new Sprite(0, 0, getResourcesManager().getSplashRegion(), getResourcesManager().getVbom()) {
     	    @Override
     	    protected void preDraw(GLState pGLState, Camera pCamera) 
     	    {
@@ -34,23 +26,28 @@ public class SplashScene extends BaseScene
     }
 
     @Override
-    public void onBackKeyPressed()
-    {
+    public void onBackKeyPressed() {
 
     }
 
     @Override
-    public SceneType getSceneType()
-    {
+    public SceneType getSceneType() {
     	return SceneType.SCENE_SPLASH;
     }
 
     @Override
-    public void disposeScene()
-    {
+    public void disposeScene() {
     	splash.detachSelf();
         splash.dispose();
         this.detachSelf();
         this.dispose();
     }
+
+	public Sprite getSplash() {
+		return splash;
+	}
+
+	public void setSplash(Sprite splash) {
+		this.splash = splash;
+	}
 }

@@ -12,10 +12,10 @@ import org.andengine.opengl.util.GLState;
 import me.capstone.advancedbattle.SceneManager.SceneType;
 
 public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener {
-	
 	private MenuScene menuChildScene;
-	private final int MENU_PLAY = 0;
-	private final int MENU_OPTIONS = 1;
+	
+	public final int MENU_PLAY = 0;
+	public final int MENU_OPTIONS = 1;
 
 	@Override
 	public void createScene() {
@@ -23,13 +23,22 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 		createMenuChildScene();
 	}
 	
-	private void createMenuChildScene()
-	{
-	    menuChildScene = new MenuScene(camera);
+	private void createBackground() {
+	    attachChild(new Sprite(0, 0, getResourcesManager().getMenuBackgroundRegion(), getResourcesManager().getVbom()) {
+	        @Override
+	        protected void preDraw(GLState pGLState, Camera pCamera) {
+	            super.preDraw(pGLState, pCamera);
+	            pGLState.enableDither();
+	        }
+	    });
+	}
+	
+	private void createMenuChildScene() {
+	    this.menuChildScene = new MenuScene(getResourcesManager().getCamera());
 	    menuChildScene.setPosition(0, 0);
 	    
-	    final IMenuItem playMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_PLAY, resourcesManager.play_region, vbom), 1.2f, 1);
-	    final IMenuItem optionsMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_OPTIONS, resourcesManager.options_region, vbom), 1.2f, 1);
+	    final IMenuItem playMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_PLAY, getResourcesManager().getPlayRegion(), getResourcesManager().getVbom()), 1.2f, 1);
+	    final IMenuItem optionsMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_OPTIONS, getResourcesManager().getOptionsRegion(), getResourcesManager().getVbom()), 1.2f, 1);
 	    
 	    menuChildScene.addMenuItem(playMenuItem);
 	    menuChildScene.addMenuItem(optionsMenuItem);
@@ -42,20 +51,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	    
 	    menuChildScene.setOnMenuItemClickListener(this);
 	    
-	    setChildScene(menuChildScene);
-	}
-	
-	private void createBackground()
-	{
-	    attachChild(new Sprite(120, -320, resourcesManager.menu_background_region, vbom)
-	    {
-	        @Override
-	        protected void preDraw(GLState pGLState, Camera pCamera) 
-	        {
-	            super.preDraw(pGLState, pCamera);
-	            pGLState.enableDither();
-	        }
-	    });
+	    setChildScene(getMenuChildScene());
 	}
 
 	@Override
@@ -70,23 +66,28 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 
 	@Override
 	public void disposeScene() {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
-	public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem,
-			float pMenuItemLocalX, float pMenuItemLocalY) {
-		switch(pMenuItem.getID())
-        {
+	public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
+		switch(pMenuItem.getID()) {
         case MENU_PLAY:
-        	SceneManager.getInstance().loadGameScene(engine);
+        	SceneManager.getInstance().loadGameScene(getResourcesManager().getEngine());
             return true;
         case MENU_OPTIONS:
             return true;
         default:
             return false;
         }
+	}
+
+	public MenuScene getMenuChildScene() {
+		return menuChildScene;
+	}
+
+	public void setMenuChildScene(MenuScene menuChildScene) {
+		this.menuChildScene = menuChildScene;
 	}
 
 }

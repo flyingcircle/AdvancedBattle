@@ -1,6 +1,5 @@
 package me.capstone.advancedbattle;
 
-import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.extension.tmx.TMXLayer;
 
 import me.capstone.advancedbattle.SceneManager.SceneType;
@@ -8,59 +7,49 @@ import me.capstone.advancedbattle.touchhandlers.MapScroller;
 import me.capstone.advancedbattle.touchhandlers.PinchZoomDetector;
 import me.capstone.advancedbattle.touchhandlers.TouchDistributor;
 
-public class GameScene extends BaseScene
-{
-	
-	private ZoomCamera camera;
-	
+public class GameScene extends BaseScene {
+		
     @Override
-    public void createScene()
-    {
-    	camera = resourcesManager.camera;
+    public void createScene() {  	
     	createBackground();
     	setCamera();
     	createTouchListeners();
     }
     
-    private void setCamera()
-    {
-		camera.setBoundsEnabled(true);
-		camera.setBounds(0, 0, resourcesManager.game_background_tmx.getTMXLayers().get(0).getWidth(), resourcesManager.game_background_tmx.getTMXLayers().get(0).getHeight());
+    private void setCamera() {
+		getResourcesManager().getCamera().setBoundsEnabled(true);
+		TMXLayer layer = getResourcesManager().getGameMap().getTMXLayers().get(0);
+		getResourcesManager().getCamera().setBounds(0, 0, layer.getWidth(), layer.getHeight());
     }
     
-    private void createBackground()
-    {
-    	for (TMXLayer layer : resourcesManager.game_background_tmx.getTMXLayers()) {
+    private void createBackground() {
+    	for (TMXLayer layer : getResourcesManager().getGameMap().getTMXLayers()) {
     		attachChild(layer);
     	}
     }
     
-    private void createTouchListeners()
-    {
-    	MapScroller mapScroller = new MapScroller(camera);
+    private void createTouchListeners() {
+    	MapScroller mapScroller = new MapScroller(getResourcesManager().getCamera());
         TouchDistributor touchDistributor = new TouchDistributor();
-        touchDistributor.addTouchListener(new PinchZoomDetector(camera, mapScroller));
+        touchDistributor.addTouchListener(new PinchZoomDetector(getResourcesManager().getCamera(), mapScroller));
         touchDistributor.addTouchListener(mapScroller);
         this.setOnSceneTouchListener(touchDistributor);
     }
 
     @Override
-    public void onBackKeyPressed()
-    {
-    	SceneManager.getInstance().loadMenuScene(engine);
+    public void onBackKeyPressed() {
+    	SceneManager.getInstance().loadMenuScene(getResourcesManager().getEngine());
     }
 
     @Override
-    public SceneType getSceneType()
-    {
+    public SceneType getSceneType() {
         return SceneType.SCENE_GAME;
     }
 
     @Override
-    public void disposeScene()
-    {
-    	camera.setHUD(null);
-        camera.setCenter(400, 240);
+    public void disposeScene() {
+    	getResourcesManager().getCamera().setHUD(null);
+    	getResourcesManager().getCamera().setCenter(400, 240);
 
         // TODO code responsible for disposing scene
         // removing all game scene objects.

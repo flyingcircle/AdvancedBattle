@@ -17,62 +17,58 @@ import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import android.view.KeyEvent;
 
 public class AdvancedBattleActivity extends BaseGameActivity {
+	private static AdvancedBattleActivity instance;
 	
 	public static final int CAMERA_WIDTH = 800;
 	public static final int CAMERA_HEIGHT = 480;
-	
-	private static AdvancedBattleActivity instance;
 		
-	private ZoomCamera camera;
+	private ZoomCamera camera = null;
 	
 	public AdvancedBattleActivity() {
 		instance = this;
 	}
 	
 	@Override
-	public Engine onCreateEngine(EngineOptions pEngineOptions){
+	public Engine onCreateEngine(EngineOptions pEngineOptions) {
 		return new LimitedFPSEngine(pEngineOptions, 60);
 	}
 	
 	@Override
-	public EngineOptions onCreateEngineOptions(){
+	public EngineOptions onCreateEngineOptions() {
 		this.camera = new ZoomCamera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
 		
-	    EngineOptions engineOptions = new EngineOptions(true, ScreenOrientation.LANDSCAPE_FIXED, new RatioResolutionPolicy(CAMERA_WIDTH, CAMERA_HEIGHT), this.camera);
+	    EngineOptions engineOptions = new EngineOptions(true, ScreenOrientation.LANDSCAPE_FIXED, new RatioResolutionPolicy(CAMERA_WIDTH, CAMERA_HEIGHT), getCamera());
 	    engineOptions.getAudioOptions().setNeedsMusic(true).setNeedsSound(true);
 	    engineOptions.setWakeLockOptions(WakeLockOptions.SCREEN_ON);
 	    return engineOptions;
 	}
 	
 	@Override
-	public void onCreateResources(OnCreateResourcesCallback pOnCreateResourcesCallback) throws IOException{
-		ResourcesManager.prepareManager(mEngine, this, camera, getVertexBufferObjectManager());
+	public void onCreateResources(OnCreateResourcesCallback pOnCreateResourcesCallback) throws IOException {
+		ResourcesManager.prepareManager(getEngine(), this, camera, getVertexBufferObjectManager());
 	    pOnCreateResourcesCallback.onCreateResourcesFinished();
 	}
 	
 	@Override
-	public void onCreateScene(OnCreateSceneCallback pOnCreateSceneCallback) throws IOException{
+	public void onCreateScene(OnCreateSceneCallback pOnCreateSceneCallback) throws IOException {
 		SceneManager.getInstance().createSplashScene(pOnCreateSceneCallback);
 	}
 	
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) 
-	{  
-	    if (keyCode == KeyEvent.KEYCODE_BACK)
-	    {
+	public boolean onKeyDown(int keyCode, KeyEvent event) {  
+	    if (keyCode == KeyEvent.KEYCODE_BACK) {
 	        SceneManager.getInstance().getCurrentScene().onBackKeyPressed();
 	    }
 	    return false; 
 	}
 	
 	@Override
-	public void onPopulateScene(Scene pScene, OnPopulateSceneCallback pOnPopulateSceneCallback) throws IOException{
-		mEngine.registerUpdateHandler(new TimerHandler(2f, new ITimerCallback() 
-	    {
+	public void onPopulateScene(Scene pScene, OnPopulateSceneCallback pOnPopulateSceneCallback) throws IOException {
+		getEngine().registerUpdateHandler(new TimerHandler(2f, new ITimerCallback() {
 	            @Override
 				public void onTimePassed(final TimerHandler pTimerHandler) 
 	            {
-	                mEngine.unregisterUpdateHandler(pTimerHandler);
+	                getEngine().unregisterUpdateHandler(pTimerHandler);
 	                SceneManager.getInstance().createMenuScene();
 	            }
 	    }));
@@ -88,5 +84,13 @@ public class AdvancedBattleActivity extends BaseGameActivity {
 	
 	public static AdvancedBattleActivity getInstance() {
 		return instance;
+	}
+	
+	public ZoomCamera getCamera() {
+		return camera;
+	}
+
+	public void setCamera(ZoomCamera camera) {
+		this.camera = camera;
 	}
 }
