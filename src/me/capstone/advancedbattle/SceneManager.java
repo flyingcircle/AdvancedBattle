@@ -6,7 +6,7 @@ import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.ui.IGameInterface.OnCreateSceneCallback;
 
 public class SceneManager {
-	private static  SceneManager instance;
+	private static SceneManager instance = new SceneManager();
     
     private BaseScene splashScene;
     private BaseScene menuScene;
@@ -17,19 +17,13 @@ public class SceneManager {
     
     private BaseScene currentScene;
     
-    private Engine engine;
+    private Engine engine = ResourcesManager.getInstance().getEngine();
     
     public enum SceneType {
         SCENE_SPLASH,
         SCENE_MENU,
         SCENE_GAME,
         SCENE_LOADING,
-    }
-    
-    public SceneManager() {
-    	instance = this;
-    	this.currentSceneType = SceneType.SCENE_SPLASH;
-    	this.engine = ResourcesManager.getInstance().getEngine();
     }
     
     public void setScene(BaseScene scene) {
