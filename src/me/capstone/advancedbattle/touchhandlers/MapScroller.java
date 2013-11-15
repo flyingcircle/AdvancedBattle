@@ -1,6 +1,11 @@
 package me.capstone.advancedbattle.touchhandlers;
 
+import me.capstone.advancedbattle.AdvancedBattleActivity;
+import me.capstone.advancedbattle.BaseScene;
+import me.capstone.advancedbattle.GameScene;
 import me.capstone.advancedbattle.ResourcesManager;
+import me.capstone.advancedbattle.SceneManager;
+import me.capstone.advancedbattle.SceneManager.SceneType;
 
 import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.engine.handler.IUpdateHandler;
@@ -17,7 +22,7 @@ public class MapScroller implements IOnSceneTouchListener, IUpdateHandler {
 	ResourcesManager resourcesManager = ResourcesManager.getInstance();
 
 	private ZoomCamera camera;
-
+	
 	private boolean touchDown = false;
 	private float speedX;
 	private float speedY;
@@ -44,32 +49,65 @@ public class MapScroller implements IOnSceneTouchListener, IUpdateHandler {
 			lastX = evt.getRawX();
 			lastY = evt.getRawY();
 
-			TMXLayer layer = getResourcesManager().getGameMap().getTMXLayers().get(3);
+			TMXLayer layer = resourcesManager.getGameMap().getTMXLayers().get(3);
 			
-			TMXTile tile = layer.getTMXTile(getResourcesManager().getCursorColumn(), getResourcesManager().getCursorRow());
-			tile.setGlobalTileID(getResourcesManager().getGameMap(), 97);
-			layer.draw(tile.getTextureRegion(), tile.getTileX(), tile.getTileY(), tile.getTileWidth(), tile.getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
+			TMXTile cursorTile = layer.getTMXTile(resourcesManager.getCursorColumn(), resourcesManager.getCursorRow());
 			
-			tile = layer.getTMXTileAt(lastX, lastY);
+			cursorTile.setGlobalTileID(resourcesManager.getGameMap(), 97);
+			layer.setIndex(cursorTile.getTileRow() * resourcesManager.getGameMap().getTileColumns() + cursorTile.getTileColumn());
+			layer.drawWithoutChecks(cursorTile.getTextureRegion(), cursorTile.getTileX(), cursorTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
 			
-			getResourcesManager().setCursorColumn(tile.getTileColumn());
-			getResourcesManager().setCursorRow(tile.getTileRow());
+			float clickedX;
+			float clickedY;
+			float ratioX = lastX / AdvancedBattleActivity.CAMERA_WIDTH;;
+			float ratioY = lastY / AdvancedBattleActivity.CAMERA_HEIGHT;
+			if (camera.getZoomFactor() == 1) {
+				clickedX = lastX;
+				clickedY = lastY;
+			} else {
+				clickedX = camera.getCenterX() + (ratioX - 1/2F) * camera.getWidth();	
+				clickedY = camera.getCenterY() + (ratioY - 1/2F) * camera.getHeight();
+			}
 			
-			tile.setGlobalTileID(getResourcesManager().getGameMap(), 96);
-			layer.draw(tile.getTextureRegion(), tile.getTileX(), tile.getTileY(), tile.getTileWidth(), tile.getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
+			int column = (int) Math.floor(clickedX / 32);
+			int row = (int) Math.floor(clickedY / 32);	
+			TMXTile newTile = layer.getTMXTile(column, row);
+			
+			resourcesManager.setCursorColumn(newTile.getTileColumn());
+			resourcesManager.setCursorRow(newTile.getTileRow());
+			
+			newTile.setGlobalTileID(resourcesManager.getGameMap(), 96);
+			layer.setIndex(newTile.getTileRow() * resourcesManager.getGameMap().getTileColumns() + newTile.getTileColumn());
+			layer.drawWithoutChecks(newTile.getTextureRegion(), newTile.getTileX(), newTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
 			
 			layer.submit();
+						
+			BaseScene scene = SceneManager.getInstance().getCurrentScene();
+			if (scene.getSceneType() == SceneType.SCENE_GAME) {
+				GameScene game = (GameScene) scene;
+				
+				//game.getText().setText(game.getText(resourcesManager.getCursorRow(), resourcesManager.getCursorColumn()));
+				
+				if (ratioX > 0.8) {
+					game.getRectangleGroup().setPosition(25, 240);
+				} else if (ratioX < 0.2) {
+					game.getRectangleGroup().setPosition(650, 240);
+				}
+			}
 		}
+		
 		if (evt.getAction() == MotionEvent.ACTION_UP) {
 			touchDown = false;
 		}
+		
 		return false;
 	}
  
  
 	@Override
 	public void onUpdate(float pSecondsElapsed) {
-		if (!isTouchDown() && (speedX != 0 || speedY != 0)) {
+		// TODO : This isn't needed until the flinger is used
+		/*if (!isTouchDown() && (speedX != 0 || speedY != 0)) {
 			// Log.v("AndEngine", "SpeedX: " + String.valueOf(this.speedX) +
 			// " SpeedY: " + String.valueOf(this.speedY));
 			
@@ -85,7 +123,7 @@ public class MapScroller implements IOnSceneTouchListener, IUpdateHandler {
 			if (speedY < 10 && speedY > -10) {
 				speedY = 0;
 			}
-		}
+		}*/
 	}
  
 	@Override

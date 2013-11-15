@@ -78,7 +78,7 @@ public class ResourcesManager {
         FontFactory.setAssetBasePath("font/");
         final ITexture mainFontTexture = new BitmapTextureAtlas(getActivity().getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 
-        setFont(FontFactory.createStrokeFromAsset(getActivity().getFontManager(), mainFontTexture, getActivity().getAssets(), "font.ttf", 50, true, Color.WHITE, 2, Color.BLACK));
+        this.font = FontFactory.createStrokeFromAsset(getActivity().getFontManager(), mainFontTexture, getActivity().getAssets(), "font.ttf", 50, true, Color.WHITE, 2, Color.BLACK);
         getFont().load();
     }
     
@@ -97,7 +97,7 @@ public class ResourcesManager {
     private void loadGameGraphics() {
     	try {
     		final TMXLoader tmxLoader = new TMXLoader(getActivity().getAssets(), getEngine().getTextureManager(), getEngine().getVertexBufferObjectManager());
-    		setGameMap(tmxLoader.loadFromAsset("tmx/Map.tmx"));
+    		this.gameMap = tmxLoader.loadFromAsset("tmx/Map.tmx");
     	} catch(final TMXLoadException tmxle) {
     		Debug.e(tmxle);
     	}

@@ -18,6 +18,7 @@ import android.view.KeyEvent;
 
 public class AdvancedBattleActivity extends BaseGameActivity {
 	private static AdvancedBattleActivity instance;
+	private ResourcesManager resourcesManager;
 	
 	public static final int CAMERA_WIDTH = 800;
 	public static final int CAMERA_HEIGHT = 480;
@@ -36,6 +37,8 @@ public class AdvancedBattleActivity extends BaseGameActivity {
 	@Override
 	public EngineOptions onCreateEngineOptions() {
 		this.camera = new ZoomCamera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
+		camera.setBounds(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
+		camera.setBoundsEnabled(true);
 		
 	    EngineOptions engineOptions = new EngineOptions(true, ScreenOrientation.LANDSCAPE_FIXED, new RatioResolutionPolicy(CAMERA_WIDTH, CAMERA_HEIGHT), camera);
 	    engineOptions.getAudioOptions().setNeedsMusic(true).setNeedsSound(true);
@@ -47,6 +50,7 @@ public class AdvancedBattleActivity extends BaseGameActivity {
 	public void onCreateResources(OnCreateResourcesCallback pOnCreateResourcesCallback) throws IOException {
 		ResourcesManager.prepareManager(getEngine(), this, camera, getVertexBufferObjectManager());
 	    pOnCreateResourcesCallback.onCreateResourcesFinished();
+	    this.resourcesManager = ResourcesManager.getInstance();
 	}
 	
 	@Override
@@ -57,7 +61,12 @@ public class AdvancedBattleActivity extends BaseGameActivity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {  
 	    if (keyCode == KeyEvent.KEYCODE_BACK) {
+	    	camera.setZoomFactor(1);
 	        SceneManager.getInstance().getCurrentScene().onBackKeyPressed();
+	        return true;
+	    } else if (keyCode == KeyEvent.KEYCODE_MENU) {
+	    	SceneManager.getInstance().getCurrentScene().onMenuKeyPressed();
+	    	return true;
 	    }
 	    return false; 
 	}
@@ -86,6 +95,14 @@ public class AdvancedBattleActivity extends BaseGameActivity {
 		return instance;
 	}
 	
+	public ResourcesManager getResourcesManager() {
+		return resourcesManager;
+	}
+
+	public void setResourcesManager(ResourcesManager resourcesManager) {
+		this.resourcesManager = resourcesManager;
+	}
+
 	public ZoomCamera getCamera() {
 		return camera;
 	}

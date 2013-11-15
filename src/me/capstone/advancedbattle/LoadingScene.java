@@ -11,12 +11,19 @@ public class LoadingScene extends BaseScene {
     @Override
     public void createScene() {
         setBackground(new Background(Color.WHITE));
-        attachChild(new Text(300, 200, getResourcesManager().getFont(), "Loading...", getResourcesManager().getVbom()));
+        Text text = new Text(350, 200, getResourcesManager().getFont(), "Loading...", getResourcesManager().getVbom());
+        text.setScale(1.5F);
+        attachChild(text);
     }
 
     @Override
     public void onBackKeyPressed() {
         return;
+    }
+    
+    @Override
+    public void onMenuKeyPressed() {
+    	return;
     }
 
     @Override

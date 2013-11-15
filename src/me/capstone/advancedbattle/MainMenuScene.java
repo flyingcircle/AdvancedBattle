@@ -58,6 +58,11 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	public void onBackKeyPressed() {
 		System.exit(0);
 	}
+	
+	@Override
+	public void onMenuKeyPressed() {
+		return;
+	}
 
 	@Override
 	public SceneType getSceneType() {
