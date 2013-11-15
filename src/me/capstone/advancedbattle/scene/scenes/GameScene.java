@@ -13,9 +13,9 @@ import android.widget.Toast;
 import me.capstone.advancedbattle.scene.BaseScene;
 import me.capstone.advancedbattle.scene.SceneManager;
 import me.capstone.advancedbattle.scene.SceneManager.SceneType;
-import me.capstone.advancedbattle.touchhandlers.MapScroller;
-import me.capstone.advancedbattle.touchhandlers.PinchZoomDetector;
-import me.capstone.advancedbattle.touchhandlers.TouchDistributor;
+import me.capstone.advancedbattle.touch.MapScroller;
+import me.capstone.advancedbattle.touch.PinchZoomDetector;
+import me.capstone.advancedbattle.touch.TouchDistributor;
 
 public class GameScene extends BaseScene {
 	private HUD hud;

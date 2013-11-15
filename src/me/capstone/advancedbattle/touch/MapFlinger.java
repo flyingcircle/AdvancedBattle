@@ -1,4 +1,4 @@
-package me.capstone.advancedbattle.touchhandlers;
+package me.capstone.advancedbattle.touch;
 
 import android.view.MotionEvent;
 import android.view.GestureDetector.SimpleOnGestureListener;

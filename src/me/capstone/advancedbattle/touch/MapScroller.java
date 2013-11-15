@@ -1,4 +1,4 @@
-package me.capstone.advancedbattle.touchhandlers;
+package me.capstone.advancedbattle.touch;
 
 import me.capstone.advancedbattle.AdvancedBattleActivity;
 import me.capstone.advancedbattle.resources.ResourcesManager;

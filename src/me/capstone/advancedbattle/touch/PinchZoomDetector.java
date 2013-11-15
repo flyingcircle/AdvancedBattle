@@ -1,4 +1,4 @@
-package me.capstone.advancedbattle.touchhandlers;
+package me.capstone.advancedbattle.touch;
 
 import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.entity.scene.Scene;
