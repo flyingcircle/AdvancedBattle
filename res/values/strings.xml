@@ -7,7 +7,5 @@
     <string name="sign_out_button">Sign out</string>
     <string name="sign_out_text">Sign out of Google+</string>
     <string name="start_button">Start</string>
-    <string name="end_turn">End Turn</string>
-    <string name="options">Options</string>
 
 </resources>
