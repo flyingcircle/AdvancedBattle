@@ -1,7 +1,8 @@
-package me.capstone.advancedbattle;
+package me.capstone.advancedbattle.scene;
 
 import org.andengine.entity.scene.Scene;
-import me.capstone.advancedbattle.SceneManager.SceneType;
+import me.capstone.advancedbattle.resources.ResourcesManager;
+import me.capstone.advancedbattle.scene.SceneManager.SceneType;
 
 public abstract class BaseScene extends Scene {  
     private ResourcesManager resourcesManager;

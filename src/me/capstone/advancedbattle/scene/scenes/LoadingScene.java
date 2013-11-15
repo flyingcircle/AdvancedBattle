@@ -1,10 +1,11 @@
-package me.capstone.advancedbattle;
+package me.capstone.advancedbattle.scene.scenes;
 
 import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.text.Text;
 import org.andengine.util.color.Color;
 
-import me.capstone.advancedbattle.SceneManager.SceneType;
+import me.capstone.advancedbattle.scene.BaseScene;
+import me.capstone.advancedbattle.scene.SceneManager.SceneType;
 
 public class LoadingScene extends BaseScene {
 	

@@ -1,4 +1,4 @@
-package me.capstone.advancedbattle;
+package me.capstone.advancedbattle.scene.scenes;
 
 import org.andengine.engine.camera.hud.HUD;
 import org.andengine.entity.Entity;
@@ -10,7 +10,9 @@ import org.andengine.util.HorizontalAlign;
 
 import android.widget.Toast;
 
-import me.capstone.advancedbattle.SceneManager.SceneType;
+import me.capstone.advancedbattle.scene.BaseScene;
+import me.capstone.advancedbattle.scene.SceneManager;
+import me.capstone.advancedbattle.scene.SceneManager.SceneType;
 import me.capstone.advancedbattle.touchhandlers.MapScroller;
 import me.capstone.advancedbattle.touchhandlers.PinchZoomDetector;
 import me.capstone.advancedbattle.touchhandlers.TouchDistributor;

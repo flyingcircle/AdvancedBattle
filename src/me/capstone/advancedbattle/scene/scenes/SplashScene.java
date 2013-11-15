@@ -1,10 +1,11 @@
-package me.capstone.advancedbattle;
+package me.capstone.advancedbattle.scene.scenes;
 
 import org.andengine.engine.camera.Camera;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.opengl.util.GLState;
 
-import me.capstone.advancedbattle.SceneManager.SceneType;
+import me.capstone.advancedbattle.scene.BaseScene;
+import me.capstone.advancedbattle.scene.SceneManager.SceneType;
 
 public class SplashScene extends BaseScene {
 	private Sprite splash;

@@ -1,4 +1,10 @@
-package me.capstone.advancedbattle;
+package me.capstone.advancedbattle.scene;
+
+import me.capstone.advancedbattle.resources.ResourcesManager;
+import me.capstone.advancedbattle.scene.scenes.GameScene;
+import me.capstone.advancedbattle.scene.scenes.LoadingScene;
+import me.capstone.advancedbattle.scene.scenes.MainMenuScene;
+import me.capstone.advancedbattle.scene.scenes.SplashScene;
 
 import org.andengine.engine.Engine;
 import org.andengine.engine.handler.timer.ITimerCallback;

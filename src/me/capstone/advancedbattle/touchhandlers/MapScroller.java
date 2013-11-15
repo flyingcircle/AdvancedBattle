@@ -1,11 +1,11 @@
 package me.capstone.advancedbattle.touchhandlers;
 
 import me.capstone.advancedbattle.AdvancedBattleActivity;
-import me.capstone.advancedbattle.BaseScene;
-import me.capstone.advancedbattle.GameScene;
-import me.capstone.advancedbattle.ResourcesManager;
-import me.capstone.advancedbattle.SceneManager;
-import me.capstone.advancedbattle.SceneManager.SceneType;
+import me.capstone.advancedbattle.resources.ResourcesManager;
+import me.capstone.advancedbattle.scene.BaseScene;
+import me.capstone.advancedbattle.scene.SceneManager;
+import me.capstone.advancedbattle.scene.SceneManager.SceneType;
+import me.capstone.advancedbattle.scene.scenes.GameScene;
 
 import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.engine.handler.IUpdateHandler;

@@ -2,6 +2,9 @@ package me.capstone.advancedbattle;
 
 import java.io.IOException;
 
+import me.capstone.advancedbattle.resources.ResourcesManager;
+import me.capstone.advancedbattle.scene.SceneManager;
+
 import org.andengine.ui.activity.BaseGameActivity;
 import org.andengine.entity.scene.Scene;
 import org.andengine.engine.Engine;

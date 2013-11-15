@@ -1,4 +1,4 @@
-package me.capstone.advancedbattle;
+package me.capstone.advancedbattle.scene.scenes;
 
 import org.andengine.engine.camera.Camera;
 import org.andengine.entity.scene.menu.MenuScene;
@@ -9,7 +9,9 @@ import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.opengl.util.GLState;
 
-import me.capstone.advancedbattle.SceneManager.SceneType;
+import me.capstone.advancedbattle.scene.BaseScene;
+import me.capstone.advancedbattle.scene.SceneManager;
+import me.capstone.advancedbattle.scene.SceneManager.SceneType;
 
 public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener {
 	private MenuScene menuChildScene;
