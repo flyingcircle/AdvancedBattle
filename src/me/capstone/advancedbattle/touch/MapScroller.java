@@ -2,6 +2,7 @@ package me.capstone.advancedbattle.touch;
 
 import me.capstone.advancedbattle.AdvancedBattleActivity;
 import me.capstone.advancedbattle.resources.ResourcesManager;
+import me.capstone.advancedbattle.resources.TileType;
 import me.capstone.advancedbattle.scene.BaseScene;
 import me.capstone.advancedbattle.scene.SceneManager;
 import me.capstone.advancedbattle.scene.SceneManager.SceneType;
@@ -53,7 +54,7 @@ public class MapScroller implements IOnSceneTouchListener, IUpdateHandler {
 			
 			TMXTile cursorTile = layer.getTMXTile(resourcesManager.getCursorColumn(), resourcesManager.getCursorRow());
 			
-			cursorTile.setGlobalTileID(resourcesManager.getGameMap(), 97);
+			cursorTile.setGlobalTileID(resourcesManager.getGameMap(), TileType.CURSOR_NULL);
 			layer.setIndex(cursorTile.getTileRow() * resourcesManager.getGameMap().getTileColumns() + cursorTile.getTileColumn());
 			layer.drawWithoutChecks(cursorTile.getTextureRegion(), cursorTile.getTileX(), cursorTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
 			
@@ -76,7 +77,7 @@ public class MapScroller implements IOnSceneTouchListener, IUpdateHandler {
 			resourcesManager.setCursorColumn(newTile.getTileColumn());
 			resourcesManager.setCursorRow(newTile.getTileRow());
 			
-			newTile.setGlobalTileID(resourcesManager.getGameMap(), 96);
+			newTile.setGlobalTileID(resourcesManager.getGameMap(), TileType.CURSOR);
 			layer.setIndex(newTile.getTileRow() * resourcesManager.getGameMap().getTileColumns() + newTile.getTileColumn());
 			layer.drawWithoutChecks(newTile.getTextureRegion(), newTile.getTileX(), newTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
 			

@@ -1,34 +1,33 @@
 package me.capstone.advancedbattle.tile;
 
-import me.capstone.advancedbattle.resources.TileType;
-import me.capstone.advancedbattle.tile.building.Building;
+import me.capstone.advancedbattle.tile.building.Structure;
 import me.capstone.advancedbattle.tile.piece.Piece;
 
 public class Tile {
-	private TileType type;
-	private Building building;
+	private int terrainTileID;
+	private Structure structure;
 	private Piece piece;
 	
-	public Tile(TileType type, Building building, Piece piece) {
-		this.type = type;
-		this.building = building;
-		this.piece = piece;
+	public Tile(int terrainTileID, int structureTileID, int pieceTileID) {
+		this.terrainTileID = terrainTileID;
+		this.structure = null;
+		this.piece = null;
 	}
 
-	public TileType getType() {
-		return type;
+	public int getTerrainTileID() {
+		return terrainTileID;
 	}
 
-	public void setType(TileType type) {
-		this.type = type;
+	public void setTerrainTileID(int terrainTileID) {
+		this.terrainTileID = terrainTileID;
 	}
 
-	public Building getBuilding() {
-		return building;
+	public Structure getStructure() {
+		return structure;
 	}
 
-	public void setBuilding(Building building) {
-		this.building = building;
+	public void setStructure(Structure structure) {
+		this.structure = structure;
 	}
 
 	public Piece getPiece() {
@@ -37,6 +36,20 @@ public class Tile {
 
 	public void setPiece(Piece piece) {
 		this.piece = piece;
+	}
+	
+	public Structure createStructureByID(int id) {
+		switch (id) {
+		default:
+			return null;
+		}
+	}
+	
+	public Piece createPieceByID(int id) {
+		switch (id) {
+		default:
+			return null;
+		}
 	}
 
 }

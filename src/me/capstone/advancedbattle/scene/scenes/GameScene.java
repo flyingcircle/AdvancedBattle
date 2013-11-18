@@ -10,14 +10,17 @@ import org.andengine.util.HorizontalAlign;
 
 import android.widget.Toast;
 
+import me.capstone.advancedbattle.map.Map;
 import me.capstone.advancedbattle.scene.BaseScene;
 import me.capstone.advancedbattle.scene.SceneManager;
 import me.capstone.advancedbattle.scene.SceneManager.SceneType;
+import me.capstone.advancedbattle.tile.Tile;
 import me.capstone.advancedbattle.touch.MapScroller;
 import me.capstone.advancedbattle.touch.PinchZoomDetector;
 import me.capstone.advancedbattle.touch.TouchDistributor;
 
 public class GameScene extends BaseScene {
+	private Map map;
 	private HUD hud;
 	private Text text;
 	private Entity rectangleGroup;
@@ -25,6 +28,7 @@ public class GameScene extends BaseScene {
     @Override
     public void createScene() {
     	createBackground();
+    	createMap();
     	createHUD();
     	setCamera();
     	createTouchListeners();
@@ -34,6 +38,24 @@ public class GameScene extends BaseScene {
     	for (TMXLayer layer : getResourcesManager().getGameMap().getTMXLayers()) {
     		attachChild(layer);
     	}
+    }
+    
+    private void createMap() {
+    	this.map = new Map(getResourcesManager().getGameMap().getTileColumns(), getResourcesManager().getGameMap().getTileRows());
+    	Tile[][] arrayMap = map.getMap();
+    	
+    	TMXLayer terrainLayer = getResourcesManager().getGameMap().getTMXLayers().get(0);
+    	TMXLayer structureLayer = getResourcesManager().getGameMap().getTMXLayers().get(1);
+    	TMXLayer pieceLayer = getResourcesManager().getGameMap().getTMXLayers().get(2);
+    	
+    	for (int i = 0; i < map.getColumns(); i++) {
+    		for (int j = 0; j < map.getRows(); j++) {
+    			arrayMap[i][j] = new Tile(terrainLayer.getTMXTile(i, j).getGlobalTileID(), structureLayer.getTMXTile(i, j).getGlobalTileID(), pieceLayer.getTMXTile(i, j).getGlobalTileID());
+    		}
+    	}
+    	
+    	map.setMap(arrayMap);
+    	map.setSelected(map.getMap()[0][0]);
     }
     
     private void createHUD() {
@@ -95,6 +117,14 @@ public class GameScene extends BaseScene {
         // TODO code responsible for disposing scene
         // removing all game scene objects.
     }
+
+	protected Map getMap() {
+		return map;
+	}
+
+	protected void setMap(Map map) {
+		this.map = map;
+	}
 
 	public HUD getHud() {
 		return hud;

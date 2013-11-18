@@ -1,5 +1,5 @@
 package me.capstone.advancedbattle.tile.building;
 
-public class Building {
+public class Structure {
 
 }
