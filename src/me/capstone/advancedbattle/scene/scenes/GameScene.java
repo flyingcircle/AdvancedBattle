@@ -3,27 +3,31 @@ package me.capstone.advancedbattle.scene.scenes;
 import org.andengine.engine.camera.hud.HUD;
 import org.andengine.entity.Entity;
 import org.andengine.entity.primitive.Rectangle;
-import org.andengine.entity.text.Text;
-import org.andengine.entity.text.TextOptions;
+import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.tmx.TMXLayer;
-import org.andengine.util.HorizontalAlign;
 
 import android.widget.Toast;
 
 import me.capstone.advancedbattle.map.Map;
+import me.capstone.advancedbattle.resources.ResourcesManager;
 import me.capstone.advancedbattle.scene.BaseScene;
 import me.capstone.advancedbattle.scene.SceneManager;
 import me.capstone.advancedbattle.scene.SceneManager.SceneType;
 import me.capstone.advancedbattle.tile.Tile;
+import me.capstone.advancedbattle.touch.CursorSelector;
 import me.capstone.advancedbattle.touch.MapScroller;
 import me.capstone.advancedbattle.touch.PinchZoomDetector;
 import me.capstone.advancedbattle.touch.TouchDistributor;
 
 public class GameScene extends BaseScene {
+	private static ResourcesManager resourcesManager = ResourcesManager.getInstance();
+	
 	private Map map;
 	private HUD hud;
-	private Text text;
 	private Entity rectangleGroup;
+	private Sprite terrainSprite;
+	private Sprite structureSprite;
+	private Sprite pieceSprite;
 
     @Override
     public void createScene() {
@@ -35,19 +39,19 @@ public class GameScene extends BaseScene {
     }
     
     private void createBackground() {
-    	for (TMXLayer layer : getResourcesManager().getGameMap().getTMXLayers()) {
+    	for (TMXLayer layer : resourcesManager.getGameMap().getTMXLayers()) {
     		attachChild(layer);
     	}
     }
     
     private void createMap() {
-    	this.map = new Map(getResourcesManager().getGameMap().getTileColumns(), getResourcesManager().getGameMap().getTileRows());
+    	this.map = new Map(resourcesManager.getGameMap().getTileColumns(), resourcesManager.getGameMap().getTileRows());
     	Tile[][] arrayMap = map.getMap();
     	
-    	TMXLayer terrainLayer = getResourcesManager().getGameMap().getTMXLayers().get(0);
-    	TMXLayer structureLayer = getResourcesManager().getGameMap().getTMXLayers().get(1);
-    	TMXLayer pieceLayer = getResourcesManager().getGameMap().getTMXLayers().get(2);
-    	
+    	TMXLayer terrainLayer = resourcesManager.getGameMap().getTMXLayers().get(0);
+    	TMXLayer structureLayer = resourcesManager.getGameMap().getTMXLayers().get(1);
+    	TMXLayer pieceLayer = resourcesManager.getGameMap().getTMXLayers().get(2);
+    	    	
     	for (int i = 0; i < map.getColumns(); i++) {
     		for (int j = 0; j < map.getRows(); j++) {
     			arrayMap[i][j] = new Tile(terrainLayer.getTMXTile(i, j).getGlobalTileID(), structureLayer.getTMXTile(i, j).getGlobalTileID(), pieceLayer.getTMXTile(i, j).getGlobalTileID());
@@ -55,38 +59,45 @@ public class GameScene extends BaseScene {
     	}
     	
     	map.setMap(arrayMap);
-    	map.setSelected(map.getMap()[0][0]);
     }
     
     private void createHUD() {
     	this.hud = new HUD();
     	
-    	this.text = new Text(650, 10, getResourcesManager().getFont(), "(00, 00)", new TextOptions(HorizontalAlign.RIGHT), getResourcesManager().getVbom());
-    	text.setText(getText(0, 0));   	
-    	text.setScale(1.3F);
-    	//hud.attachChild(text);
-    	
     	this.rectangleGroup = new Entity(650, 240);
-    	Rectangle rectangle = new Rectangle(0, 0, 125, 215, getResourcesManager().getVbom());
+    	Rectangle rectangle = new Rectangle(0, 0, 124, 214, resourcesManager.getVbom());
     	rectangle.setColor(0.0F, 0.0F, 0.0F, 0.75F);
     	rectangleGroup.attachChild(rectangle);
-    	hud.attachChild(rectangleGroup);
     	
+    	Tile tile = map.getTile(resourcesManager.getCursorColumn(), resourcesManager.getCursorRow());
+    	this.terrainSprite = new Sprite(46, 30, resourcesManager.getGameMap().getTextureRegionFromGlobalTileID(tile.getTerrainTileID()), resourcesManager.getVbom());
+    	this.structureSprite = new Sprite(46, 30, resourcesManager.getGameMap().getTextureRegionFromGlobalTileID(tile.getStructureTileID()), resourcesManager.getVbom());
+    	this.pieceSprite = new Sprite(46, 30, resourcesManager.getGameMap().getTextureRegionFromGlobalTileID(tile.getPieceTileID()), resourcesManager.getVbom());
+    	terrainSprite.setScale(1.5F);
+    	structureSprite.setScale(1.5F);
+    	pieceSprite.setScale(1.5F);
+    	rectangleGroup.attachChild(terrainSprite);
+    	rectangleGroup.attachChild(structureSprite);
+    	rectangleGroup.attachChild(pieceSprite);
+    	
+    	hud.attachChild(rectangleGroup);
     	getResourcesManager().getCamera().setHUD(hud);
     }
     
     private void setCamera() {
-		getResourcesManager().getCamera().setBoundsEnabled(true);
-		TMXLayer layer = getResourcesManager().getGameMap().getTMXLayers().get(0);
-		getResourcesManager().getCamera().setBounds(0, 0, layer.getWidth(), layer.getHeight());
+		resourcesManager.getCamera().setBoundsEnabled(true);
+		TMXLayer layer = resourcesManager.getGameMap().getTMXLayers().get(0);
+		resourcesManager.getCamera().setBounds(0, 0, layer.getWidth(), layer.getHeight());
     }
     
     private void createTouchListeners() {
-    	MapScroller mapScroller = new MapScroller(getResourcesManager().getCamera());
-    	PinchZoomDetector zoom = new PinchZoomDetector(getResourcesManager().getCamera(), mapScroller);
+    	MapScroller mapScroller = new MapScroller(resourcesManager.getCamera());
+    	PinchZoomDetector zoom = new PinchZoomDetector(resourcesManager.getCamera(), mapScroller);
+    	CursorSelector cursor = new CursorSelector(resourcesManager.getCamera());
         TouchDistributor touchDistributor = new TouchDistributor();
         touchDistributor.addTouchListener(zoom);
         touchDistributor.addTouchListener(mapScroller);
+        touchDistributor.addTouchListener(cursor);
         setOnSceneTouchListener(touchDistributor);
     }
     
@@ -96,12 +107,12 @@ public class GameScene extends BaseScene {
 
     @Override
     public void onBackKeyPressed() {
-    	SceneManager.getInstance().loadMenuScene(getResourcesManager().getEngine());
+    	SceneManager.getInstance().loadMenuScene(resourcesManager.getEngine());
     }
     
     @Override
     public void onMenuKeyPressed() {
-    	Toast.makeText(getResourcesManager().getActivity().getApplicationContext(), "Menu button pressed.", Toast.LENGTH_SHORT).show();
+    	Toast.makeText(resourcesManager.getActivity().getApplicationContext(), "Menu button pressed.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -111,18 +122,18 @@ public class GameScene extends BaseScene {
 
     @Override
     public void disposeScene() {
-    	getResourcesManager().getCamera().setHUD(null);
-    	getResourcesManager().getCamera().setCenter(400, 240);
+    	resourcesManager.getCamera().setHUD(null);
+    	resourcesManager.getCamera().setCenter(400, 240);
 
         // TODO code responsible for disposing scene
         // removing all game scene objects.
     }
 
-	protected Map getMap() {
+	public Map getMap() {
 		return map;
 	}
 
-	protected void setMap(Map map) {
+	public void setMap(Map map) {
 		this.map = map;
 	}
 
@@ -134,19 +145,35 @@ public class GameScene extends BaseScene {
 		this.hud = hud;
 	}
 
-	public Text getText() {
-		return text;
-	}
-
-	public void setText(Text text) {
-		this.text = text;
-	}
-
 	public Entity getRectangleGroup() {
 		return rectangleGroup;
 	}
 
 	public void setRectangleGroup(Entity rectangleGroup) {
 		this.rectangleGroup = rectangleGroup;
+	}
+
+	public Sprite getTerrainSprite() {
+		return terrainSprite;
+	}
+
+	public void setTerrainSprite(Sprite terrainSprite) {
+		this.terrainSprite = terrainSprite;
+	}
+
+	public Sprite getStructureSprite() {
+		return structureSprite;
+	}
+
+	public void setStructureSprite(Sprite structureSprite) {
+		this.structureSprite = structureSprite;
+	}
+
+	public Sprite getPieceSprite() {
+		return pieceSprite;
+	}
+
+	public void setPieceSprite(Sprite pieceSprite) {
+		this.pieceSprite = pieceSprite;
 	}
 }

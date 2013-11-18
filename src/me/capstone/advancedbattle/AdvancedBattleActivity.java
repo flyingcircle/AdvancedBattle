@@ -40,8 +40,6 @@ public class AdvancedBattleActivity extends BaseGameActivity {
 	@Override
 	public EngineOptions onCreateEngineOptions() {
 		this.camera = new ZoomCamera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
-		camera.setBounds(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
-		camera.setBoundsEnabled(true);
 		
 	    EngineOptions engineOptions = new EngineOptions(true, ScreenOrientation.LANDSCAPE_FIXED, new RatioResolutionPolicy(CAMERA_WIDTH, CAMERA_HEIGHT), camera);
 	    engineOptions.getAudioOptions().setNeedsMusic(true).setNeedsSound(true);

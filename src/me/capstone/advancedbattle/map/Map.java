@@ -6,13 +6,15 @@ public class Map {
 	private Tile[][] map;
 	private int columns;
 	private int rows;
-	private Tile selected;
 	
 	public Map(int columns, int rows) {
 		this.map = new Tile[columns][rows];
 		this.columns = columns;
 		this.rows = rows;
-		this.selected = null;
+	}
+	
+	public Tile getTile(int column, int row) {
+		return map[column][row];
 	}
 
 	public Tile[][] getMap() {
@@ -38,13 +40,4 @@ public class Map {
 	public void setRows(int rows) {
 		this.rows = rows;
 	}
-
-	public Tile getSelected() {
-		return selected;
-	}
-
-	public void setSelected(Tile selected) {
-		this.selected = selected;
-	}
-
 }

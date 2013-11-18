@@ -27,7 +27,8 @@ public class TouchDistributor implements IOnSceneTouchListener {
 	public boolean onSceneTouchEvent(Scene pScene, TouchEvent pSceneTouchEvent) {
 		boolean error = false;
 		for (int i = 0; i < touchListeners.size(); i++) {
-			if (!touchListeners.get(i).onSceneTouchEvent(pScene, pSceneTouchEvent)) {
+			IOnSceneTouchListener touch = touchListeners.get(i);
+			if (!touch.onSceneTouchEvent(pScene, pSceneTouchEvent)) {
 				error = true;
 			}
 		}
