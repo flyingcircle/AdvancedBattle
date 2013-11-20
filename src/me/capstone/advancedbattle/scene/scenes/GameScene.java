@@ -2,8 +2,6 @@ package me.capstone.advancedbattle.scene.scenes;
 
 import org.andengine.extension.tmx.TMXLayer;
 
-import android.widget.Toast;
-
 import me.capstone.advancedbattle.manager.GameManager;
 import me.capstone.advancedbattle.resources.ResourcesManager;
 import me.capstone.advancedbattle.scene.BaseScene;
@@ -16,7 +14,7 @@ import me.capstone.advancedbattle.touch.TouchDistributor;
 
 public class GameScene extends BaseScene {
 	private static ResourcesManager resourcesManager = ResourcesManager.getInstance();
-
+	
     @Override
     public void createScene() {
     	createBackground();
@@ -54,12 +52,20 @@ public class GameScene extends BaseScene {
 
     @Override
     public void onBackKeyPressed() {
-    	SceneManager.getInstance().loadMenuScene(resourcesManager.getEngine());
+    	if (resourcesManager.getGameManager().hasActionMenu()) {
+    		resourcesManager.getGameManager().destroyActionMenu();
+    	} else {
+    		SceneManager.getInstance().loadMenuScene(resourcesManager.getEngine());
+    	}
     }
     
     @Override
     public void onMenuKeyPressed() {
-    	Toast.makeText(resourcesManager.getActivity().getApplicationContext(), "Menu button pressed.", Toast.LENGTH_SHORT).show();
+    	if (resourcesManager.getGameManager().hasActionMenu()) {
+    		resourcesManager.getGameManager().destroyActionMenu();
+    	} else {
+    		resourcesManager.getGameManager().createActionMenu();
+    	}
     }
 
     @Override
@@ -75,4 +81,5 @@ public class GameScene extends BaseScene {
         // TODO code responsible for disposing scene
         // removing all game scene objects.
     }
+    
 }

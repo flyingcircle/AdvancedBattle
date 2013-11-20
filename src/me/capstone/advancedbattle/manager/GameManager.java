@@ -14,6 +14,7 @@ import me.capstone.advancedbattle.resources.PieceTile;
 import me.capstone.advancedbattle.resources.ResourcesManager;
 import me.capstone.advancedbattle.resources.TerrainTile;
 import me.capstone.advancedbattle.tile.Tile;
+import me.capstone.advancedbattle.tile.piece.Piece;
 
 public class GameManager {
 	private static ResourcesManager resourcesManager = ResourcesManager.getInstance();
@@ -26,6 +27,9 @@ public class GameManager {
 	private Sprite structureSprite;
 	private Sprite pieceSprite;
 	private Text defense;
+	
+	private Entity actionMenu;
+	private boolean hasActionMenu = false;
 	
 	public GameManager() {
 		createMap();
@@ -193,6 +197,44 @@ public class GameManager {
 	    	}
 	    }
 	}
+	
+	public void handleAction() {
+		Tile tile = map.getTile(resourcesManager.getCursorColumn(), resourcesManager.getCursorRow());
+		if (tile.getPiece() != null) {
+			Piece piece = tile.getPiece();
+			// Has piece been used this turn?
+		} else {
+			// Check if it was a building. First we need to work on player object and turn.
+		}
+		createActionMenu();
+	}
+	
+	public void createActionMenu() {	
+		this.actionMenu = new Entity(0, 0);
+		
+		Rectangle backGroundRect = new Rectangle(0, 0, 800, 480, resourcesManager.getVbom());
+	    backGroundRect.setColor(1.0F, 1.0F, 1.0F, 1.5F);
+	    actionMenu.attachChild(backGroundRect);
+	    
+	    
+	    Rectangle menuRect = new Rectangle(320, 80, 160, 320, resourcesManager.getVbom());
+	    menuRect.setColor(0.0F, 0.0F, 0.0F, 0.75F);
+	    actionMenu.attachChild(menuRect);
+	    
+	    hud.attachChild(actionMenu);
+	    
+	    this.hasActionMenu = true;
+	}
+	
+	public void destroyActionMenu() {
+		hud.detachChild(actionMenu);
+		
+		actionMenu.dispose();
+		
+		this.actionMenu = null;
+		
+		this.hasActionMenu = false;
+	}
 
 	public Map getMap() {
 		return map;
@@ -256,6 +298,21 @@ public class GameManager {
 
 	public void setDefense(Text defense) {
 		this.defense = defense;
+	}
+
+	public Entity getActionMenu() {
+		return actionMenu;
+	}
+
+	public void setActionMenu(Entity actionMenu) {
+		this.actionMenu = actionMenu;
+	}
+	
+	public boolean hasActionMenu() {
+		if (hasActionMenu) {
+			return true;
+		}
+		return false;
 	}
 	    
 }

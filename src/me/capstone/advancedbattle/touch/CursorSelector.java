@@ -49,30 +49,36 @@ public class CursorSelector implements IOnSceneTouchListener, IUpdateHandler {
 				clickedX = camera.getCenterX() + (ratioX - 1/2F) * camera.getWidth();	
 				clickedY = camera.getCenterY() + (ratioY - 1/2F) * camera.getHeight();
 			}
-			
-			TMXLayer layer = resourcesManager.getGameMap().getTMXLayers().get(3);
-			
-			TMXTile cursorTile = layer.getTMXTile(resourcesManager.getCursorColumn(), resourcesManager.getCursorRow());		
-			cursorTile.setGlobalTileID(resourcesManager.getGameMap(), CursorTile.CURSOR_NULL.getId());
-			layer.setIndex(cursorTile.getTileRow() * resourcesManager.getGameMap().getTileColumns() + cursorTile.getTileColumn());
-			layer.drawWithoutChecks(cursorTile.getTextureRegion(), cursorTile.getTileX(), cursorTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
-			
-			resourcesManager.setCursorColumn((int) Math.floor(clickedX / 32));
-			resourcesManager.setCursorRow((int) Math.floor(clickedY / 32));
-			
-			TMXTile newTile = layer.getTMXTile((int) Math.floor(clickedX / 32), (int) Math.floor(clickedY / 32));		
-			newTile.setGlobalTileID(resourcesManager.getGameMap(), CursorTile.CURSOR.getId());
-			layer.setIndex(newTile.getTileRow() * resourcesManager.getGameMap().getTileColumns() + newTile.getTileColumn());
-			layer.drawWithoutChecks(newTile.getTextureRegion(), newTile.getTileX(), newTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
-			
-			layer.submit();
+			clickedX = (float) Math.floor(clickedX / 32);
+			clickedY = (float) Math.floor(clickedY / 32);
 			
 			GameManager game = resourcesManager.getGameManager();
-			game.updateHUD();
-			if (ratioX > 0.8) {
-				game.getRectangleGroup().setPosition(25, 240);
-			} else if (ratioX < 0.2) {
-				game.getRectangleGroup().setPosition(650, 240);
+			if (clickedX != resourcesManager.getCursorColumn() || clickedY != resourcesManager.getCursorRow()) {
+				TMXLayer layer = resourcesManager.getGameMap().getTMXLayers().get(3);
+				
+				TMXTile cursorTile = layer.getTMXTile(resourcesManager.getCursorColumn(), resourcesManager.getCursorRow());		
+				cursorTile.setGlobalTileID(resourcesManager.getGameMap(), CursorTile.CURSOR_NULL.getId());
+				layer.setIndex(cursorTile.getTileRow() * resourcesManager.getGameMap().getTileColumns() + cursorTile.getTileColumn());
+				layer.drawWithoutChecks(cursorTile.getTextureRegion(), cursorTile.getTileX(), cursorTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
+				
+				resourcesManager.setCursorColumn((int) clickedX);
+				resourcesManager.setCursorRow((int) clickedY);
+				
+				TMXTile newTile = layer.getTMXTile((int) clickedX, (int) clickedY);		
+				newTile.setGlobalTileID(resourcesManager.getGameMap(), CursorTile.CURSOR.getId());
+				layer.setIndex(newTile.getTileRow() * resourcesManager.getGameMap().getTileColumns() + newTile.getTileColumn());
+				layer.drawWithoutChecks(newTile.getTextureRegion(), newTile.getTileX(), newTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
+				
+				layer.submit();
+				
+				game.updateHUD();
+				if (ratioX > 0.8) {
+					game.getRectangleGroup().setPosition(25, 240);
+				} else if (ratioX < 0.2) {
+					game.getRectangleGroup().setPosition(650, 240);
+				}
+			} else {
+				game.handleAction();
 			}
 		}
 		
