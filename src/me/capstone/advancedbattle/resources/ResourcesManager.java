@@ -1,6 +1,7 @@
 package me.capstone.advancedbattle.resources;
 
 import me.capstone.advancedbattle.AdvancedBattleActivity;
+import me.capstone.advancedbattle.manager.GameManager;
 
 import org.andengine.engine.Engine;
 import org.andengine.engine.camera.ZoomCamera;
@@ -36,6 +37,7 @@ public class ResourcesManager {
 	
 	private TMXTiledMap gameMap;
 	private TiledTextureRegion playerTextureRegion;
+	private GameManager gameManager;
 	    
 	private BuildableBitmapTextureAtlas menuTextureAtlas;
 	private Font font;
@@ -195,6 +197,14 @@ public class ResourcesManager {
 
 	public void setPlayerTextureRegion(TiledTextureRegion playerTextureRegion) {
 		this.playerTextureRegion = playerTextureRegion;
+	}
+
+	public GameManager getGameManager() {
+		return gameManager;
+	}
+
+	public void setGameManager(GameManager gameManager) {
+		this.gameManager = gameManager;
 	}
 
 	public BuildableBitmapTextureAtlas getMenuTextureAtlas() {
