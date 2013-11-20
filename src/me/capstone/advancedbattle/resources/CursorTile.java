@@ -16,6 +16,10 @@ public enum CursorTile {
 		this.id = id;
 		this.name = name;
 	}
+	
+	public CursorTile get(int id) {
+		return values()[id];
+	}
 
 	public int getId() {
 		return id;

@@ -54,7 +54,7 @@ public class GameScene extends BaseScene {
     	    	
     	for (int i = 0; i < map.getColumns(); i++) {
     		for (int j = 0; j < map.getRows(); j++) {
-    			arrayMap[i][j] = new Tile(terrainLayer.getTMXTile(i, j).getGlobalTileID(), structureLayer.getTMXTile(i, j).getGlobalTileID(), pieceLayer.getTMXTile(i, j).getGlobalTileID());
+    			arrayMap[i][j] = new Tile(i, j, terrainLayer.getTMXTile(i, j).getGlobalTileID(), structureLayer.getTMXTile(i, j).getGlobalTileID(), pieceLayer.getTMXTile(i, j).getGlobalTileID());
     		}
     	}
     	

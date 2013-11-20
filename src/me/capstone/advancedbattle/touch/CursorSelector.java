@@ -1,8 +1,8 @@
 package me.capstone.advancedbattle.touch;
 
 import me.capstone.advancedbattle.AdvancedBattleActivity;
+import me.capstone.advancedbattle.resources.CursorTile;
 import me.capstone.advancedbattle.resources.ResourcesManager;
-import me.capstone.advancedbattle.resources.TerrainTile;
 import me.capstone.advancedbattle.scene.BaseScene;
 import me.capstone.advancedbattle.scene.SceneManager;
 import me.capstone.advancedbattle.scene.SceneManager.SceneType;
@@ -58,7 +58,7 @@ public class CursorSelector implements IOnSceneTouchListener, IUpdateHandler {
 			TMXLayer layer = resourcesManager.getGameMap().getTMXLayers().get(3);
 			
 			TMXTile cursorTile = layer.getTMXTile(resourcesManager.getCursorColumn(), resourcesManager.getCursorRow());		
-			cursorTile.setGlobalTileID(resourcesManager.getGameMap(), TerrainTile.CURSOR_NULL.getId());
+			cursorTile.setGlobalTileID(resourcesManager.getGameMap(), CursorTile.CURSOR_NULL.getId());
 			layer.setIndex(cursorTile.getTileRow() * resourcesManager.getGameMap().getTileColumns() + cursorTile.getTileColumn());
 			layer.drawWithoutChecks(cursorTile.getTextureRegion(), cursorTile.getTileX(), cursorTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
 			
@@ -66,7 +66,7 @@ public class CursorSelector implements IOnSceneTouchListener, IUpdateHandler {
 			resourcesManager.setCursorRow((int) Math.floor(clickedY / 32));
 			
 			TMXTile newTile = layer.getTMXTile((int) Math.floor(clickedX / 32), (int) Math.floor(clickedY / 32));		
-			newTile.setGlobalTileID(resourcesManager.getGameMap(), TerrainTile.CURSOR.getId());
+			newTile.setGlobalTileID(resourcesManager.getGameMap(), CursorTile.CURSOR.getId());
 			layer.setIndex(newTile.getTileRow() * resourcesManager.getGameMap().getTileColumns() + newTile.getTileColumn());
 			layer.drawWithoutChecks(newTile.getTextureRegion(), newTile.getTileX(), newTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
 			

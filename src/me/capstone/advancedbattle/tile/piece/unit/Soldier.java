@@ -1,9 +1,7 @@
 package me.capstone.advancedbattle.tile.piece.unit;
 
-import org.andengine.opengl.texture.region.ITextureRegion;
-
+import me.capstone.advancedbattle.resources.PieceTile;
 import me.capstone.advancedbattle.tile.piece.Piece;
-import me.capstone.advancedbattle.player.Player;
 
 //Everything that all soldiers should have in common.
 public abstract class Soldier extends Piece {
@@ -11,8 +9,8 @@ public abstract class Soldier extends Piece {
 	private final int MAX_BUILDING_HEALTH;
 	private int currentBuildingHealth;
 	
-	protected Soldier(final int id, final int column, final int row, final int width, final int height, final ITextureRegion region, int maxAmmo, int maxFuel, int movement, int vision, Player owner) {
-		super(id, column, row, width, height, region, maxAmmo, maxFuel, movement, vision, true, owner);
+	protected Soldier(final int column, final int row, PieceTile piece) {
+		super(column, row, piece, true);
 		this.MAX_BUILDING_HEALTH = 10;
 		this.currentBuildingHealth = MAX_BUILDING_HEALTH;
 	}
