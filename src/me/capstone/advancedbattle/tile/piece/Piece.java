@@ -30,11 +30,11 @@ public class Piece {
 			this.health = health;
 	}
 	
-	public Tile getTile() {
+	protected Tile getTile() {
 		return tile;
 	}
 
-	public void setTile(Tile tile) {
+	protected void setTile(Tile tile) {
 		this.tile = tile;
 	}
 
