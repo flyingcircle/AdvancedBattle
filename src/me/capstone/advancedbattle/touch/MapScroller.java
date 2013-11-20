@@ -81,22 +81,6 @@ public class MapScroller implements IOnSceneTouchListener, IUpdateHandler {
 		setTouchDown(false);
 	}
 
-	public ResourcesManager getResourcesManager() {
-		return resourcesManager;
-	}
-
-	public void setResourcesManager(ResourcesManager resourcesManager) {
-		this.resourcesManager = resourcesManager;
-	}
-
-	public ZoomCamera getCamera() {
-		return camera;
-	}
-
-	public void setCamera(ZoomCamera camera) {
-		this.camera = camera;
-	}
-
 	public boolean isTouchDown() {
 		return touchDown;
 	}
