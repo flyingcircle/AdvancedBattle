@@ -158,10 +158,6 @@ public enum TerrainTile {
 		this.landerMovement = landerMovement;
 		this.airMovement = airMovement;
 	}
-	
-	public TerrainTile get(int id) {
-		return values()[id];
-	}
 
 	public int getId() {
 		return id;

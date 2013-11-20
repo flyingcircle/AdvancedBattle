@@ -11,12 +11,12 @@ public enum PieceTile {
 	RED_APC(103, "APC", 5000, 6, 1),
 	RED_ARTILLERY(104, "Artillery", 6000, 5, 1),
 	RED_ROCKET(105, "Rocket", 15000, 5, 1),
-	RED_ANTI_AIR_TANK(106, "AA Tank", 8000, 6, 2),
-	RED_ANTI_AIR_MISSILE(107, "AA Missile", 12000, 4, 5),
+	RED_ANTI_AIR_TANK(106, "Anti-Air", 8000, 6, 2),
+	RED_ANTI_AIR_MISSILE(107, "Missile", 12000, 4, 5),
 	RED_FIGHTER(108, "Fighter", 20000, 9, 2),
 	RED_BOMBER(109, "Bomber", 22000, 7, 2),
-	RED_BATTLE_COPTER(110, "Battle Copter", 9000, 6, 3),
-	RED_TRANSPORT_COPTER(111, "Trans. Copter", 5000, 6, 2),
+	RED_BATTLE_COPTER(110, "Copter", 9000, 6, 3),
+	RED_TRANSPORT_COPTER(111, "Transport", 5000, 6, 2),
 	RED_BATTLESHIP(112, "Battleship", 28000, 5, 2),
 	RED_CRUISER(113, "Cruiser", 18000, 6, 3),
 	RED_LANDER(114, "Lander", 12000, 6, 1),
@@ -31,12 +31,12 @@ public enum PieceTile {
 	BLUE_APC(121, "APC", 5000, 6, 1),
 	BLUE_ARTILLERY(122, "Artillery", 6000, 5, 1),
 	BLUE_ROCKET(123, "Rocket", 15000, 5, 1),
-	BLUE_ANTI_AIR_TANK(124, "AA Tank", 8000, 6, 2),
-	BLUE_ANTI_AIR_MISSILE(125, "AA Missile", 12000, 4, 5),
+	BLUE_ANTI_AIR_TANK(124, "Anti-Air", 8000, 6, 2),
+	BLUE_ANTI_AIR_MISSILE(125, "Missile", 12000, 4, 5),
 	BLUE_FIGHTER(126, "Fighter", 20000, 9, 2),
 	BLUE_BOMBER(127, "Bomber", 22000, 7, 2),
-	BLUE_BATTLE_COPTER(128, "Battle Copter", 9000, 6, 3),
-	BLUE_TRANSPORT_COPTER(129, "Trans. Copter", 5000, 6, 2),
+	BLUE_BATTLE_COPTER(128, "Copter", 9000, 6, 3),
+	BLUE_TRANSPORT_COPTER(129, "Transport", 5000, 6, 2),
 	BLUE_BATTLESHIP(130, "Battleship", 28000, 5, 2),
 	BLUE_CRUISER(131, "Cruiser", 18000, 6, 3),
 	BLUE_LANDER(132, "Lander", 12000, 6, 1),
@@ -51,12 +51,12 @@ public enum PieceTile {
 	GREEN_APC(139, "APC", 5000, 6, 1),
 	GREEN_ARTILLERY(140, "Artillery", 6000, 5, 1),
 	GREEN_ROCKET(141, "Rocket", 15000, 5, 1),
-	GREEN_ANTI_AIR_TANK(142, "AA Tank", 8000, 6, 2),
-	GREEN_ANTI_AIR_MISSILE(143, "AA Missile", 12000, 4, 5),
+	GREEN_ANTI_AIR_TANK(142, "Anti-Air", 8000, 6, 2),
+	GREEN_ANTI_AIR_MISSILE(143, "Missile", 12000, 4, 5),
 	GREEN_FIGHTER(144, "Fighter", 20000, 9, 2),
 	GREEN_BOMBER(145, "Bomber", 22000, 7, 2),
-	GREEN_BATTLE_COPTER(146, "Battle Copter", 9000, 6, 3),
-	GREEN_TRANSPORT_COPTER(147, "Trans. Copter", 5000, 6, 2),
+	GREEN_BATTLE_COPTER(146, "Copter", 9000, 6, 3),
+	GREEN_TRANSPORT_COPTER(147, "Transport", 5000, 6, 2),
 	GREEN_BATTLESHIP(148, "Battleship", 28000, 5, 2),
 	GREEN_CRUISER(149, "Cruiser", 18000, 6, 3),
 	GREEN_LANDER(150, "Lander", 12000, 6, 1),
@@ -71,12 +71,12 @@ public enum PieceTile {
 	YELLOW_APC(157, "APC", 5000, 6, 1),
 	YELLOW_ARTILLERY(158, "Artillery", 6000, 5, 1),
 	YELLOW_ROCKET(159, "Rocket", 15000, 5, 1),
-	YELLOW_ANTI_AIR_TANK(160, "AA Tank", 8000, 6, 2),
-	YELLOW_ANTI_AIR_MISSILE(161, "AA Missile", 12000, 4, 5),
+	YELLOW_ANTI_AIR_TANK(160, "Anti-Air", 8000, 6, 2),
+	YELLOW_ANTI_AIR_MISSILE(161, "Missile", 12000, 4, 5),
 	YELLOW_FIGHTER(162, "Fighter", 20000, 9, 2),
 	YELLOW_BOMBER(163, "Bomber", 22000, 7, 2),
-	YELLOW_BATTLE_COPTER(164, "Battle Copter", 9000, 6, 3),
-	YELLOW_TRANSPORT_COPTER(165, "Trans. Copter", 5000, 6, 2),
+	YELLOW_BATTLE_COPTER(164, "Copter", 9000, 6, 3),
+	YELLOW_TRANSPORT_COPTER(165, "Transport", 5000, 6, 2),
 	YELLOW_BATTLESHIP(166, "Battleship", 28000, 5, 2),
 	YELLOW_CRUISER(167, "Cruiser", 18000, 6, 3),
 	YELLOW_LANDER(168, "Lander", 12000, 6, 1),
@@ -98,10 +98,6 @@ public enum PieceTile {
 		this.cost = cost;
 		this.movement = movement;
 		this.vision = vision;
-	}
-	
-	public static PieceTile get(int id) {
-		return values()[id];
 	}
 
 	public int getId() {

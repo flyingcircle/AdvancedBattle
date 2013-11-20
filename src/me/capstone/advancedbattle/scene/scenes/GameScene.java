@@ -4,12 +4,17 @@ import org.andengine.engine.camera.hud.HUD;
 import org.andengine.entity.Entity;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.sprite.Sprite;
+import org.andengine.entity.text.Text;
+import org.andengine.entity.text.TextOptions;
 import org.andengine.extension.tmx.TMXLayer;
+import org.andengine.util.HorizontalAlign;
 
 import android.widget.Toast;
 
 import me.capstone.advancedbattle.map.Map;
+import me.capstone.advancedbattle.resources.PieceTile;
 import me.capstone.advancedbattle.resources.ResourcesManager;
+import me.capstone.advancedbattle.resources.TerrainTile;
 import me.capstone.advancedbattle.scene.BaseScene;
 import me.capstone.advancedbattle.scene.SceneManager;
 import me.capstone.advancedbattle.scene.SceneManager.SceneType;
@@ -25,9 +30,11 @@ public class GameScene extends BaseScene {
 	private Map map;
 	private HUD hud;
 	private Entity rectangleGroup;
+	private Text tileName;
 	private Sprite terrainSprite;
 	private Sprite structureSprite;
 	private Sprite pieceSprite;
+	private Text defense;
 
     @Override
     public void createScene() {
@@ -70,15 +77,68 @@ public class GameScene extends BaseScene {
     	rectangleGroup.attachChild(rectangle);
     	
     	Tile tile = map.getTile(resourcesManager.getCursorColumn(), resourcesManager.getCursorRow());
-    	this.terrainSprite = new Sprite(46, 30, resourcesManager.getGameMap().getTextureRegionFromGlobalTileID(tile.getTerrainTileID()), resourcesManager.getVbom());
-    	this.structureSprite = new Sprite(46, 30, resourcesManager.getGameMap().getTextureRegionFromGlobalTileID(tile.getStructureTileID()), resourcesManager.getVbom());
-    	this.pieceSprite = new Sprite(46, 30, resourcesManager.getGameMap().getTextureRegionFromGlobalTileID(tile.getPieceTileID()), resourcesManager.getVbom());
-    	terrainSprite.setScale(1.5F);
-    	structureSprite.setScale(1.5F);
-    	pieceSprite.setScale(1.5F);
+    	
+    	this.tileName = new Text(0, 0, resourcesManager.getFont(), "abcdefghijklmnopqrstuvwxyz", new TextOptions(HorizontalAlign.CENTER), resourcesManager.getVbom());
+    	if (tile.getPieceTileID() != PieceTile.PIECE_NULL.getId()) {
+    		for (PieceTile piece : PieceTile.values()) {
+    			if (piece.getId() == tile.getPieceTileID()) {
+    				tileName.setText(piece.getName());
+    				break;
+    			}
+    		}
+    	} else {
+    		if (tile.getStructureTileID() != TerrainTile.STRUCTURE_NULL.getId() && tile.getStructureTileID() != TerrainTile.HQ_BLUE_TOP.getId() && tile.getStructureTileID() != TerrainTile.HQ_RED_TOP.getId()) {
+    			for (TerrainTile terrain : TerrainTile.values()) {
+    				if (terrain.getId() == tile.getStructureTileID()) {
+    					tileName.setText(terrain.getName());
+    					break;
+    				}
+    			}
+    		} else {
+    			for (TerrainTile terrain : TerrainTile.values()) {
+    				if (terrain.getId() == tile.getTerrainTileID()) {
+    					tileName.setText(terrain.getName());
+    					break;
+    				}
+    			}
+    		}
+    	}
+    	tileName.setScale(0.3F);
+    	tileName.setPosition(62 - tileName.getWidth() / 2, 0);
+    	rectangleGroup.attachChild(tileName);
+    	
+    	this.terrainSprite = new Sprite(0, 0, resourcesManager.getGameMap().getTextureRegionFromGlobalTileID(tile.getTerrainTileID()), resourcesManager.getVbom());
+    	this.structureSprite = new Sprite(0, 0, resourcesManager.getGameMap().getTextureRegionFromGlobalTileID(tile.getStructureTileID()), resourcesManager.getVbom());
+    	this.pieceSprite = new Sprite(0, 0, resourcesManager.getGameMap().getTextureRegionFromGlobalTileID(tile.getPieceTileID()), resourcesManager.getVbom());
+    	terrainSprite.setScale(1.25F);
+    	terrainSprite.setPosition(62 - terrainSprite.getWidth() / 2, 40);
+    	structureSprite.setScale(1.25F);
+    	structureSprite.setPosition(62 - structureSprite.getWidth() / 2, 40);
+    	pieceSprite.setScale(1.25F);
+    	pieceSprite.setPosition(62 - pieceSprite.getWidth() / 2, 40);
     	rectangleGroup.attachChild(terrainSprite);
     	rectangleGroup.attachChild(structureSprite);
     	rectangleGroup.attachChild(pieceSprite);
+    	
+    	this.defense = new Text(0, 0, resourcesManager.getFont(), "abcdefghijklmnopqrstuvwxyz", new TextOptions(HorizontalAlign.CENTER), resourcesManager.getVbom());
+    	if (tile.getStructureTileID() != TerrainTile.STRUCTURE_NULL.getId() && tile.getStructureTileID() != TerrainTile.HQ_BLUE_TOP.getId() && tile.getStructureTileID() != TerrainTile.HQ_RED_TOP.getId()) {
+    		for (TerrainTile terrain : TerrainTile.values()) {
+    			if (terrain.getId() == tile.getStructureTileID()) {
+    				defense.setText("Def: " + terrain.getDefense());
+    				break;
+    			}
+    		}
+    	} else {
+    		for (TerrainTile terrain : TerrainTile.values()) {
+    			if (terrain.getId() == tile.getTerrainTileID()) {
+    				defense.setText("Def: " + terrain.getDefense());
+    				break;
+    			}
+    		}
+    	}
+    	defense.setScale(0.25F);
+    	defense.setPosition(62 - defense.getWidth() / 2, 70);
+    	rectangleGroup.attachChild(defense);
     	
     	hud.attachChild(rectangleGroup);
     	getResourcesManager().getCamera().setHUD(hud);
@@ -153,6 +213,14 @@ public class GameScene extends BaseScene {
 		this.rectangleGroup = rectangleGroup;
 	}
 
+	public Text getTileName() {
+		return tileName;
+	}
+
+	public void setTileName(Text tileName) {
+		this.tileName = tileName;
+	}
+
 	public Sprite getTerrainSprite() {
 		return terrainSprite;
 	}
@@ -175,5 +243,13 @@ public class GameScene extends BaseScene {
 
 	public void setPieceSprite(Sprite pieceSprite) {
 		this.pieceSprite = pieceSprite;
+	}
+
+	public Text getDefense() {
+		return defense;
+	}
+
+	public void setDefense(Text defense) {
+		this.defense = defense;
 	}
 }

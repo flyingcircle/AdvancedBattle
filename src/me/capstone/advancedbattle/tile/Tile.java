@@ -71,9 +71,15 @@ public class Tile {
 	
 	// TODO : More pieces later
 	public Piece createPieceByID(int id) {
-		if (id == 98 || id == 116 || id == 134 || id == 152) {
-			return new Infantry(this, PieceTile.get(id));
-		} else if (id == 170){
+		if (id == 98) {
+			return new Infantry(this, PieceTile.RED_INFANTRY);
+		} else if (id == 116) {
+			return new Infantry(this, PieceTile.BLUE_INFANTRY);
+		} else if (id == 134) {
+			return new Infantry(this, PieceTile.GREEN_INFANTRY);
+		} else if (id == 152) {
+			return new Infantry(this, PieceTile.YELLOW_INFANTRY);
+		} else if (id == 170) {
 			return null;
 		} else {
 			// Throw an illegal id error
