@@ -1,6 +1,7 @@
 package me.capstone.advancedbattle.tile.piece.unit;
 
 import me.capstone.advancedbattle.resources.PieceTile;
+import me.capstone.advancedbattle.tile.Tile;
 import me.capstone.advancedbattle.tile.piece.Piece;
 
 //Everything that all soldiers should have in common.
@@ -9,8 +10,8 @@ public abstract class Soldier extends Piece {
 	private final int MAX_BUILDING_HEALTH;
 	private int currentBuildingHealth;
 	
-	protected Soldier(final int column, final int row, PieceTile piece) {
-		super(column, row, piece, true);
+	protected Soldier(Tile tile, PieceTile piece) {
+		super(tile, piece, true);
 		this.MAX_BUILDING_HEALTH = 10;
 		this.currentBuildingHealth = MAX_BUILDING_HEALTH;
 	}

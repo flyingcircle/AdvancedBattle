@@ -72,7 +72,7 @@ public class Tile {
 	// TODO : More pieces later
 	public Piece createPieceByID(int id) {
 		if (id == 98 || id == 116 || id == 134 || id == 152) {
-			return new Infantry(column, row, PieceTile.get(id));
+			return new Infantry(this, PieceTile.get(id));
 		} else if (id == 170){
 			return null;
 		} else {
