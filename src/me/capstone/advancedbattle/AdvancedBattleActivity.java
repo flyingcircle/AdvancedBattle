@@ -63,6 +63,7 @@ public class AdvancedBattleActivity extends BaseGameActivity {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {  
 	    if (keyCode == KeyEvent.KEYCODE_BACK) {
 	    	camera.setZoomFactor(1);
+	    	camera.setCenter(400, 240);
 	        SceneManager.getInstance().getCurrentScene().onBackKeyPressed();
 	        return true;
 	    } else if (keyCode == KeyEvent.KEYCODE_MENU) {
@@ -79,7 +80,7 @@ public class AdvancedBattleActivity extends BaseGameActivity {
 				public void onTimePassed(final TimerHandler pTimerHandler) 
 	            {
 	                getEngine().unregisterUpdateHandler(pTimerHandler);
-	                SceneManager.getInstance().createMenuScene();
+	                SceneManager.getInstance().loadMenuScene(getEngine());
 	            }
 	    }));
 	    pOnPopulateSceneCallback.onPopulateSceneFinished();

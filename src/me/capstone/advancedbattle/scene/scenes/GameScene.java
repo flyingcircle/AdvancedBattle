@@ -13,10 +13,13 @@ import me.capstone.advancedbattle.touch.PinchZoomDetector;
 import me.capstone.advancedbattle.touch.TouchDistributor;
 
 public class GameScene extends BaseScene {
-	private static ResourcesManager resourcesManager = ResourcesManager.getInstance();
+	private ResourcesManager resourcesManager;
+	
+	private TouchDistributor touchDistributor;
 	
     @Override
     public void createScene() {
+    	this.resourcesManager = ResourcesManager.getInstance();
     	createBackground();
     	setCamera();
     	createTouchListeners();
@@ -31,15 +34,14 @@ public class GameScene extends BaseScene {
     
     private void setCamera() {
 		resourcesManager.getCamera().setBoundsEnabled(true);
-		TMXLayer layer = resourcesManager.getGameMap().getTMXLayers().get(0);
-		resourcesManager.getCamera().setBounds(0, 0, layer.getWidth(), layer.getHeight());
+		resourcesManager.getCamera().setBounds(0, 0, 800, 480);
     }
     
     private void createTouchListeners() {
     	MapScroller mapScroller = new MapScroller(resourcesManager.getCamera());
     	PinchZoomDetector zoom = new PinchZoomDetector(resourcesManager.getCamera(), mapScroller);
     	CursorSelector cursor = new CursorSelector(resourcesManager.getCamera());
-        TouchDistributor touchDistributor = new TouchDistributor();
+        this.touchDistributor = new TouchDistributor();
         touchDistributor.addTouchListener(zoom);
         touchDistributor.addTouchListener(mapScroller);
         touchDistributor.addTouchListener(cursor);
@@ -76,10 +78,15 @@ public class GameScene extends BaseScene {
     @Override
     public void disposeScene() {
     	resourcesManager.getCamera().setHUD(null);
+    	resourcesManager.getCamera().setBoundsEnabled(false);
     	resourcesManager.getCamera().setCenter(400, 240);
-
-        // TODO code responsible for disposing scene
-        // removing all game scene objects.
+    	
+    	touchDistributor.removeAllTouchListeners();
+    	
+    	resourcesManager.unloadGameResources();
+    	
+    	detachSelf();
+    	dispose();
     }
     
 }

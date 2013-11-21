@@ -6,15 +6,18 @@ import org.andengine.entity.text.TextOptions;
 import org.andengine.util.HorizontalAlign;
 import org.andengine.util.color.Color;
 
+import me.capstone.advancedbattle.resources.ResourcesManager;
 import me.capstone.advancedbattle.scene.BaseScene;
 import me.capstone.advancedbattle.scene.SceneManager.SceneType;
 
 public class LoadingScene extends BaseScene {
+	private ResourcesManager resourcesManager;
 	
     @Override
     public void createScene() {
+    	this.resourcesManager = ResourcesManager.getInstance();
         setBackground(new Background(Color.WHITE));
-        Text text = new Text(0, 0, getResourcesManager().getFont(), "Loading...", new TextOptions(HorizontalAlign.CENTER), getResourcesManager().getVbom());
+        Text text = new Text(0, 0, resourcesManager.getFont(), "Loading...", new TextOptions(HorizontalAlign.CENTER), resourcesManager.getVbom());
         text.setScale(1.5F);
         text.setPosition(400 - text.getWidth() / 2, 240 - text.getHeight() / 2);
         attachChild(text);
@@ -37,6 +40,7 @@ public class LoadingScene extends BaseScene {
 
     @Override
     public void disposeScene() {
-
+    	detachSelf();
+    	dispose();
     }
 }

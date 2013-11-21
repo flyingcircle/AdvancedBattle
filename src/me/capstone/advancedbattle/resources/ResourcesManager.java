@@ -1,5 +1,8 @@
 package me.capstone.advancedbattle.resources;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.capstone.advancedbattle.AdvancedBattleActivity;
 import me.capstone.advancedbattle.manager.GameManager;
 
@@ -14,11 +17,8 @@ import org.andengine.opengl.texture.ITexture;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
-import org.andengine.opengl.texture.atlas.bitmap.BuildableBitmapTextureAtlas;
-import org.andengine.opengl.texture.atlas.bitmap.source.IBitmapTextureAtlasSource;
-import org.andengine.opengl.texture.atlas.buildable.builder.BlackPawnTextureAtlasBuilder;
-import org.andengine.opengl.texture.atlas.buildable.builder.ITextureAtlasBuilder.TextureAtlasBuilderException;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.debug.Debug;
@@ -28,107 +28,218 @@ import android.graphics.Color;
 public class ResourcesManager {
 	private static ResourcesManager instance = new ResourcesManager();
 	
-	private ITextureRegion splashRegion;
+	// Splash scene
 	private BitmapTextureAtlas splashTextureAtlas;
+	private ITextureRegion splashRegion;
 	
+	// Menu scene
+	private BitmapTextureAtlas menuTextureAtlas;
 	private ITextureRegion menuBackgroundRegion;
 	private ITextureRegion playRegion;
 	private ITextureRegion optionsRegion;
 	
-	private TMXTiledMap gameMap;
+	// Level selector scene
+	private static int LEVEL_ITEMS = 2;
+	
+	private BitmapTextureAtlas backgroundTextureAtlas;
+	private TextureRegion backgroundTextureRegion;
+	
+	private BitmapTextureAtlas titleTextureAtlas;
+	private TextureRegion titleTextureRegion;
+	
+	private BitmapTextureAtlas levelTextureAtlas;
+	private TextureRegion menuLeftTextureRegion;
+	private TextureRegion menuRightTextureRegion;
+	
+	private List<BitmapTextureAtlas> levels = new ArrayList<BitmapTextureAtlas>();
+	private List<TextureRegion> columns = new ArrayList<TextureRegion>();
+	
+	// Game scene
 	private TiledTextureRegion playerTextureRegion;
+	
+	private TMXTiledMap gameMap;
+	
 	private GameManager gameManager;
-	    
-	private BuildableBitmapTextureAtlas menuTextureAtlas;
+	
+	private int cursorRow = 0;
+    private int cursorColumn = 0;
+	
+	// Font
 	private Font font;
 	    
+	// Attributes
     private Engine engine;
     private AdvancedBattleActivity activity;
     private ZoomCamera camera;
     private VertexBufferObjectManager vbom;
-    
-    private int cursorRow = 0;
-    private int cursorColumn= 0;
 
+    public void loadSplashResources() {
+    	loadSplashGraphics();
+    	loadFonts();
+    }
+    
     public void loadMenuResources() {
         loadMenuGraphics();
         loadMenuAudio();
-        loadMenuFonts();
     }
     
-    public void loadGameResources() {
-        loadGameGraphics();
-        loadGameFonts();
+    public void loadLevelResources() {
+    	loadLevelGraphics();
+    	loadLevelAudio();
+    }
+    
+    public void loadGameResources(int id) {
+    	this.cursorColumn = 0;
+    	this.cursorRow = 0;
+        loadGameGraphics(id);
         loadGameAudio();
     }
     
-    private void loadMenuGraphics() {
+    public void unloadSplashResources() {
+    	unloadSplashGraphics();
+    }
+    
+    public void unloadMenuResources() {
+    	unloadMenuGraphics();
+    	unloadMenuAudio();
+    }
+    
+    public void unloadLevelResources() {
+    	unloadLevelGraphics();
+    	unloadLevelAudio();
+    }
+    
+    public void unloadGameResources() {
+    	this.gameManager = null;
+    	unloadGameGraphics();
+    	unloadGameAudio();
+    }
+    
+    public void createSplashGraphics() {
+    	BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/splash/");
+    	
+    	this.splashTextureAtlas = new BitmapTextureAtlas(getActivity().getTextureManager(), 256, 256, TextureOptions.BILINEAR);
+    	this.splashRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(getSplashTextureAtlas(), getActivity(), "splash.png", 0, 0);
+    }
+    
+    private void loadSplashGraphics() {
+    	splashTextureAtlas.load();
+    }
+    
+    private void unloadSplashGraphics() {
+    	splashTextureAtlas.unload();
+    }
+    
+    public void createMenuGraphics() {
     	BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/menu/");
-    	setMenuTextureAtlas(new BuildableBitmapTextureAtlas(getActivity().getTextureManager(), 1024, 1024, TextureOptions.BILINEAR));
-    	setMenuBackgroundRegion(BitmapTextureAtlasTextureRegionFactory.createFromAsset(getMenuTextureAtlas(), getActivity(), "menuBackground2.png"));
-    	setPlayRegion(BitmapTextureAtlasTextureRegionFactory.createFromAsset(getMenuTextureAtlas(), getActivity(), "play.png"));
-    	setOptionsRegion(BitmapTextureAtlasTextureRegionFactory.createFromAsset(getMenuTextureAtlas(), getActivity(), "options.png"));
-    	       
-    	try {
-    	    getMenuTextureAtlas().build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));
-    	    getMenuTextureAtlas().load();
-    	} 
-    	catch (final TextureAtlasBuilderException e) {
-    	        Debug.e(e);
-    	}
+    	
+    	this.menuTextureAtlas = new BitmapTextureAtlas(getActivity().getTextureManager(), 1024, 1024, TextureOptions.BILINEAR);
+    	this.menuBackgroundRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, getActivity(), "menuBackground.png", 0, 0);
+    	this.playRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, getActivity(), "play.png", 200, 140);
+    	this.optionsRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, getActivity(), "options.png", 200, 240);    	       
     }
     
-    private void loadMenuFonts() {
-        FontFactory.setAssetBasePath("font/");
-        final ITexture mainFontTexture = new BitmapTextureAtlas(getActivity().getTextureManager(), 1024, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-
-        this.font = FontFactory.createStrokeFromAsset(getActivity().getFontManager(), mainFontTexture, getActivity().getAssets(), "font.ttf", 50, true, Color.WHITE, 2, Color.BLACK);
-        getFont().load();
+    private void loadMenuGraphics() {
+    	menuTextureAtlas.load();
     }
     
-    public void unloadMenuTextures() {
-        getMenuTextureAtlas().unload();
-    }
-        
-    public void loadMenuTextures() {
-        getMenuTextureAtlas().load();
+    private void unloadMenuGraphics() {
+    	menuTextureAtlas.unload();
     }
     
     private void loadMenuAudio() {
         // TODO : Audio
     }
+    
+    private void unloadMenuAudio() {
+    	// TODO : Audio
+    }
+    
+    public void createLevelGraphics() {
+    	BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/level/");
+    	
+    	this.backgroundTextureAtlas = new BitmapTextureAtlas(getActivity().getTextureManager(), 1024, 1024, TextureOptions.BILINEAR);
+    	this.backgroundTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(backgroundTextureAtlas, getActivity(), "levelBackground.png", 0, 0);
+    	
+    	// TODO : Title stuff
+    	    	
+    	for (int i = 0; i < LEVEL_ITEMS; i++) {
+    		BitmapTextureAtlas levelAtlas = new BitmapTextureAtlas(getActivity().getTextureManager(), 1024, 1024, TextureOptions.BILINEAR);
+    		TextureRegion texture = BitmapTextureAtlasTextureRegionFactory.createFromAsset(levelAtlas, getActivity(), "level" + i + ".png", 0, 0);
+    		
+    		levels.add(levelAtlas);
+    		columns.add(texture);
+    	}
+    	
+    	this.levelTextureAtlas = new BitmapTextureAtlas(getActivity().getTextureManager(), 1024, 1024, TextureOptions.BILINEAR);
+    	this.menuLeftTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(levelTextureAtlas, getActivity(), "level_left.png", 0, 0);
+    	this.menuRightTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(levelTextureAtlas, getActivity(), "level_right.png", 672, 0);
+    }
+    
+    private void loadLevelGraphics() {
+    	backgroundTextureAtlas.load();
+    	levelTextureAtlas.load();
+    	
+    	for (int i = 0; i < levels.size(); i++) {	
+    		levels.get(i).load();
+    	}
+    }
+    
+    private void unloadLevelGraphics() {
+    	backgroundTextureAtlas.unload();
+    	levelTextureAtlas.unload();
+    	
+    	for (int i = 0; i < levels.size(); i++) {	
+    		levels.get(i).unload();
+    	}
+    }
+    
+    private void loadLevelAudio() {
+    	// TODO : Audio
+    }
+    
+    private void unloadLevelAudio() {
+    	// TODO : Audio
+    }
 
-    private void loadGameGraphics() {
+    private void loadGameGraphics(int id) {
     	try {
-    		final TMXLoader tmxLoader = new TMXLoader(getActivity().getAssets(), getEngine().getTextureManager(), getEngine().getVertexBufferObjectManager());
-    		this.gameMap = tmxLoader.loadFromAsset("tmx/Map.tmx");
+    		final TMXLoader tmxLoader = new TMXLoader(getActivity().getAssets(), getEngine().getTextureManager(), getVbom());
+    		if (id == 0) {
+    			this.gameMap = tmxLoader.loadFromAsset("tmx/Canal.tmx");
+    		} else if (id == 1) {
+    			this.gameMap = tmxLoader.loadFromAsset("tmx/Islands.tmx");
+    		}
     	} catch(final TMXLoadException tmxle) {
     		Debug.e(tmxle);
     	}
     }
     
-    private void loadGameFonts() {
-        // TODO : Are there any game fonts? Probably?
+    private void unloadGameGraphics() {
+    	this.gameMap = null;
     }
     
     private void loadGameAudio() {
     	// TODO : Audio
     }
     
-    public void loadSplashScreen() {
-    	BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
-    	setSplashTextureAtlas(new BitmapTextureAtlas(getActivity().getTextureManager(), 256, 256, TextureOptions.BILINEAR));
-    	setSplashRegion(BitmapTextureAtlasTextureRegionFactory.createFromAsset(getSplashTextureAtlas(), getActivity(), "splash.png", 0, 0));
-    	getSplashTextureAtlas().load();
+    private void unloadGameAudio() {
+    	// TODO : Audio
     }
     
-    public void unloadSplashScreen() {
-    	getSplashTextureAtlas().unload();
-    	setSplashRegion(null);
+    public void createFonts() {
+        FontFactory.setAssetBasePath("font/");
+        
+        final ITexture mainFontTexture = new BitmapTextureAtlas(getActivity().getTextureManager(), 1024, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        this.font = FontFactory.createStrokeFromAsset(getActivity().getFontManager(), mainFontTexture, getActivity().getAssets(), "font.ttf", 50, true, Color.WHITE, 2, Color.BLACK);
     }
     
-    public void unloadGameTextures() {
-    	// TODO : Are there any game textures?
+    private void loadFonts() {
+    	font.load();
+    }
+    
+    private void unloadFonts() {
+    	font.unload();
     }
     
     public static void prepareManager(Engine engine, AdvancedBattleActivity activity, ZoomCamera camera, VertexBufferObjectManager vbom) {
@@ -137,11 +248,18 @@ public class ResourcesManager {
         getInstance().setCamera(camera);
         getInstance().setVbom(vbom);
     }
-    
-    public static ResourcesManager getInstance()
-    {
-        return instance;
-    }
+
+	public static ResourcesManager getInstance() {
+		return instance;
+	}
+
+	public BitmapTextureAtlas getSplashTextureAtlas() {
+		return splashTextureAtlas;
+	}
+
+	public void setSplashTextureAtlas(BitmapTextureAtlas splashTextureAtlas) {
+		this.splashTextureAtlas = splashTextureAtlas;
+	}
 
 	public ITextureRegion getSplashRegion() {
 		return splashRegion;
@@ -151,12 +269,12 @@ public class ResourcesManager {
 		this.splashRegion = splashRegion;
 	}
 
-	public BitmapTextureAtlas getSplashTextureAtlas() {
-		return splashTextureAtlas;
+	public BitmapTextureAtlas getMenuTextureAtlas() {
+		return menuTextureAtlas;
 	}
 
-	public void setSplashTextureAtlas(BitmapTextureAtlas splashTextureAtlas) {
-		this.splashTextureAtlas = splashTextureAtlas;
+	public void setMenuTextureAtlas(BitmapTextureAtlas menuTextureAtlas) {
+		this.menuTextureAtlas = menuTextureAtlas;
 	}
 
 	public ITextureRegion getMenuBackgroundRegion() {
@@ -183,12 +301,68 @@ public class ResourcesManager {
 		this.optionsRegion = optionsRegion;
 	}
 
-	public TMXTiledMap getGameMap() {
-		return gameMap;
+	public BitmapTextureAtlas getBackgroundTextureAtlas() {
+		return backgroundTextureAtlas;
 	}
 
-	public void setGameMap(TMXTiledMap gameMap) {
-		this.gameMap = gameMap;
+	public void setBackgroundTextureAtlas(BitmapTextureAtlas backgroundTextureAtlas) {
+		this.backgroundTextureAtlas = backgroundTextureAtlas;
+	}
+
+	public TextureRegion getBackgroundTextureRegion() {
+		return backgroundTextureRegion;
+	}
+
+	public void setBackgroundTextureRegion(TextureRegion backgroundTextureRegion) {
+		this.backgroundTextureRegion = backgroundTextureRegion;
+	}
+
+	public BitmapTextureAtlas getTitleTextureAtlas() {
+		return titleTextureAtlas;
+	}
+
+	public void setTitleTextureAtlas(BitmapTextureAtlas titleTextureAtlas) {
+		this.titleTextureAtlas = titleTextureAtlas;
+	}
+
+	public TextureRegion getTitleTextureRegion() {
+		return titleTextureRegion;
+	}
+
+	public void setTitleTextureRegion(TextureRegion titleTextureRegion) {
+		this.titleTextureRegion = titleTextureRegion;
+	}
+
+	public BitmapTextureAtlas getLevelTextureAtlas() {
+		return levelTextureAtlas;
+	}
+
+	public void setLevelTextureAtlas(BitmapTextureAtlas levelTextureAtlas) {
+		this.levelTextureAtlas = levelTextureAtlas;
+	}
+
+	public TextureRegion getMenuLeftTextureRegion() {
+		return menuLeftTextureRegion;
+	}
+
+	public void setMenuLeftTextureRegion(TextureRegion menuLeftTextureRegion) {
+		this.menuLeftTextureRegion = menuLeftTextureRegion;
+	}
+
+	public TextureRegion getMenuRightTextureRegion() {
+		return menuRightTextureRegion;
+	}
+
+	public void setMenuRightTextureRegion(TextureRegion menuRightTextureRegion) {
+		this.menuRightTextureRegion = menuRightTextureRegion;
+	}
+
+	public List<TextureRegion> getColumns() {
+		return columns;
+	}
+
+	public void setColumns(List<TextureRegion> columns) {
+		this.columns = columns;
 	}
 
 	public TiledTextureRegion getPlayerTextureRegion() {
@@ -199,6 +373,14 @@ public class ResourcesManager {
 		this.playerTextureRegion = playerTextureRegion;
 	}
 
+	public TMXTiledMap getGameMap() {
+		return gameMap;
+	}
+
+	public void setGameMap(TMXTiledMap gameMap) {
+		this.gameMap = gameMap;
+	}
+
 	public GameManager getGameManager() {
 		return gameManager;
 	}
@@ -207,12 +389,20 @@ public class ResourcesManager {
 		this.gameManager = gameManager;
 	}
 
-	public BuildableBitmapTextureAtlas getMenuTextureAtlas() {
-		return menuTextureAtlas;
+	public int getCursorRow() {
+		return cursorRow;
 	}
 
-	public void setMenuTextureAtlas(BuildableBitmapTextureAtlas menuTextureAtlas) {
-		this.menuTextureAtlas = menuTextureAtlas;
+	public void setCursorRow(int cursorRow) {
+		this.cursorRow = cursorRow;
+	}
+
+	public int getCursorColumn() {
+		return cursorColumn;
+	}
+
+	public void setCursorColumn(int cursorColumn) {
+		this.cursorColumn = cursorColumn;
 	}
 
 	public Font getFont() {
@@ -254,20 +444,5 @@ public class ResourcesManager {
 	public void setVbom(VertexBufferObjectManager vbom) {
 		this.vbom = vbom;
 	}
-
-	public int getCursorRow() {
-		return cursorRow;
-	}
-
-	public void setCursorRow(int cursorRow) {
-		this.cursorRow = cursorRow;
-	}
-
-	public int getCursorColumn() {
-		return cursorColumn;
-	}
-
-	public void setCursorColumn(int cursorColumn) {
-		this.cursorColumn = cursorColumn;
-	}
+    
 }

@@ -20,11 +20,17 @@ public class TouchDistributor implements IOnSceneTouchListener {
 	public void removeTouchListener(IOnSceneTouchListener IOsceneTouchListener) {
 		touchListeners.remove(IOsceneTouchListener);
 	}
+	
+	public void removeAllTouchListeners() {
+		touchListeners.clear();
+	}
 
 	@Override
 	public boolean onSceneTouchEvent(Scene pScene, TouchEvent pSceneTouchEvent) {
-		if (resourcesManager.getGameManager().hasActionMenu()) {
-			return false;
+		if (resourcesManager.getGameManager() != null) {
+			if (resourcesManager.getGameManager().hasActionMenu()) {
+				return false;
+			}
 		}
 		
 		boolean error = false;
@@ -41,4 +47,5 @@ public class TouchDistributor implements IOnSceneTouchListener {
 		
 		return true;
 	}
+	
 }

@@ -4,15 +4,18 @@ import org.andengine.engine.camera.Camera;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.opengl.util.GLState;
 
+import me.capstone.advancedbattle.resources.ResourcesManager;
 import me.capstone.advancedbattle.scene.BaseScene;
 import me.capstone.advancedbattle.scene.SceneManager.SceneType;
 
 public class SplashScene extends BaseScene {
+	private ResourcesManager resourcesManager;
 	private Sprite splash;
 	
     @Override
 	public void createScene() {
-    	this.splash = new Sprite(0, 0, getResourcesManager().getSplashRegion(), getResourcesManager().getVbom()) {
+    	this.resourcesManager = ResourcesManager.getInstance();
+    	this.splash = new Sprite(0, 0, resourcesManager.getSplashRegion(), resourcesManager.getVbom()) {
     	    @Override
     	    protected void preDraw(GLState pGLState, Camera pCamera) 
     	    {
@@ -43,10 +46,10 @@ public class SplashScene extends BaseScene {
 
     @Override
     public void disposeScene() {
-    	splash.detachSelf();
-        splash.dispose();
-        this.detachSelf();
-        this.dispose();
+        resourcesManager.unloadSplashResources();
+        
+        detachSelf();
+        dispose();
     }
 
 	public Sprite getSplash() {
