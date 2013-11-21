@@ -10,6 +10,7 @@ import me.capstone.advancedbattle.touch.TouchDistributor;
 
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.background.Background;
+import org.andengine.entity.scene.background.SpriteBackground;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.input.touch.TouchEvent;
 
@@ -20,7 +21,7 @@ public class LevelScene extends BaseScene {
 	
 	private LevelScroller level;
 	
-	private Sprite levelBackground;
+	private SpriteBackground levelBackground;
 	private Sprite levelLeft;
 	private Sprite levelRight;
 	private Rectangle scrollBar;
@@ -40,9 +41,8 @@ public class LevelScene extends BaseScene {
 	
 	private void createBackground() {
 		setBackground(new Background(0, 0, 0, 1));
-		this.levelBackground = new Sprite(0, 0, resourcesManager.getBackgroundTextureRegion(), resourcesManager.getVbom());
-		levelBackground.setScaleX(2);
-		attachChild(levelBackground);
+		this.levelBackground = new SpriteBackground(new Sprite(0, 0, resourcesManager.getBackgroundTextureRegion(), resourcesManager.getVbom()));
+		setBackground(levelBackground);
 	}
 	
 	private void createTouchListeners() {
@@ -75,6 +75,8 @@ public class LevelScene extends BaseScene {
 			
 			spriteX = (int) (spriteX + 2 *PADDING + sprite.getWidth());
 		}
+		
+		spriteX -= 50;
 		
 		level.setMaxX(spriteX - width);
 		
@@ -129,11 +131,11 @@ public class LevelScene extends BaseScene {
 		dispose();
 	}
 	
-	public Sprite getLevelBackground() {
+	public SpriteBackground getLevelBackground() {
 		return levelBackground;
 	}
 
-	public void setLevelBackground(Sprite levelBackground) {
+	public void setLevelBackground(SpriteBackground levelBackground) {
 		this.levelBackground = levelBackground;
 	}
 

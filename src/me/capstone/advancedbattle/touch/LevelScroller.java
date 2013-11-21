@@ -74,7 +74,6 @@ public class LevelScroller implements IOnSceneTouchListener, IScrollDetectorList
 		
 		level.getMenuRight().setPosition(camera.getCenterX() + width / 2 - level.getMenuRight().getWidth(), level.getMenuRight().getY());
 		level.getMenuLeft().setPosition(camera.getCenterX() - width / 2, level.getMenuLeft().getY());
-		level.getLevelBackground().setPosition(camera.getCenterX() - level.getLevelBackground().getWidth() / 2, level.getLevelBackground().getY());
 		// TODO : Title stuff?
 		
 		if (camera.getXMin() < 0) {
