@@ -201,7 +201,7 @@ public class GameManager {
 	public void handleAction() {
 		Tile tile = map.getTile(resourcesManager.getCursorColumn(), resourcesManager.getCursorRow());
 		if (tile.getPiece() != null) {
-			Piece piece = tile.getPiece();
+			//Piece piece = tile.getPiece();
 			// Has piece been used this turn?
 		} else {
 			// Check if it was a building. First we need to work on player object and turn.

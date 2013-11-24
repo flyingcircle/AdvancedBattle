@@ -5,6 +5,7 @@ import me.capstone.advancedbattle.scene.scenes.GameScene;
 import me.capstone.advancedbattle.scene.scenes.LevelScene;
 import me.capstone.advancedbattle.scene.scenes.LoadingScene;
 import me.capstone.advancedbattle.scene.scenes.MainMenuScene;
+import me.capstone.advancedbattle.scene.scenes.OptionsScene;
 import me.capstone.advancedbattle.scene.scenes.SplashScene;
 
 import org.andengine.engine.Engine;
@@ -18,6 +19,7 @@ public class SceneManager {
     
     private BaseScene splashScene;
     private BaseScene menuScene;
+    private BaseScene optionsScene;
     private BaseScene levelScene;
     private BaseScene gameScene;
     private BaseScene loadingScene;
@@ -31,7 +33,8 @@ public class SceneManager {
         SCENE_MENU,
         SCENE_LEVEL,
         SCENE_GAME,
-        SCENE_LOADING,
+        SCENE_LOADING, 
+        SCENE_OPTIONS,
     }
     
     public void setScene(BaseScene scene) {
@@ -48,6 +51,9 @@ public class SceneManager {
             case SCENE_MENU:
                 setScene(menuScene);
                 break;
+            case SCENE_OPTIONS:
+            	setScene(optionsScene);
+            	break;
             case SCENE_LEVEL:
             	setScene(levelScene);
             	break;
@@ -68,6 +74,7 @@ public class SceneManager {
     public void createSplashScene(OnCreateSceneCallback pOnCreateSceneCallback) {
     	resourcesManager.createSplashGraphics();
 	    resourcesManager.createMenuGraphics();
+	    resourcesManager.createOptionsGraphics();
 	    resourcesManager.createLevelGraphics();
 	    resourcesManager.createFonts();
     	
@@ -96,6 +103,10 @@ public class SceneManager {
         	this.splashScene = null;
         }
         
+        if (optionsScene != null) {
+        	optionsScene = null;
+        }
+        
         if (levelScene != null) {
         	this.levelScene = null;
         }
@@ -108,6 +119,40 @@ public class SceneManager {
         	loadingScene = null;
         }
         
+    }
+    
+    public void loadOptionsScene(final Engine mEngine){
+    	loadingScene = new LoadingScene();
+    	setScene(loadingScene);
+    	
+    	mEngine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback() {
+            @Override
+			public void onTimePassed(final TimerHandler pTimerHandler) {
+                mEngine.unregisterUpdateHandler(pTimerHandler);
+                resourcesManager.loadOptionsResources();
+                optionsScene = new OptionsScene();
+                setScene(optionsScene);
+            }
+        }));
+    	if (splashScene != null) {
+        	this.splashScene = null;
+        }
+        
+        if (menuScene != null) {
+        	this.menuScene = null;
+        }
+        
+        if (levelScene != null) {
+        	this.levelScene = null;
+        }
+        
+        if (gameScene != null) {
+        	this.gameScene = null;
+        }
+        
+        if (loadingScene != null) {
+        	loadingScene = null;
+        }
     }
     
     public void loadLevelScene(final Engine mEngine) {
@@ -130,6 +175,10 @@ public class SceneManager {
         
         if (menuScene != null) {
         	this.menuScene = null;
+        }
+        
+        if (optionsScene != null) {
+        	optionsScene = null;
         }
         
         if (gameScene != null) {
@@ -162,6 +211,10 @@ public class SceneManager {
         
         if (menuScene != null) {
         	this.menuScene = null;
+        }
+        
+        if (optionsScene != null) {
+        	optionsScene = null;
         }
         
         if (levelScene != null) {

@@ -38,6 +38,10 @@ public class ResourcesManager {
 	private ITextureRegion playRegion;
 	private ITextureRegion optionsRegion;
 	
+	//OptionsScene
+	private BitmapTextureAtlas optionsTextureAtlas;
+	private ITextureRegion musicOptionRegion;
+	
 	// Level selector scene
 	private static int LEVEL_ITEMS = 2;
 	
@@ -83,6 +87,10 @@ public class ResourcesManager {
         loadMenuAudio();
     }
     
+    public void loadOptionsResources(){
+    	loadOptionsGraphics();
+    }
+    
     public void loadLevelResources() {
     	loadLevelGraphics();
     	loadLevelAudio();
@@ -102,6 +110,10 @@ public class ResourcesManager {
     public void unloadMenuResources() {
     	unloadMenuGraphics();
     	unloadMenuAudio();
+    }
+    
+    public void unloadOptionsResources(){
+    	unloadOptionsGraphics();
     }
     
     public void unloadLevelResources() {
@@ -153,6 +165,21 @@ public class ResourcesManager {
     
     private void unloadMenuAudio() {
     	// TODO : Audio
+    }
+    
+    public void createOptionsGraphics(){
+    	BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/options/");
+    	
+    	this.optionsTextureAtlas = new BitmapTextureAtlas(getActivity().getTextureManager(), 1024, 1024, TextureOptions.BILINEAR);
+    	this.setMusicOptionRegion(BitmapTextureAtlasTextureRegionFactory.createFromAsset(optionsTextureAtlas, getActivity(), "musicOptionOn.png", 200, 0));
+    }
+    
+    private void loadOptionsGraphics(){
+    	optionsTextureAtlas.load();
+    }
+    
+    private void unloadOptionsGraphics(){
+    	optionsTextureAtlas.unload();
     }
     
     public void createLevelGraphics() {
@@ -443,6 +470,14 @@ public class ResourcesManager {
 
 	public void setVbom(VertexBufferObjectManager vbom) {
 		this.vbom = vbom;
+	}
+
+	public ITextureRegion getMusicOptionRegion() {
+		return musicOptionRegion;
+	}
+
+	public void setMusicOptionRegion(ITextureRegion musicOptionRegion) {
+		this.musicOptionRegion = musicOptionRegion;
 	}
     
 }
