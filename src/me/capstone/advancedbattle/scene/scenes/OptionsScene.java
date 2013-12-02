@@ -15,7 +15,7 @@ import me.capstone.advancedbattle.scene.SceneManager.SceneType;
 
 public class OptionsScene extends BaseScene implements IOnMenuItemClickListener{
 
-	private ResourcesManager resourcesManager = ResourcesManager.getInstance();
+	private ResourcesManager resourcesManager;
 	private MenuScene optionsChildScene;
 	private final int MUSIC_OPTION = 0;
 	

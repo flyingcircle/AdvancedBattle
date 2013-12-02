@@ -6,29 +6,26 @@ import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.MenuScene.IOnMenuItemClickListener;
 import org.andengine.entity.scene.menu.item.IMenuItem;
-import org.andengine.entity.scene.menu.item.SpriteMenuItem;
 import org.andengine.entity.scene.menu.item.TextMenuItem;
 import org.andengine.util.color.Color;
 import org.andengine.entity.scene.menu.item.decorator.ColorMenuItemDecorator;
-import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
 import org.andengine.extension.tmx.TMXLayer;
-import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.andengine.util.HorizontalAlign;
+
+import android.widget.Toast;
 
 import me.capstone.advancedbattle.map.Map;
 import me.capstone.advancedbattle.resources.PieceTile;
 import me.capstone.advancedbattle.resources.ResourcesManager;
 import me.capstone.advancedbattle.resources.TerrainTile;
-import me.capstone.advancedbattle.scene.SceneManager;
 import me.capstone.advancedbattle.tile.Tile;
 import me.capstone.advancedbattle.tile.piece.Piece;
 
 public class GameManager implements IOnMenuItemClickListener{
 	private static ResourcesManager resourcesManager = ResourcesManager.getInstance();
-	private static SceneManager sceneManager = SceneManager.getInstance();
 	
 	private Map map;
 	private HUD hud;
@@ -45,9 +42,10 @@ public class GameManager implements IOnMenuItemClickListener{
 	private MenuScene actionMenuOptions;
 	private static final int ATTACK = 0;
 	private static final int LIBERATE = 1;
-	private static final int END_MOVE = 2;
-	private static final int CANCEL = 3;
-	private static final int END_TURN = 4;
+	private static final int MOVE = 2;
+	private static final int BUY = 3;
+	private static final int CANCEL = 4;
+	private static final int END_TURN = 5;
 	
 	public GameManager() {
 		createMap();
@@ -218,64 +216,139 @@ public class GameManager implements IOnMenuItemClickListener{
 	
 	public void handleAction() {
 		Tile tile = map.getTile(resourcesManager.getCursorColumn(), resourcesManager.getCursorRow());
+		
+		// We always want to display Cancel and End Turn in the action menu
+		int count = 2;
 		if (tile.getPiece() != null) {
-			//Piece piece = tile.getPiece();
-			// Has piece been used this turn?
+			Piece piece = tile.getPiece();
+			
+			// If piece has not been used this turn
+			
+			// Show the move action
+			count++;
+			
+			// Can the piece attack without moving?
+			boolean canAttack = true;
+			count++;
+			
+			// Can the piece liberate?
+			boolean canLiberate = false;
+			if (piece.getPiece().canLiberate()) {
+				if (tile.getStructureTileID() == TerrainTile.CITY_WHITE.getId()) {
+					count++;
+					canLiberate = true;
+				}
+			}
+			
+			createActionMenu(count, false, canAttack, canLiberate);
 		} else {
-			// Check if it was a building. First we need to work on player object and turn.
+			// No piece there. Is there a factory there? If not, just show Cancel and End Turn.
+			if (tile.getStructureTileID() == TerrainTile.FACTORY_BLUE.getId() || tile.getStructureTileID() == TerrainTile.FACTORY_RED.getId()) {
+				count++;
+				createActionMenu(count, true, false, false);
+			} else {
+				createActionMenu(count, false, false, false);
+			}
 		}
-		createActionMenu();
 	}
 	
-	public void createActionMenu() {	
+	public void createActionMenu(int items, boolean isFactory, boolean canAttack, boolean canLiberate) {	
 		this.actionMenu = new Entity(0, 0);
 		
 		Rectangle backGroundRect = new Rectangle(0, 0, 800, 480, resourcesManager.getVbom());
-	    backGroundRect.setColor(1.0F, 1.0F, 1.0F, 1.5F);
+	    backGroundRect.setColor(1.0F, 1.0F, 1.0F, 0.75F);
 	    actionMenu.attachChild(backGroundRect);
 	    
-	    Rectangle menuRect = new Rectangle(240, 80, 320, 320, resourcesManager.getVbom());
+	    int size = items * 50;
+	    Rectangle menuRect = new Rectangle(240, 240 - size / 2, 320, size + 10, resourcesManager.getVbom());
 	    menuRect.setColor(0.0F, 0.0F, 0.0F, 0.75F);
 	    
 	    this.actionMenuOptions = new MenuScene(resourcesManager.getCamera());
 	    actionMenuOptions.setPosition(0, 0);
-	    actionMenuOptions.setBackgroundEnabled(false);
 	    
-	    final IMenuItem attackMenuItem = new ColorMenuItemDecorator(new TextMenuItem(ATTACK, resourcesManager.getFont(), "Attack", resourcesManager.getVbom()), new Color(0f, 0f, 0f), new Color(0.7f, 0.7f, 0.7f));
-	    final IMenuItem liberateMenuItem = new ColorMenuItemDecorator(new TextMenuItem(LIBERATE, resourcesManager.getFont(), "Liberate", resourcesManager.getVbom()), new Color(0f, 0f, 0f), new Color(0.7f, 0.7f, 0.7f));
-	    final IMenuItem endMoveMenuItem = new ColorMenuItemDecorator(new TextMenuItem(END_MOVE, resourcesManager.getFont(), "End Move", resourcesManager.getVbom()), new Color(0f, 0f, 0f), new Color(0.7f, 0.7f, 0.7f));
-	    final IMenuItem cancelMenuItem = new ColorMenuItemDecorator(new TextMenuItem(CANCEL, resourcesManager.getFont(), "Cancel", resourcesManager.getVbom()), new Color(0f, 0f, 0f), new Color(0.7f, 0.7f, 0.7f));
-	    final IMenuItem endTurnMenuItem = new ColorMenuItemDecorator(new TextMenuItem(END_TURN, resourcesManager.getFont(), "EndTurn", resourcesManager.getVbom()), new Color(0f, 0f, 0f), new Color(0.7f, 0.7f, 0.7f));
+	    if (isFactory) {
+	    	final IMenuItem buyMenuItem = new ColorMenuItemDecorator(new TextMenuItem(BUY, resourcesManager.getFont(), "Buy", resourcesManager.getVbom()), new Color(1.0f, 1.0f, 1.0f, 0.75f), new Color(0.7f, 0.7f, 0.7f, 0.75f));
+	    	actionMenuOptions.addMenuItem(buyMenuItem);
+	    } else {
+	    	// There isn't a factory in that tile, but it has a piece in it
+	    	if (items > 2) {
+	    	    final IMenuItem moveMenuItem = new ColorMenuItemDecorator(new TextMenuItem(MOVE, resourcesManager.getFont(), "Move", resourcesManager.getVbom()), new Color(1.0f, 1.0f, 1.0f, 0.75f), new Color(0.7f, 0.7f, 0.7f, 0.75f));
+	    	    actionMenuOptions.addMenuItem(moveMenuItem);
+	    	    
+	    	    if (canAttack) {
+	    		    final IMenuItem attackMenuItem = new ColorMenuItemDecorator(new TextMenuItem(ATTACK, resourcesManager.getFont(), "Attack", resourcesManager.getVbom()), new Color(1.0f, 1.0f, 1.0f, 0.75f), new Color(0.7f, 0.7f, 0.7f, 0.75f));
+	    		    actionMenuOptions.addMenuItem(attackMenuItem);
+	    	    }
+	    	    
+	    	    if (canLiberate) {
+	    		    final IMenuItem liberateMenuItem = new ColorMenuItemDecorator(new TextMenuItem(LIBERATE, resourcesManager.getFont(), "Liberate", resourcesManager.getVbom()), new Color(1.0f, 1.0f, 1.0f, 0.75f), new Color(0.7f, 0.7f, 0.7f, 0.75f));
+	    		    actionMenuOptions.addMenuItem(liberateMenuItem);
+	    	    }
+	    	}
+	    }
+	    final IMenuItem cancelMenuItem = new ColorMenuItemDecorator(new TextMenuItem(CANCEL, resourcesManager.getFont(), "Cancel", resourcesManager.getVbom()), new Color(1.0f, 1.0f, 1.0f, 0.75f), new Color(0.7f, 0.7f, 0.7f, 0.75f));
+	    final IMenuItem endTurnMenuItem = new ColorMenuItemDecorator(new TextMenuItem(END_TURN, resourcesManager.getFont(), "EndTurn", resourcesManager.getVbom()), new Color(1.0f, 1.0f, 1.0f, 0.75f), new Color(0.7f, 0.7f, 0.7f, 0.75f));
 	    
-	    actionMenuOptions.addMenuItem(attackMenuItem);
-	    actionMenuOptions.addMenuItem(liberateMenuItem);
-	    actionMenuOptions.addMenuItem(endMoveMenuItem);
 	    actionMenuOptions.addMenuItem(cancelMenuItem);
 	    actionMenuOptions.addMenuItem(endTurnMenuItem);
 	    
 	    actionMenuOptions.buildAnimations();
+	    actionMenuOptions.setBackgroundEnabled(false);
 	    
-	    actionMenuOptions.setOnMenuItemClickListener(this);
-	    menuRect.attachChild(actionMenuOptions);
 	    actionMenu.attachChild(menuRect);
 	    
+	    
 	    hud.attachChild(actionMenu);
+	    hud.setChildScene(actionMenuOptions);
+	    
+	    actionMenuOptions.setOnMenuItemClickListener(this);
 	    
 	    this.hasActionMenu = true;
 	}
-
+	
 	@Override
-	public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem,
-			float pMenuItemLocalX, float pMenuItemLocalY) {
-		//TODO put directions for the actionMenuOptions here
-		return false;
+	public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
+		switch(pMenuItem.getID()) {
+		case 0:
+			destroyActionMenu();
+			// Attack stuff
+			return true;
+		case 1:
+			destroyActionMenu();
+			// Liberate stuff
+			return true;
+		case 2:
+			destroyActionMenu();
+			// Move stuff
+			return true;
+		case 3:
+			destroyActionMenu();
+			// Buy stuff
+			return true;
+		case 4:
+			destroyActionMenu();
+			// Cancel stuff
+			return true;
+		case 5:
+			destroyActionMenu();
+			// End turn stuff
+			return true;
+		default:
+			return false;
+		}
 	}
 	
 	public void destroyActionMenu() {
 		hud.detachChild(actionMenu);
+		hud.detachChild(actionMenuOptions);
+		
+		actionMenuOptions.clearMenuItems();
+		actionMenuOptions.clearTouchAreas();
+		actionMenuOptions.closeMenuScene();
+		actionMenuOptions.dispose();
+		this.actionMenuOptions = null;
 		
 		actionMenu.dispose();
-		
 		this.actionMenu = null;
 		
 		this.hasActionMenu = false;

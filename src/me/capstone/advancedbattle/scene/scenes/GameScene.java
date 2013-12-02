@@ -66,7 +66,7 @@ public class GameScene extends BaseScene {
     	if (resourcesManager.getGameManager().hasActionMenu()) {
     		resourcesManager.getGameManager().destroyActionMenu();
     	} else {
-    		resourcesManager.getGameManager().createActionMenu();
+    		resourcesManager.getGameManager().handleAction();
     	}
     }
 
