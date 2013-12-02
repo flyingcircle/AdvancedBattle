@@ -3,21 +3,32 @@ package me.capstone.advancedbattle.manager;
 import org.andengine.engine.camera.hud.HUD;
 import org.andengine.entity.Entity;
 import org.andengine.entity.primitive.Rectangle;
+import org.andengine.entity.scene.menu.MenuScene;
+import org.andengine.entity.scene.menu.MenuScene.IOnMenuItemClickListener;
+import org.andengine.entity.scene.menu.item.IMenuItem;
+import org.andengine.entity.scene.menu.item.SpriteMenuItem;
+import org.andengine.entity.scene.menu.item.TextMenuItem;
+import org.andengine.util.color.Color;
+import org.andengine.entity.scene.menu.item.decorator.ColorMenuItemDecorator;
+import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
 import org.andengine.extension.tmx.TMXLayer;
+import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.andengine.util.HorizontalAlign;
 
 import me.capstone.advancedbattle.map.Map;
 import me.capstone.advancedbattle.resources.PieceTile;
 import me.capstone.advancedbattle.resources.ResourcesManager;
 import me.capstone.advancedbattle.resources.TerrainTile;
+import me.capstone.advancedbattle.scene.SceneManager;
 import me.capstone.advancedbattle.tile.Tile;
 import me.capstone.advancedbattle.tile.piece.Piece;
 
-public class GameManager {
+public class GameManager implements IOnMenuItemClickListener{
 	private static ResourcesManager resourcesManager = ResourcesManager.getInstance();
+	private static SceneManager sceneManager = SceneManager.getInstance();
 	
 	private Map map;
 	private HUD hud;
@@ -30,6 +41,13 @@ public class GameManager {
 	
 	private Entity actionMenu;
 	private boolean hasActionMenu = false;
+
+	private MenuScene actionMenuOptions;
+	private static final int ATTACK = 0;
+	private static final int LIBERATE = 1;
+	private static final int END_MOVE = 2;
+	private static final int CANCEL = 3;
+	private static final int END_TURN = 4;
 	
 	public GameManager() {
 		createMap();
@@ -216,14 +234,41 @@ public class GameManager {
 	    backGroundRect.setColor(1.0F, 1.0F, 1.0F, 1.5F);
 	    actionMenu.attachChild(backGroundRect);
 	    
-	    
-	    Rectangle menuRect = new Rectangle(320, 80, 160, 320, resourcesManager.getVbom());
+	    Rectangle menuRect = new Rectangle(240, 80, 320, 320, resourcesManager.getVbom());
 	    menuRect.setColor(0.0F, 0.0F, 0.0F, 0.75F);
+	    
+	    this.actionMenuOptions = new MenuScene(resourcesManager.getCamera());
+	    actionMenuOptions.setPosition(0, 0);
+	    actionMenuOptions.setBackgroundEnabled(false);
+	    
+	    final IMenuItem attackMenuItem = new ColorMenuItemDecorator(new TextMenuItem(ATTACK, resourcesManager.getFont(), "Attack", resourcesManager.getVbom()), new Color(0f, 0f, 0f), new Color(0.7f, 0.7f, 0.7f));
+	    final IMenuItem liberateMenuItem = new ColorMenuItemDecorator(new TextMenuItem(LIBERATE, resourcesManager.getFont(), "Liberate", resourcesManager.getVbom()), new Color(0f, 0f, 0f), new Color(0.7f, 0.7f, 0.7f));
+	    final IMenuItem endMoveMenuItem = new ColorMenuItemDecorator(new TextMenuItem(END_MOVE, resourcesManager.getFont(), "End Move", resourcesManager.getVbom()), new Color(0f, 0f, 0f), new Color(0.7f, 0.7f, 0.7f));
+	    final IMenuItem cancelMenuItem = new ColorMenuItemDecorator(new TextMenuItem(CANCEL, resourcesManager.getFont(), "Cancel", resourcesManager.getVbom()), new Color(0f, 0f, 0f), new Color(0.7f, 0.7f, 0.7f));
+	    final IMenuItem endTurnMenuItem = new ColorMenuItemDecorator(new TextMenuItem(END_TURN, resourcesManager.getFont(), "EndTurn", resourcesManager.getVbom()), new Color(0f, 0f, 0f), new Color(0.7f, 0.7f, 0.7f));
+	    
+	    actionMenuOptions.addMenuItem(attackMenuItem);
+	    actionMenuOptions.addMenuItem(liberateMenuItem);
+	    actionMenuOptions.addMenuItem(endMoveMenuItem);
+	    actionMenuOptions.addMenuItem(cancelMenuItem);
+	    actionMenuOptions.addMenuItem(endTurnMenuItem);
+	    
+	    actionMenuOptions.buildAnimations();
+	    
+	    actionMenuOptions.setOnMenuItemClickListener(this);
+	    menuRect.attachChild(actionMenuOptions);
 	    actionMenu.attachChild(menuRect);
 	    
 	    hud.attachChild(actionMenu);
 	    
 	    this.hasActionMenu = true;
+	}
+
+	@Override
+	public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem,
+			float pMenuItemLocalX, float pMenuItemLocalY) {
+		//TODO put directions for the actionMenuOptions here
+		return false;
 	}
 	
 	public void destroyActionMenu() {
@@ -313,6 +358,5 @@ public class GameManager {
 			return true;
 		}
 		return false;
-	}
-	    
+	}   
 }
