@@ -106,7 +106,7 @@ public enum PieceTile {
 		this.moveType = moveType;
 	}
 
-	public int getId() {
+	public final int getId() {
 		return id;
 	}
 

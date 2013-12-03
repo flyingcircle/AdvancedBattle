@@ -13,6 +13,7 @@ import org.andengine.extension.tmx.TMXLayer;
 
 import me.capstone.advancedbattle.manager.hud.GameHUD;
 import me.capstone.advancedbattle.manager.managers.AttackManager;
+import me.capstone.advancedbattle.manager.managers.BuyMenuManager;
 import me.capstone.advancedbattle.manager.managers.LiberateManager;
 import me.capstone.advancedbattle.manager.managers.MoveManager;
 import me.capstone.advancedbattle.map.Map;
@@ -45,6 +46,7 @@ public class GameManager implements IOnMenuItemClickListener{
 	private AttackManager attackManager;
 	private LiberateManager liberateManager;
 	private MoveManager moveManager;
+	private BuyMenuManager buyMenuManager;
 	
 	// Team
 	private int blueFunds;
@@ -98,6 +100,7 @@ public class GameManager implements IOnMenuItemClickListener{
 		this.attackManager = new AttackManager(this);
 		this.liberateManager = new LiberateManager(this);
 		this.moveManager = new MoveManager(this);
+		this.buyMenuManager = new BuyMenuManager(this);
 	}
 	
 	private TeamColor getPieceColor(Piece piece) {
@@ -253,9 +256,9 @@ public class GameManager implements IOnMenuItemClickListener{
 	public void createActionMenu(int items, boolean isFactory, boolean canAttack, boolean canLiberate) {	
 		this.actionMenu = new Entity(0, 0);
 		
-		Rectangle backGroundRect = new Rectangle(0, 0, 800, 480, resourcesManager.getVbom());
-	    backGroundRect.setColor(1.0F, 1.0F, 1.0F, 0.75F);
-	    actionMenu.attachChild(backGroundRect);
+		Rectangle backgroundRect = new Rectangle(0, 0, 800, 480, resourcesManager.getVbom());
+	    backgroundRect.setColor(1.0F, 1.0F, 1.0F, 0.75F);
+	    actionMenu.attachChild(backgroundRect);
 	    
 	    int size = items * 50;
 	    Rectangle menuRect = new Rectangle(240, 240 - size / 2, 320, size + 10, resourcesManager.getVbom());
@@ -336,7 +339,7 @@ public class GameManager implements IOnMenuItemClickListener{
 			return true;
 		case BUY:
 			destroyActionMenu();
-			// Buy stuff
+			buyMenuManager.createBuyMenu();
 			return true;
 		case CANCEL:
 			destroyActionMenu();
@@ -464,6 +467,24 @@ public class GameManager implements IOnMenuItemClickListener{
 		this.redFunds = redFunds;
 	}
 
+	public int getCurrentFunds(){
+		if(turn == TeamColor.RED){
+			return redFunds;
+		}
+		else {
+			return blueFunds;
+		}
+	}
+	
+	public void setCurrentFunds(int newFunds) {
+		if (turn == TeamColor.RED) {
+			setRedFunds(newFunds);
+		}
+		else{
+			setBlueFunds(newFunds);
+		}
+	}
+	
 	public TeamColor getTurn() {
 		return turn;
 	}
