@@ -1,4 +1,4 @@
-package me.capstone.advancedbattle.resources;
+package me.capstone.advancedbattle.resources.data;
 
 public enum Direction {
 

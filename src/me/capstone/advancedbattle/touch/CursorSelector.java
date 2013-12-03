@@ -2,10 +2,10 @@ package me.capstone.advancedbattle.touch;
 
 import me.capstone.advancedbattle.AdvancedBattleActivity;
 import me.capstone.advancedbattle.manager.GameManager;
-import me.capstone.advancedbattle.resources.CursorTile;
-import me.capstone.advancedbattle.resources.PieceTile;
 import me.capstone.advancedbattle.resources.ResourcesManager;
-import me.capstone.advancedbattle.resources.TerrainTile;
+import me.capstone.advancedbattle.resources.tile.CursorTile;
+import me.capstone.advancedbattle.resources.tile.PieceTile;
+import me.capstone.advancedbattle.resources.tile.TerrainTile;
 import me.capstone.advancedbattle.tile.Tile;
 import me.capstone.advancedbattle.tile.piece.Piece;
 
@@ -82,7 +82,10 @@ public class CursorSelector implements IOnSceneTouchListener, IUpdateHandler {
 							
 							Piece piece = game.getMovingPieceTile().getPiece();
 							// TODO : Need to check if player walks off enemy HQ also
-							if (game.getMovingPieceTile().getStructureTileID() == TerrainTile.CITY_WHITE.getId()) {
+							if (game.getMovingPieceTile().getStructureTileID() == TerrainTile.CITY_WHITE.getId() || game.getMovingPieceTile().getStructureTileID() == TerrainTile.CITY_BLUE.getId() 
+									|| game.getMovingPieceTile().getStructureTileID() == TerrainTile.CITY_RED.getId() || game.getMovingPieceTile().getStructureTileID() == TerrainTile.FACTORY_BLUE.getId() 
+									|| game.getMovingPieceTile().getStructureTileID() == TerrainTile.FACTORY_RED.getId() || game.getMovingPieceTile().getStructureTileID() == TerrainTile.FACTORY_WHITE.getId() 
+									|| game.getMovingPieceTile().getStructureTileID() == TerrainTile.HQ_BLUE.getId() || game.getMovingPieceTile().getStructureTileID() == TerrainTile.HQ_RED.getId()) {
 								piece.setCurrentBuildingHealth(piece.MAX_BUILDING_HEALTH);
 							}
 							
@@ -110,11 +113,11 @@ public class CursorSelector implements IOnSceneTouchListener, IUpdateHandler {
 					}
 				}
 				
-				game.updateHUD();
+				game.getHud().updateHUD();
 				if (ratioX > 0.8) {
-					game.getRectangleGroup().setPosition(25, 240);
+					game.getHud().getRectangleGroup().setPosition(24, 291);
 				} else if (ratioX < 0.2) {
-					game.getRectangleGroup().setPosition(650, 240);
+					game.getHud().getRectangleGroup().setPosition(650, 291);
 				}
 			} else {
 				if (!game.isMoving()) {

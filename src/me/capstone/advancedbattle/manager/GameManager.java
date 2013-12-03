@@ -2,7 +2,6 @@ package me.capstone.advancedbattle.manager;
 
 import java.util.ArrayList;
 
-import org.andengine.engine.camera.hud.HUD;
 import org.andengine.entity.Entity;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.menu.MenuScene;
@@ -12,20 +11,17 @@ import org.andengine.entity.scene.menu.item.TextMenuItem;
 import org.andengine.util.color.Color;
 import org.andengine.entity.scene.menu.item.decorator.ColorMenuItemDecorator;
 import org.andengine.entity.sprite.Sprite;
-import org.andengine.entity.text.Text;
-import org.andengine.entity.text.TextOptions;
 import org.andengine.extension.tmx.TMXLayer;
 import org.andengine.extension.tmx.TMXTile;
-import org.andengine.util.HorizontalAlign;
 
+import me.capstone.advancedbattle.manager.hud.GameHUD;
 import me.capstone.advancedbattle.map.Map;
-import me.capstone.advancedbattle.resources.CursorTile;
-import me.capstone.advancedbattle.resources.Direction;
-import me.capstone.advancedbattle.resources.MovementType;
-import me.capstone.advancedbattle.resources.PieceTile;
 import me.capstone.advancedbattle.resources.ResourcesManager;
-import me.capstone.advancedbattle.resources.TeamColor;
-import me.capstone.advancedbattle.resources.TerrainTile;
+import me.capstone.advancedbattle.resources.data.Direction;
+import me.capstone.advancedbattle.resources.data.MovementType;
+import me.capstone.advancedbattle.resources.data.TeamColor;
+import me.capstone.advancedbattle.resources.tile.CursorTile;
+import me.capstone.advancedbattle.resources.tile.TerrainTile;
 import me.capstone.advancedbattle.tile.Tile;
 import me.capstone.advancedbattle.tile.piece.Piece;
 
@@ -34,17 +30,7 @@ public class GameManager implements IOnMenuItemClickListener{
 	
 	private Map map;
 	
-	// HUD
-	private HUD hud;
-	private Entity rectangleGroup;
-	private Text tileName;
-	private Sprite terrainSprite;
-	private Sprite structureSprite;
-	private Sprite pieceSprite;
-	private Text defense;	
-	private Entity playerRectangleGroup;
-	private Text currentPlayer;
-	private Text currentFunds;
+	private GameHUD hud;
 	
 	// Action Menu
 	private Entity actionMenu;
@@ -73,7 +59,8 @@ public class GameManager implements IOnMenuItemClickListener{
 	
 	public GameManager() {
 		createMap();
-		createHUD();
+		initGame();
+		this.hud = new GameHUD(this);
 	}
 	
 	private void createMap() {
@@ -103,187 +90,12 @@ public class GameManager implements IOnMenuItemClickListener{
 	    
 	    map.setMap(arrayMap);
 	}
-	    
-	private void createHUD() {
-	    this.hud = new HUD();
-	    
-	    this.turn = TeamColor.RED;
-	    
-	    this.blueFunds = map.getBlueCities() * 1000;
-		this.redFunds = map.getRedCities() * 1000;
-		
-	    this.playerRectangleGroup = new Entity(10, 10);
-	    Rectangle rectangle = new Rectangle(0, 0, 200, 60, resourcesManager.getVbom());
-	    rectangle.setColor(0.0F, 0.0F, 0.0F, 0.75F);
-	    playerRectangleGroup.attachChild(rectangle);
-	    
-	    this.currentPlayer = new Text(0, 0, resourcesManager.getFont(), "abcdefghijklmnopqrstuvwxyz", new TextOptions(HorizontalAlign.LEFT), resourcesManager.getVbom());
-	    currentPlayer.setText(turn.getName());
-	    currentPlayer.setColor(turn.getColor());
-	    currentPlayer.setScale(0.75F);
-	    playerRectangleGroup.attachChild(currentPlayer);
-	    
-	    this.currentFunds = new Text(0, 0, resourcesManager.getFont(), "$123456789", new TextOptions(HorizontalAlign.RIGHT), resourcesManager.getVbom());
-	    currentFunds.setText(Integer.toString(redFunds));
-	    currentFunds.setScale(0.5F);
-	    currentFunds.setPosition(200 - currentFunds.getWidth() / 1.3F, 60 - currentFunds.getHeight());
-	    playerRectangleGroup.attachChild(currentFunds);
-	    
-	    hud.attachChild(playerRectangleGroup);
-	    
-	    this.rectangleGroup = new Entity(650, 240);
-	    rectangle = new Rectangle(0, 0, 124, 214, resourcesManager.getVbom());
-	    rectangle.setColor(0.0F, 0.0F, 0.0F, 0.75F);
-	    rectangleGroup.attachChild(rectangle);
-	    
-	    Tile tile = map.getTile(resourcesManager.getCursorColumn(), resourcesManager.getCursorRow());
-	    
-	    this.tileName = new Text(0, 0, resourcesManager.getFont(), "abcdefghijklmnopqrstuvwxyz", new TextOptions(HorizontalAlign.CENTER), resourcesManager.getVbom());
-	    if (tile.getPieceTileID() != PieceTile.PIECE_NULL.getId()) {
-	    	for (PieceTile piece : PieceTile.values()) {
-	    		if (piece.getId() == tile.getPieceTileID()) {
-	    			tileName.setText(piece.getName());
-	    			break;
-	    		}
-	    	}
-	    } else {
-	    	if (tile.getStructureTileID() != TerrainTile.STRUCTURE_NULL.getId() && tile.getStructureTileID() != TerrainTile.HQ_BLUE_TOP.getId() && tile.getStructureTileID() != TerrainTile.HQ_RED_TOP.getId()) {
-	    		for (TerrainTile terrain : TerrainTile.values()) {
-	    			if (terrain.getId() == tile.getStructureTileID()) {
-	    				tileName.setText(terrain.getName());
-	    				break;
-	    			}
-	    		}
-	    	} else {
-	    		for (TerrainTile terrain : TerrainTile.values()) {
-	    			if (terrain.getId() == tile.getTerrainTileID()) {
-	    				tileName.setText(terrain.getName());
-	    				break;
-	    			}
-	    		}
-	    	}
-	    }
-	    tileName.setScale(0.3F);
-	    tileName.setPosition(62 - tileName.getWidth() / 2, 0);
-	    rectangleGroup.attachChild(tileName);
-	    
-	    this.terrainSprite = new Sprite(0, 0, resourcesManager.getGameMap().getTextureRegionFromGlobalTileID(tile.getTerrainTileID()), resourcesManager.getVbom());
-	    this.structureSprite = new Sprite(0, 0, resourcesManager.getGameMap().getTextureRegionFromGlobalTileID(tile.getStructureTileID()), resourcesManager.getVbom());
-	    this.pieceSprite = new Sprite(0, 0, resourcesManager.getGameMap().getTextureRegionFromGlobalTileID(tile.getPieceTileID()), resourcesManager.getVbom());
-	    terrainSprite.setScale(1.25F);
-	    terrainSprite.setPosition(62 - terrainSprite.getWidth() / 2, 40);
-	    structureSprite.setScale(1.25F);
-	    structureSprite.setPosition(62 - structureSprite.getWidth() / 2, 40);
-	    pieceSprite.setScale(1.25F);
-	    pieceSprite.setPosition(62 - pieceSprite.getWidth() / 2, 40);
-	    rectangleGroup.attachChild(terrainSprite);
-	    rectangleGroup.attachChild(structureSprite);
-	    rectangleGroup.attachChild(pieceSprite);
-	    
-	    this.defense = new Text(0, 0, resourcesManager.getFont(), "abcdefghijklmnopqrstuvwxyz", new TextOptions(HorizontalAlign.CENTER), resourcesManager.getVbom());
-	    if (tile.getStructureTileID() != TerrainTile.STRUCTURE_NULL.getId() && tile.getStructureTileID() != TerrainTile.HQ_BLUE_TOP.getId() && tile.getStructureTileID() != TerrainTile.HQ_RED_TOP.getId()) {
-	    	for (TerrainTile terrain : TerrainTile.values()) {
-	    		if (terrain.getId() == tile.getStructureTileID()) {
-	    			defense.setText("Def: " + terrain.getDefense());
-	    			break;
-	    		}
-	    	}
-	    } else {
-	    	for (TerrainTile terrain : TerrainTile.values()) {
-	    		if (terrain.getId() == tile.getTerrainTileID()) {
-	    			defense.setText("Def: " + terrain.getDefense());
-	    			break;
-	    		}
-	    	}
-	    }
-	    defense.setScale(0.25F);
-	    defense.setPosition(62 - defense.getWidth() / 2, 70);
-	    rectangleGroup.attachChild(defense);
-	    
-	    hud.attachChild(rectangleGroup);
-	    resourcesManager.getCamera().setHUD(hud);
-	}
 	
-	public void updateHUD() {
-		currentPlayer.setText(turn.getName());
-	    currentPlayer.setColor(turn.getColor());
-	    
-	    if (turn == TeamColor.RED) {
-	    	currentFunds.setText(Integer.toString(redFunds));
-	    } else if (turn == TeamColor.BLUE) {
-	    	currentFunds.setText(Integer.toString(blueFunds));
-	    } else {
-	    	currentFunds.setText("0");
-	    }
-	    currentFunds.setScale(0.5F);
-	    currentFunds.setPosition(200 - currentFunds.getWidth() / 1.3F, 60 - currentFunds.getHeight());
-	    
-		Tile tile = map.getTile(resourcesManager.getCursorColumn(), resourcesManager.getCursorRow());
+	private void initGame() {
+		this.turn = TeamColor.RED;
 		
-		rectangleGroup.detachChild(terrainSprite);
-		rectangleGroup.detachChild(structureSprite);
-		rectangleGroup.detachChild(pieceSprite);
-			
-		if (tile.getPieceTileID() != PieceTile.PIECE_NULL.getId()) {
-	    	for (PieceTile piece : PieceTile.values()) {
-	    		if (piece.getId() == tile.getPieceTileID()) {
-	    			tileName.setText(piece.getName());
-	    			tileName.setPosition(62 - tileName.getWidth() / 2, 0);
-	    			break;
-	    		}
-	    	}
-	    } else {
-	    	if (tile.getStructureTileID() != TerrainTile.STRUCTURE_NULL.getId() && tile.getStructureTileID() != TerrainTile.HQ_BLUE_TOP.getId() && tile.getStructureTileID() != TerrainTile.HQ_RED_TOP.getId()) {
-	    		for (TerrainTile terrain : TerrainTile.values()) {
-	    			if (terrain.getId() == tile.getStructureTileID()) {
-	    				tileName.setText(terrain.getName());
-	    				tileName.setPosition(62 - tileName.getWidth() / 2, 0);
-	    				break;
-	    			}
-	    		}
-	    	} else {
-	    		for (TerrainTile terrain : TerrainTile.values()) {
-	    			if (terrain.getId() == tile.getTerrainTileID()) {
-	    				tileName.setText(terrain.getName());
-	    				tileName.setPosition(62 - tileName.getWidth() / 2, 0);
-	    				break;
-	    			}
-	    		}
-	    	}
-	    }
-		
-		Sprite terrainSprite = new Sprite(0, 0, resourcesManager.getGameMap().getTextureRegionFromGlobalTileID(tile.getTerrainTileID()), resourcesManager.getVbom());
-	    Sprite structureSprite = new Sprite(0, 0, resourcesManager.getGameMap().getTextureRegionFromGlobalTileID(tile.getStructureTileID()), resourcesManager.getVbom());
-	    Sprite pieceSprite = new Sprite(0, 0, resourcesManager.getGameMap().getTextureRegionFromGlobalTileID(tile.getPieceTileID()), resourcesManager.getVbom());
-	    
-	    terrainSprite.setScale(1.25F);
-	    terrainSprite.setPosition(62 - terrainSprite.getWidth() / 2, 40);
-	    structureSprite.setScale(1.25F);
-	    structureSprite.setPosition(62 - structureSprite.getWidth() / 2, 40);
-	    pieceSprite.setScale(1.25F);
-	    pieceSprite.setPosition(62 - pieceSprite.getWidth() / 2, 40);
-	    
-	    rectangleGroup.attachChild(terrainSprite);
-	    rectangleGroup.attachChild(structureSprite);
-	    rectangleGroup.attachChild(pieceSprite);
-	    
-	    if (tile.getStructureTileID() != TerrainTile.STRUCTURE_NULL.getId() && tile.getStructureTileID() != TerrainTile.HQ_BLUE_TOP.getId() && tile.getStructureTileID() != TerrainTile.HQ_RED_TOP.getId()) {
-	    	for (TerrainTile terrain : TerrainTile.values()) {
-	    		if (terrain.getId() == tile.getStructureTileID()) {
-	    			defense.setText("Def: " + terrain.getDefense());
-	    			defense.setPosition(62 - defense.getWidth() / 2, 70);
-	    			break;
-	    		}
-	    	}
-	    } else {
-	    	for (TerrainTile terrain : TerrainTile.values()) {
-	    		if (terrain.getId() == tile.getTerrainTileID()) {
-	    			defense.setText("Def: " + terrain.getDefense());
-	    			defense.setPosition(62 - defense.getWidth() / 2, 70);
-	    			break;
-	    		}
-	    	}
-	    }
+		this.blueFunds = map.getBlueCities() * 1000;
+		this.redFunds = map.getRedCities() * 1000;
 	}
 	
 	public void handleAction() {
@@ -384,8 +196,8 @@ public class GameManager implements IOnMenuItemClickListener{
 	    actionMenu.attachChild(menuRect);
 	    
 	    
-	    hud.attachChild(actionMenu);
-	    hud.setChildScene(actionMenuOptions);
+	    hud.getHud().attachChild(actionMenu);
+	    hud.getHud().setChildScene(actionMenuOptions);
 	    
 	    actionMenuOptions.setOnMenuItemClickListener(this);
 	    
@@ -424,8 +236,8 @@ public class GameManager implements IOnMenuItemClickListener{
 	}
 	
 	public void destroyActionMenu() {
-		hud.detachChild(actionMenu);
-		hud.detachChild(actionMenuOptions);
+		hud.getHud().detachChild(actionMenu);
+		hud.getHud().detachChild(actionMenuOptions);
 		
 		actionMenuOptions.clearMenuItems();
 		actionMenuOptions.clearTouchAreas();
@@ -465,8 +277,6 @@ public class GameManager implements IOnMenuItemClickListener{
 					structureLayer.submit();
 						
 					map.setRedCities(map.getRedCities() + 1);
-					
-					updateHUD();
 				} else if (tile.getStructureTileID() == TerrainTile.FACTORY_BLUE.getId()) {
 					piece.setCurrentBuildingHealth(piece.MAX_BUILDING_HEALTH);
 					
@@ -478,8 +288,6 @@ public class GameManager implements IOnMenuItemClickListener{
 					structureLayer.setIndex(factory.getTileRow() * resourcesManager.getGameMap().getTileColumns() + factory.getTileColumn());
 					structureLayer.drawWithoutChecks(factory.getTextureRegion(), factory.getTileX(), factory.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
 					structureLayer.submit();
-					
-					updateHUD();
 				} else if (tile.getStructureTileID() == TerrainTile.HQ_BLUE.getId()) {
 					piece.setCurrentBuildingHealth(piece.MAX_BUILDING_HEALTH);
 					
@@ -500,7 +308,6 @@ public class GameManager implements IOnMenuItemClickListener{
 					structureLayer.drawWithoutChecks(hqtop.getTextureRegion(), hqtop.getTileX(), hqtop.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
 					structureLayer.submit();
 					
-					updateHUD();
 					createVictoryImage();
 				}
 			} else if (turn == TeamColor.BLUE) {
@@ -517,8 +324,6 @@ public class GameManager implements IOnMenuItemClickListener{
 					structureLayer.submit();
 						
 					map.setBlueCities(map.getBlueCities() + 1);
-					
-					updateHUD();
 				} else if (tile.getStructureTileID() == TerrainTile.FACTORY_RED.getId()) {
 					piece.setCurrentBuildingHealth(piece.MAX_BUILDING_HEALTH);
 					
@@ -530,8 +335,6 @@ public class GameManager implements IOnMenuItemClickListener{
 					structureLayer.setIndex(factory.getTileRow() * resourcesManager.getGameMap().getTileColumns() + factory.getTileColumn());
 					structureLayer.drawWithoutChecks(factory.getTextureRegion(), factory.getTileX(), factory.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
 					structureLayer.submit();
-					
-					updateHUD();
 				} else if (tile.getStructureTileID() == TerrainTile.HQ_RED.getId()) {
 					piece.setCurrentBuildingHealth(piece.MAX_BUILDING_HEALTH);
 					
@@ -552,13 +355,14 @@ public class GameManager implements IOnMenuItemClickListener{
 					structureLayer.drawWithoutChecks(hqtop.getTextureRegion(), hqtop.getTileX(), hqtop.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
 					structureLayer.submit();
 					
-					updateHUD();
 					createVictoryImage();
 				}
 			} else {
 				// Not sure what to do here. Should always be red or blue.
 			}
 		}
+		
+		hud.updateHUD();
 	}
 	
 	public void createVictoryImage() {
@@ -573,7 +377,7 @@ public class GameManager implements IOnMenuItemClickListener{
 		
 		victoryImage.setScale(2F);
 		victoryImage.setPosition(400 - victoryImage.getWidth() / 2, 240 - victoryImage.getHeight() / 2);
-		hud.attachChild(victoryImage);
+		hud.getHud().attachChild(victoryImage);
 	}
 	
 	public void createMoveAction() {
@@ -876,7 +680,7 @@ public class GameManager implements IOnMenuItemClickListener{
 			turn = TeamColor.NULL;
 		}
 		
-		updateHUD();
+		hud.updateHUD();
 	}
 
 	public Map getMap() {
@@ -887,84 +691,12 @@ public class GameManager implements IOnMenuItemClickListener{
 		this.map = map;
 	}
 
-	public HUD getHud() {
+	public GameHUD getHud() {
 		return hud;
 	}
 
-	public void setHud(HUD hud) {
+	public void setHud(GameHUD hud) {
 		this.hud = hud;
-	}
-
-	public Entity getRectangleGroup() {
-		return rectangleGroup;
-	}
-
-	public void setRectangleGroup(Entity rectangleGroup) {
-		this.rectangleGroup = rectangleGroup;
-	}
-
-	public Text getTileName() {
-		return tileName;
-	}
-
-	public void setTileName(Text tileName) {
-		this.tileName = tileName;
-	}
-
-	public Sprite getTerrainSprite() {
-		return terrainSprite;
-	}
-
-	public void setTerrainSprite(Sprite terrainSprite) {
-		this.terrainSprite = terrainSprite;
-	}
-
-	public Sprite getStructureSprite() {
-		return structureSprite;
-	}
-
-	public void setStructureSprite(Sprite structureSprite) {
-		this.structureSprite = structureSprite;
-	}
-
-	public Sprite getPieceSprite() {
-		return pieceSprite;
-	}
-
-	public void setPieceSprite(Sprite pieceSprite) {
-		this.pieceSprite = pieceSprite;
-	}
-
-	public Text getDefense() {
-		return defense;
-	}
-
-	public void setDefense(Text defense) {
-		this.defense = defense;
-	}
-
-	public Entity getPlayerRectangleGroup() {
-		return playerRectangleGroup;
-	}
-
-	public void setPlayerRectangleGroup(Entity playerRectangleGroup) {
-		this.playerRectangleGroup = playerRectangleGroup;
-	}
-
-	public Text getCurrentPlayer() {
-		return currentPlayer;
-	}
-
-	public void setCurrentPlayer(Text currentPlayer) {
-		this.currentPlayer = currentPlayer;
-	}
-
-	public Text getCurrentFunds() {
-		return currentFunds;
-	}
-
-	public void setCurrentFunds(Text currentFunds) {
-		this.currentFunds = currentFunds;
 	}
 
 	public Entity getActionMenu() {

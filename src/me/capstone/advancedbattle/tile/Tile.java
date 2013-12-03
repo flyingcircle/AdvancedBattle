@@ -1,6 +1,6 @@
 package me.capstone.advancedbattle.tile;
 
-import me.capstone.advancedbattle.resources.PieceTile;
+import me.capstone.advancedbattle.resources.tile.PieceTile;
 import me.capstone.advancedbattle.tile.piece.Piece;
 
 public class Tile {

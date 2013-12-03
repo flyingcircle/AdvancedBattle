@@ -1,4 +1,6 @@
-package me.capstone.advancedbattle.resources;
+package me.capstone.advancedbattle.resources.tile;
+
+import me.capstone.advancedbattle.resources.data.MovementType;
 
 public enum PieceTile {
 	

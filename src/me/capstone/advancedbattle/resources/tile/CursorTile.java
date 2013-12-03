@@ -1,4 +1,4 @@
-package me.capstone.advancedbattle.resources;
+package me.capstone.advancedbattle.resources.tile;
 
 public enum CursorTile {
 	
@@ -11,7 +11,11 @@ public enum CursorTile {
 	// Status
 	DISABLED(190),
 	HIGHLIGHT(191),
-	TARGET(192);
+	TARGET(192),
+	
+	// Icons
+	HEALTH(193),
+	BUILDING(194);
 	
 	//Attributes
 	final int id;

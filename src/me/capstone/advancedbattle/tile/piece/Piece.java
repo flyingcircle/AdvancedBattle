@@ -1,6 +1,6 @@
 package me.capstone.advancedbattle.tile.piece;
 
-import me.capstone.advancedbattle.resources.PieceTile;
+import me.capstone.advancedbattle.resources.tile.PieceTile;
 
 public class Piece {
 	
@@ -13,9 +13,9 @@ public class Piece {
 	public Piece(PieceTile pieceTile) {
 		this.MAX_HEALTH = 10;
 		this.health = MAX_HEALTH;
-		this.pieceTile = pieceTile;
 		this.MAX_BUILDING_HEALTH = 10;
 		this.currentBuildingHealth = MAX_BUILDING_HEALTH;
+		this.pieceTile = pieceTile;
 	}
 
 	public int getHealth() {
