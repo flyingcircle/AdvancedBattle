@@ -183,8 +183,52 @@ public class GameManager implements IOnMenuItemClickListener{
 				
 				count++;
 				
-				boolean canAttack = true;
-				count++;
+				boolean canAttack = false;
+				if (tile.getRow() == 0) {
+					Tile sTile = map.getTile(tile.getColumn(), tile.getRow() + 1);
+					if (sTile.getPiece() != null && getPieceColor(sTile.getPiece()) != turn) {
+						canAttack = true;
+					}
+				} else if (tile.getRow() == map.getRows() - 1) {
+					Tile nTile = map.getTile(tile.getColumn(), tile.getRow() - 1);
+					if (nTile.getPiece() != null && getPieceColor(nTile.getPiece()) != turn) {
+						canAttack = true;
+					}
+				} else if (tile.getColumn() == 0) {
+					Tile eTile = map.getTile(tile.getColumn() + 1, tile.getRow());
+					if (eTile.getPiece() != null && getPieceColor(eTile.getPiece()) != turn) {
+						canAttack = true;
+					}
+				} else if (tile.getColumn() == map.getColumns() - 1) {
+					Tile wTile = map.getTile(tile.getColumn() - 1, tile.getRow());
+					if (wTile.getPiece() != null && getPieceColor(wTile.getPiece()) != turn) {
+						canAttack = true;
+					}
+				} else {
+					Tile nTile = map.getTile(tile.getColumn(), tile.getRow() - 1);
+					if (nTile.getPiece() != null && getPieceColor(nTile.getPiece()) != turn) {
+						canAttack = true;
+					}
+					
+					Tile sTile = map.getTile(tile.getColumn(), tile.getRow() + 1);
+					if (sTile.getPiece() != null && getPieceColor(sTile.getPiece()) != turn) {
+						canAttack = true;
+					}
+					
+					Tile eTile = map.getTile(tile.getColumn() + 1, tile.getRow());
+					if (eTile.getPiece() != null && getPieceColor(eTile.getPiece()) != turn) {
+						canAttack = true;
+					}
+					
+					Tile wTile = map.getTile(tile.getColumn() - 1, tile.getRow());
+					if (wTile.getPiece() != null && getPieceColor(wTile.getPiece()) != turn) {
+						canAttack = true;
+					}
+				}
+
+				if (canAttack) {
+					count++;
+				}
 				
 				boolean canLiberate = false;	
 				if (tile.getStructureTileID() == TerrainTile.FACTORY_RED.getId() || tile.getStructureTileID() == TerrainTile.CITY_RED.getId() || tile.getStructureTileID() == TerrainTile.HQ_RED.getId() || tile.getStructureTileID() == TerrainTile.CITY_WHITE.getId()) {
