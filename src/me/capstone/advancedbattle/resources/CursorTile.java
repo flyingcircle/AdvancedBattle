@@ -3,26 +3,25 @@ package me.capstone.advancedbattle.resources;
 public enum CursorTile {
 	
 	// Cursor	
-	CURSOR(188, "Cursor"),
+	CURSOR(188),
 		
 	// Misc
-	CURSOR_NULL(189, "Null");
+	CURSOR_NULL(189),
+	
+	// Status
+	DISABLED(190),
+	HIGHLIGHT(191),
+	TARGET(192);
 	
 	//Attributes
 	final int id;
-	final String name;
 	
-	private CursorTile(int id, String name) {
+	private CursorTile(int id) {
 		this.id = id;
-		this.name = name;
 	}
 
 	public int getId() {
 		return id;
-	}
-
-	public String getName() {
-		return name;
 	}
 
 }

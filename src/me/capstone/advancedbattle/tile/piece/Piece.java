@@ -1,7 +1,6 @@
 package me.capstone.advancedbattle.tile.piece;
 
 import me.capstone.advancedbattle.resources.PieceTile;
-import me.capstone.advancedbattle.tile.Tile;
 
 public class Piece {
 	
@@ -9,14 +8,12 @@ public class Piece {
 	private int health;
 	private final int MAX_BUILDING_HEALTH;
 	private int currentBuildingHealth;
-	private Tile tile;
-	private PieceTile piece;
+	private PieceTile pieceTile;
 
-	public Piece(Tile tile, PieceTile piece) {
+	public Piece(PieceTile pieceTile) {
 		this.MAX_HEALTH = 10;
 		this.health = MAX_HEALTH;
-		this.tile = tile;
-		this.piece = piece;
+		this.pieceTile = pieceTile;
 		this.MAX_BUILDING_HEALTH = 10;
 		this.currentBuildingHealth = MAX_BUILDING_HEALTH;
 	}
@@ -40,20 +37,12 @@ public class Piece {
 		this.currentBuildingHealth = currentBuildingHealth;
 	}
 
-	public Tile getTile() {
-		return tile;
-	}
-
-	public void setTile(Tile tile) {
-		this.tile = tile;
-	}
-
-	public PieceTile getPiece() {
-		return piece;
+	public PieceTile getPieceTile() {
+		return pieceTile;
 	}
 	
-	public void setPiece(PieceTile piece) {
-		this.piece = piece;
+	public void setPieceTile(PieceTile pieceTile) {
+		this.pieceTile = pieceTile;
 	}
 	
 }

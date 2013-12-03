@@ -75,7 +75,7 @@ public class Tile {
 	public Piece createPieceByID(int id) {
 		for (PieceTile piece : PieceTile.values()) {
     		if (piece.getId() == id) {
-    			return new Piece(this, piece);
+    			return new Piece(piece);
     		}
     	}
 		return null;
