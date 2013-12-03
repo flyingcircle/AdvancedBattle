@@ -9,6 +9,12 @@ import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.MenuScene.IOnMenuItemClickListener;
 import org.andengine.entity.scene.menu.item.IMenuItem;
 import org.andengine.entity.scene.menu.item.TextMenuItem;
+import org.andengine.opengl.texture.TextureOptions;
+import org.andengine.opengl.texture.atlas.TextureAtlas;
+import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
+import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
+import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.util.color.Color;
 import org.andengine.entity.scene.menu.item.decorator.ColorMenuItemDecorator;
 import org.andengine.entity.sprite.Sprite;
@@ -32,6 +38,8 @@ public class GameManager implements IOnMenuItemClickListener{
 	private static ResourcesManager resourcesManager = ResourcesManager.getInstance();
 	
 	private Map map;
+	
+	//tile info hud
 	private HUD hud;
 	private Entity rectangleGroup;
 	private Text tileName;
@@ -40,6 +48,12 @@ public class GameManager implements IOnMenuItemClickListener{
 	private Sprite pieceSprite;
 	private Text defense;
 	
+	//playerinfo hud
+	private Entity playerRectangleGroup;
+	private Text currentPlayer;
+	private Text currentFunds;
+	
+	//action menu
 	private Entity actionMenu;
 	private boolean hasActionMenu = false;
 
@@ -51,6 +65,11 @@ public class GameManager implements IOnMenuItemClickListener{
 	private static final int CANCEL = 4;
 	private static final int END_TURN = 5;
 	
+	//Victory image
+	private BitmapTextureAtlas victoryTextureAtlas;
+	private ITextureRegion victoryTextureRegion;
+	private Sprite victoryImage;
+	
 	private boolean isMoving = false;
 	private Tile movingPieceTile = null;
 	private ArrayList<Tile> moves;
@@ -58,6 +77,7 @@ public class GameManager implements IOnMenuItemClickListener{
 	public GameManager() {
 		createMap();
 		createHUD();
+		createPlayerHud();
 	}
 	
 	private void createMap() {
@@ -222,6 +242,37 @@ public class GameManager implements IOnMenuItemClickListener{
 	    }
 	}
 	
+	private void createPlayerHud() {
+	    playerRectangleGroup = new Entity(10, 10);
+	    Rectangle rectangle = new Rectangle(0, 0, 240, 80, resourcesManager.getVbom());
+	    rectangle.setColor(0.0F, 0.0F, 0.0F, 0.75F);
+	    playerRectangleGroup.attachChild(rectangle);
+	    
+	    //TODO get Player for current Player
+	    
+	    currentPlayer = new Text(0, 0, resourcesManager.getFont(), "RED", new TextOptions(HorizontalAlign.CENTER), resourcesManager.getVbom());
+	    //TODO currentPlayer.setText(player.getColor());
+	    
+	    currentPlayer.setScale(1F);
+	    currentPlayer.setPosition(5, 5);
+	    playerRectangleGroup.attachChild(currentPlayer);
+	    
+	    currentFunds = new Text(0, 0, resourcesManager.getFont(), "$1000", new TextOptions(HorizontalAlign.CENTER), resourcesManager.getVbom());
+	    //TODO currentFunds.setText(player.getFunds());
+	    currentFunds.setScale(0.5F);
+	    currentFunds.setPosition( 80, 40);
+	    playerRectangleGroup.attachChild(currentFunds);
+	    
+	    hud.attachChild(playerRectangleGroup);
+	}
+	
+	public void updatePlayerHud() {
+		//TODO get player info
+		//TODO set new currentPlayer
+	    //currentPlayer.setText(player.getColor());
+		//currentFunds.setText(player.getFunds());
+	}
+	
 	public void handleAction() {
 		Tile tile = map.getTile(resourcesManager.getCursorColumn(), resourcesManager.getCursorRow());
 		
@@ -317,33 +368,44 @@ public class GameManager implements IOnMenuItemClickListener{
 	@Override
 	public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
 		switch(pMenuItem.getID()) {
-		case 0:
+		case ATTACK:
 			destroyActionMenu();
 			// Attack stuff
 			return true;
-		case 1:
+		case LIBERATE:
 			destroyActionMenu();
 			// Liberate stuff
 			return true;
-		case 2:
+		case MOVE:
 			destroyActionMenu();
 			createMoveAction();
 			return true;
-		case 3:
+		case BUY:
 			destroyActionMenu();
 			// Buy stuff
 			return true;
-		case 4:
+		case CANCEL:
 			destroyActionMenu();
 			// Cancel stuff
 			return true;
-		case 5:
+		case END_TURN:
 			destroyActionMenu();
 			// End turn stuff
 			return true;
 		default:
 			return false;
 		}
+	}
+	
+	public void createVictoryImage() {
+		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/splash/");
+		victoryTextureAtlas = new BitmapTextureAtlas(resourcesManager.getActivity().getTextureManager(), 256, 256, TextureOptions.BILINEAR);
+    	victoryTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(victoryTextureAtlas, resourcesManager.getActivity(), "RedWins.png", 0, 0);
+		victoryImage = new Sprite(0, 0, victoryTextureRegion, resourcesManager.getVbom());
+		
+		victoryImage.setScale(2F);
+		victoryImage.setPosition(235, 200);
+		hud.attachChild(victoryImage);
 	}
 	
 	public void destroyActionMenu() {
