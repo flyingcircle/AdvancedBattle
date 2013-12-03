@@ -323,7 +323,7 @@ public class GameManager implements IOnMenuItemClickListener{
 			return true;
 		case 1:
 			destroyActionMenu();
-			// Liberate stuff
+			liberate();
 			return true;
 		case 2:
 			destroyActionMenu();
@@ -360,6 +360,43 @@ public class GameManager implements IOnMenuItemClickListener{
 		this.actionMenu = null;
 		
 		this.hasActionMenu = false;
+	}
+	
+	public void liberate() {
+		Tile tile = map.getTile(resourcesManager.getCursorColumn(), resourcesManager.getCursorRow());
+		Piece piece = tile.getPiece();
+		
+		int pieceHealth = piece.getHealth();
+		int buildingHealth = piece.getCurrentBuildingHealth() - pieceHealth / 2;
+		if (buildingHealth <= 0) {
+			buildingHealth = 0;
+		}
+		piece.setCurrentBuildingHealth(buildingHealth);
+		
+		if (piece.getCurrentBuildingHealth() == 0 && tile.getStructureTileID() == TerrainTile.CITY_WHITE.getId()) {
+			piece.setCurrentBuildingHealth(piece.MAX_BUILDING_HEALTH);
+			
+			// TODO : Add images for other colors
+			if (piece.getPieceTile().getId() >= 98 && piece.getPieceTile().getId() < 116) {
+				tile.setStructureTileID(TerrainTile.CITY_RED.getId());
+				
+				TMXLayer structureLayer = resourcesManager.getGameMap().getTMXLayers().get(1);
+				TMXTile city = structureLayer.getTMXTile(tile.getColumn(), tile.getRow());
+				city.setGlobalTileID(resourcesManager.getGameMap(), TerrainTile.CITY_RED.getId());
+				structureLayer.setIndex(city.getTileRow() * resourcesManager.getGameMap().getTileColumns() + city.getTileColumn());
+				structureLayer.drawWithoutChecks(city.getTextureRegion(), city.getTileX(), city.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
+				structureLayer.submit();
+			} else if (piece.getPieceTile().getId() >= 116 && piece.getPieceTile().getId() < 134) {
+				tile.setStructureTileID(TerrainTile.CITY_BLUE.getId());
+				
+				TMXLayer structureLayer = resourcesManager.getGameMap().getTMXLayers().get(1);
+				TMXTile city = structureLayer.getTMXTile(tile.getColumn(), tile.getRow());
+				city.setGlobalTileID(resourcesManager.getGameMap(), TerrainTile.CITY_BLUE.getId());
+				structureLayer.setIndex(city.getTileRow() * resourcesManager.getGameMap().getTileColumns() + city.getTileColumn());
+				structureLayer.drawWithoutChecks(city.getTextureRegion(), city.getTileX(), city.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
+				structureLayer.submit();
+			}
+		}
 	}
 	
 	public void createMoveAction() {

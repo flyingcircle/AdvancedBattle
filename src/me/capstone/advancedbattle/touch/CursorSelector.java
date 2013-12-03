@@ -5,6 +5,7 @@ import me.capstone.advancedbattle.manager.GameManager;
 import me.capstone.advancedbattle.resources.CursorTile;
 import me.capstone.advancedbattle.resources.PieceTile;
 import me.capstone.advancedbattle.resources.ResourcesManager;
+import me.capstone.advancedbattle.resources.TerrainTile;
 import me.capstone.advancedbattle.tile.Tile;
 import me.capstone.advancedbattle.tile.piece.Piece;
 
@@ -81,10 +82,12 @@ public class CursorSelector implements IOnSceneTouchListener, IUpdateHandler {
 					for (Tile tile : game.getMoves()) {
 						if (tile.getRow() == (int) clickedY && tile.getColumn() == (int) clickedX) {
 							
-							System.out.println(tile.getColumn() + ", " + tile.getRow());
-							System.out.println(game.getMovingPieceTile().getColumn() + ", " + game.getMovingPieceTile().getRow());
-							
 							Piece piece = game.getMovingPieceTile().getPiece();
+							// TODO : Need to check if player walks off enemy HQ also
+							if (game.getMovingPieceTile().getStructureTileID() == TerrainTile.CITY_WHITE.getId()) {
+								piece.setCurrentBuildingHealth(piece.MAX_BUILDING_HEALTH);
+							}
+							
 							TMXTile pieceTile = pieceLayer.getTMXTile(game.getMovingPieceTile().getColumn(), game.getMovingPieceTile().getRow());
 							pieceTile.setGlobalTileID(resourcesManager.getGameMap(), PieceTile.PIECE_NULL.getId());
 							pieceLayer.setIndex(pieceTile.getTileRow() * resourcesManager.getGameMap().getTileColumns() + pieceTile.getTileColumn());
