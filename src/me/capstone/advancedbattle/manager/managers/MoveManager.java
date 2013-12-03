@@ -11,8 +11,10 @@ import me.capstone.advancedbattle.resources.ResourcesManager;
 import me.capstone.advancedbattle.resources.data.Direction;
 import me.capstone.advancedbattle.resources.data.MovementType;
 import me.capstone.advancedbattle.resources.tile.CursorTile;
+import me.capstone.advancedbattle.resources.tile.PieceTile;
 import me.capstone.advancedbattle.resources.tile.TerrainTile;
 import me.capstone.advancedbattle.tile.Tile;
+import me.capstone.advancedbattle.tile.piece.Piece;
 
 public class MoveManager {
 	private static ResourcesManager resourcesManager = ResourcesManager.getInstance();
@@ -37,30 +39,71 @@ public class MoveManager {
 		MovementType moveType = movingPieceTile.getPiece().getPieceTile().getMoveType();
 		moves = calculatePath(0, movement, movingPieceTile, new ArrayList<Tile>(), moveType, Direction.NULL);
 		
-		TMXLayer statusLayer = resourcesManager.getGameMap().getTMXLayers().get(3);
-		for (Tile move : moves) {
-			TMXTile highlighted = statusLayer.getTMXTile(move.getColumn(), move.getRow());
-			highlighted.setGlobalTileID(resourcesManager.getGameMap(), CursorTile.HIGHLIGHT.getId());
-			statusLayer.setIndex(highlighted.getTileRow() * resourcesManager.getGameMap().getTileColumns() + highlighted.getTileColumn());
-			statusLayer.drawWithoutChecks(highlighted.getTextureRegion(), highlighted.getTileX(), highlighted.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
-			statusLayer.submit();
+		if (!moves.isEmpty()) {
+			display(moves);
 		}
 	}
 	
 	public void destroyMoveAction(boolean successful) {
+		Tile tile = game.getMap().getTile(resourcesManager.getCursorColumn(), resourcesManager.getCursorRow());
 		this.isMoving = false;
 		
-		TMXLayer statusLayer = resourcesManager.getGameMap().getTMXLayers().get(3);
-		for (Tile move : moves) {
-			TMXTile highlighted = statusLayer.getTMXTile(move.getColumn(), move.getRow());
-			highlighted.setGlobalTileID(resourcesManager.getGameMap(), CursorTile.CURSOR_NULL.getId());
-			statusLayer.setIndex(highlighted.getTileRow() * resourcesManager.getGameMap().getTileColumns() + highlighted.getTileColumn());
-			statusLayer.drawWithoutChecks(highlighted.getTextureRegion(), highlighted.getTileX(), highlighted.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
-			statusLayer.submit();
+		if (!moves.isEmpty()) {
+			hide(moves);
 		}
 		
 		this.movingPieceTile = null;
 		this.moves = null;
+		
+		if (successful) {
+			if (game.getAttackManager().canAttack(tile) && !game.getLiberateManager().canLiberate(tile)) {
+				game.getActionMenuManager().createActionMenu(3, false, true, false, false);
+			} else if (!game.getAttackManager().canAttack(tile) && game.getLiberateManager().canLiberate(tile)) {
+				game.getActionMenuManager().createActionMenu(3, false, false, true, false);
+			} else if (game.getAttackManager().canAttack(tile) && game.getLiberateManager().canLiberate(tile)) {
+				game.getActionMenuManager().createActionMenu(4, false, true, true, false);
+			} else {
+				game.disable(tile);
+			}
+		}
+	}
+	
+	public void executeMoveAction(int clickedX, int clickedY) {
+		TMXLayer pieceLayer = resourcesManager.getGameMap().getTMXLayers().get(2);
+		
+		for (Tile tile : game.getMoveManager().getMoves()) {
+			if (tile.getRow() == clickedY && tile.getColumn() == clickedX) {
+				
+				Piece piece = game.getMoveManager().getMovingPieceTile().getPiece();
+				if (game.getMoveManager().getMovingPieceTile().getStructureTileID() == TerrainTile.CITY_WHITE.getId() || game.getMoveManager().getMovingPieceTile().getStructureTileID() == TerrainTile.CITY_BLUE.getId() 
+						|| game.getMoveManager().getMovingPieceTile().getStructureTileID() == TerrainTile.CITY_RED.getId() || game.getMoveManager().getMovingPieceTile().getStructureTileID() == TerrainTile.FACTORY_BLUE.getId() 
+						|| game.getMoveManager().getMovingPieceTile().getStructureTileID() == TerrainTile.FACTORY_RED.getId() || game.getMoveManager().getMovingPieceTile().getStructureTileID() == TerrainTile.FACTORY_WHITE.getId() 
+						|| game.getMoveManager().getMovingPieceTile().getStructureTileID() == TerrainTile.HQ_BLUE.getId() || game.getMoveManager().getMovingPieceTile().getStructureTileID() == TerrainTile.HQ_RED.getId()) {
+					piece.setCurrentBuildingHealth(piece.MAX_BUILDING_HEALTH);
+				}
+				
+				TMXTile pieceTile = pieceLayer.getTMXTile(game.getMoveManager().getMovingPieceTile().getColumn(), game.getMoveManager().getMovingPieceTile().getRow());
+				pieceTile.setGlobalTileID(resourcesManager.getGameMap(), PieceTile.PIECE_NULL.getId());
+				pieceLayer.setIndex(pieceTile.getTileRow() * resourcesManager.getGameMap().getTileColumns() + pieceTile.getTileColumn());
+				pieceLayer.drawWithoutChecks(pieceTile.getTextureRegion(), pieceTile.getTileX(), pieceTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
+								
+				game.getMoveManager().getMovingPieceTile().setPiece(null);
+				game.getMoveManager().getMovingPieceTile().setPieceTileID(PieceTile.PIECE_NULL.getId());			
+				pieceLayer.submit();
+				
+				TMXTile moveTile = pieceLayer.getTMXTile((int) clickedX, (int) clickedY);
+				moveTile.setGlobalTileID(resourcesManager.getGameMap(), piece.getPieceTile().getId());
+				pieceLayer.setIndex(moveTile.getTileRow() * resourcesManager.getGameMap().getTileColumns() + moveTile.getTileColumn());
+				pieceLayer.drawWithoutChecks(moveTile.getTextureRegion(), moveTile.getTileX(), moveTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);								
+				pieceLayer.submit();
+				
+				game.getMap().getTile(moveTile.getTileColumn(), moveTile.getTileRow()).setPiece(piece);
+				game.getMap().getTile(moveTile.getTileColumn(), moveTile.getTileRow()).setPieceTileID(piece.getPieceTile().getId());
+				
+				game.getMoveManager().destroyMoveAction(true);
+				break;
+			}
+		}
 	}
 	
 	public ArrayList<Tile> calculatePath(int current, int movement, Tile tile, ArrayList<Tile> result, MovementType moveType, Direction lastDirection) {
@@ -292,21 +335,27 @@ public class MoveManager {
 				
 		return result;
 	}
-
-	public static ResourcesManager getResourcesManager() {
-		return resourcesManager;
+	
+	private void display(ArrayList<Tile> moves) {
+		TMXLayer statusLayer = resourcesManager.getGameMap().getTMXLayers().get(3);
+		for (Tile move : moves) {
+			TMXTile highlighted = statusLayer.getTMXTile(move.getColumn(), move.getRow());
+			highlighted.setGlobalTileID(resourcesManager.getGameMap(), CursorTile.HIGHLIGHT.getId());
+			statusLayer.setIndex(highlighted.getTileRow() * resourcesManager.getGameMap().getTileColumns() + highlighted.getTileColumn());
+			statusLayer.drawWithoutChecks(highlighted.getTextureRegion(), highlighted.getTileX(), highlighted.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
+			statusLayer.submit();
+		}
 	}
-
-	public static void setResourcesManager(ResourcesManager resourcesManager) {
-		MoveManager.resourcesManager = resourcesManager;
-	}
-
-	public GameManager getGame() {
-		return game;
-	}
-
-	public void setGame(GameManager game) {
-		this.game = game;
+	
+	private void hide(ArrayList<Tile> moves) {
+		TMXLayer statusLayer = resourcesManager.getGameMap().getTMXLayers().get(3);
+		for (Tile move : moves) {
+			TMXTile highlighted = statusLayer.getTMXTile(move.getColumn(), move.getRow());
+			highlighted.setGlobalTileID(resourcesManager.getGameMap(), CursorTile.CURSOR_NULL.getId());
+			statusLayer.setIndex(highlighted.getTileRow() * resourcesManager.getGameMap().getTileColumns() + highlighted.getTileColumn());
+			statusLayer.drawWithoutChecks(highlighted.getTextureRegion(), highlighted.getTileX(), highlighted.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
+			statusLayer.submit();
+		}
 	}
 
 	public boolean isMoving() {

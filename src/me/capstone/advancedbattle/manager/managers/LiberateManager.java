@@ -20,6 +20,22 @@ public class LiberateManager {
 		this.game = game;
 	}
 	
+	public boolean canLiberate(Tile tile) {
+		Piece piece = tile.getPiece();
+		if (piece.getPieceTile().canLiberate()) {
+			if (game.getTurn() == TeamColor.RED) {
+				if (tile.getStructureTileID() == TerrainTile.FACTORY_BLUE.getId() || tile.getStructureTileID() == TerrainTile.CITY_BLUE.getId() || tile.getStructureTileID() == TerrainTile.HQ_BLUE.getId() || tile.getStructureTileID() == TerrainTile.CITY_WHITE.getId() || tile.getStructureTileID() == TerrainTile.FACTORY_WHITE.getId()) {
+					return true;
+				}
+			} else if (game.getTurn() == TeamColor.BLUE) {
+				if (tile.getStructureTileID() == TerrainTile.FACTORY_RED.getId() || tile.getStructureTileID() == TerrainTile.CITY_RED.getId() || tile.getStructureTileID() == TerrainTile.HQ_RED.getId() || tile.getStructureTileID() == TerrainTile.CITY_WHITE.getId() || tile.getStructureTileID() == TerrainTile.FACTORY_WHITE.getId()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 	public void liberate() {
 		Tile tile = game.getMap().getTile(resourcesManager.getCursorColumn(), resourcesManager.getCursorRow());
 		Piece piece = tile.getPiece();
@@ -46,7 +62,7 @@ public class LiberateManager {
 					structureLayer.submit();
 						
 					game.getMap().setRedCities(game.getMap().getRedCities() + 1);
-				} else if (tile.getStructureTileID() == TerrainTile.FACTORY_BLUE.getId()) {
+				} else if (tile.getStructureTileID() == TerrainTile.FACTORY_BLUE.getId() || tile.getStructureTileID() == TerrainTile.FACTORY_WHITE.getId()) {
 					piece.setCurrentBuildingHealth(piece.MAX_BUILDING_HEALTH);
 					
 					tile.setStructureTileID(TerrainTile.FACTORY_RED.getId());
@@ -57,6 +73,20 @@ public class LiberateManager {
 					structureLayer.setIndex(factory.getTileRow() * resourcesManager.getGameMap().getTileColumns() + factory.getTileColumn());
 					structureLayer.drawWithoutChecks(factory.getTextureRegion(), factory.getTileX(), factory.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
 					structureLayer.submit();
+				} else if (tile.getStructureTileID() == TerrainTile.CITY_BLUE.getId()) {
+					piece.setCurrentBuildingHealth(piece.MAX_BUILDING_HEALTH);
+					
+					tile.setStructureTileID(TerrainTile.CITY_RED.getId());
+						
+					TMXLayer structureLayer = resourcesManager.getGameMap().getTMXLayers().get(1);
+					TMXTile city = structureLayer.getTMXTile(tile.getColumn(), tile.getRow());
+					city.setGlobalTileID(resourcesManager.getGameMap(), TerrainTile.CITY_RED.getId());
+					structureLayer.setIndex(city.getTileRow() * resourcesManager.getGameMap().getTileColumns() + city.getTileColumn());
+					structureLayer.drawWithoutChecks(city.getTextureRegion(), city.getTileX(), city.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
+					structureLayer.submit();
+						
+					game.getMap().setRedCities(game.getMap().getRedCities() + 1);
+					game.getMap().setBlueCities(game.getMap().getBlueCities() - 1);
 				} else if (tile.getStructureTileID() == TerrainTile.HQ_BLUE.getId()) {
 					piece.setCurrentBuildingHealth(piece.MAX_BUILDING_HEALTH);
 					
@@ -93,7 +123,7 @@ public class LiberateManager {
 					structureLayer.submit();
 						
 					game.getMap().setBlueCities(game.getMap().getBlueCities() + 1);
-				} else if (tile.getStructureTileID() == TerrainTile.FACTORY_RED.getId()) {
+				} else if (tile.getStructureTileID() == TerrainTile.FACTORY_RED.getId() || tile.getStructureTileID() == TerrainTile.FACTORY_WHITE.getId()) {
 					piece.setCurrentBuildingHealth(piece.MAX_BUILDING_HEALTH);
 					
 					tile.setStructureTileID(TerrainTile.FACTORY_BLUE.getId());
@@ -104,6 +134,20 @@ public class LiberateManager {
 					structureLayer.setIndex(factory.getTileRow() * resourcesManager.getGameMap().getTileColumns() + factory.getTileColumn());
 					structureLayer.drawWithoutChecks(factory.getTextureRegion(), factory.getTileX(), factory.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
 					structureLayer.submit();
+				} else if (tile.getStructureTileID() == TerrainTile.CITY_RED.getId()) {
+					piece.setCurrentBuildingHealth(piece.MAX_BUILDING_HEALTH);
+					
+					tile.setStructureTileID(TerrainTile.CITY_BLUE.getId());
+						
+					TMXLayer structureLayer = resourcesManager.getGameMap().getTMXLayers().get(1);
+					TMXTile city = structureLayer.getTMXTile(tile.getColumn(), tile.getRow());
+					city.setGlobalTileID(resourcesManager.getGameMap(), TerrainTile.CITY_BLUE.getId());
+					structureLayer.setIndex(city.getTileRow() * resourcesManager.getGameMap().getTileColumns() + city.getTileColumn());
+					structureLayer.drawWithoutChecks(city.getTextureRegion(), city.getTileX(), city.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
+					structureLayer.submit();
+						
+					game.getMap().setBlueCities(game.getMap().getBlueCities() + 1);
+					game.getMap().setRedCities(game.getMap().getRedCities() - 1);
 				} else if (tile.getStructureTileID() == TerrainTile.HQ_RED.getId()) {
 					piece.setCurrentBuildingHealth(piece.MAX_BUILDING_HEALTH);
 					
@@ -126,11 +170,10 @@ public class LiberateManager {
 					
 					game.createVictoryImage();
 				}
-			} else {
-				// Not sure what to do here. Should always be red or blue.
 			}
 		}
 		
+		game.disable(tile);
 		game.getHud().updateHUD();
 	}
 
