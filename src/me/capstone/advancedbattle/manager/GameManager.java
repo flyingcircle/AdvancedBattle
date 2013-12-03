@@ -15,8 +15,6 @@ import org.andengine.entity.text.TextOptions;
 import org.andengine.extension.tmx.TMXLayer;
 import org.andengine.util.HorizontalAlign;
 
-import android.widget.Toast;
-
 import me.capstone.advancedbattle.map.Map;
 import me.capstone.advancedbattle.resources.PieceTile;
 import me.capstone.advancedbattle.resources.ResourcesManager;

@@ -17,7 +17,11 @@ public class Tile {
 		this.terrainTileID = terrainTileID;
 		this.structureTileID = structureTileID;
 		this.pieceTileID = pieceTileID;
-		this.piece = createPieceByID(pieceTileID);
+		if (pieceTileID == 170) {
+			this.piece = null;
+		} else {
+			this.piece = createPieceByID(pieceTileID);
+		}
 	}
 	
 	public int getColumn() {
