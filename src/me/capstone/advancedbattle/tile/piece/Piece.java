@@ -4,9 +4,9 @@ import me.capstone.advancedbattle.resources.PieceTile;
 
 public class Piece {
 	
-	private final int MAX_HEALTH;
+	public final int MAX_HEALTH;
 	private int health;
-	private final int MAX_BUILDING_HEALTH;
+	public final int MAX_BUILDING_HEALTH;
 	private int currentBuildingHealth;
 	private PieceTile pieceTile;
 

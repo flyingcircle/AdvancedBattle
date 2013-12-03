@@ -5,6 +5,7 @@ import me.capstone.advancedbattle.manager.GameManager;
 import me.capstone.advancedbattle.resources.CursorTile;
 import me.capstone.advancedbattle.resources.PieceTile;
 import me.capstone.advancedbattle.resources.ResourcesManager;
+import me.capstone.advancedbattle.resources.TerrainTile;
 import me.capstone.advancedbattle.tile.Tile;
 import me.capstone.advancedbattle.tile.piece.Piece;
 
@@ -62,8 +63,7 @@ public class CursorSelector implements IOnSceneTouchListener, IUpdateHandler {
 				TMXTile cursorTile = cursorLayer.getTMXTile(resourcesManager.getCursorColumn(), resourcesManager.getCursorRow());		
 				cursorTile.setGlobalTileID(resourcesManager.getGameMap(), CursorTile.CURSOR_NULL.getId());
 				cursorLayer.setIndex(cursorTile.getTileRow() * resourcesManager.getGameMap().getTileColumns() + cursorTile.getTileColumn());
-				cursorLayer.drawWithoutChecks(cursorTile.getTextureRegion(), cursorTile.getTileX(), cursorTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
-				
+				cursorLayer.drawWithoutChecks(cursorTile.getTextureRegion(), cursorTile.getTileX(), cursorTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);			
 				cursorLayer.submit();
 				
 				resourcesManager.setCursorColumn((int) clickedX);
@@ -73,7 +73,6 @@ public class CursorSelector implements IOnSceneTouchListener, IUpdateHandler {
 				newTile.setGlobalTileID(resourcesManager.getGameMap(), CursorTile.CURSOR.getId());
 				cursorLayer.setIndex(newTile.getTileRow() * resourcesManager.getGameMap().getTileColumns() + newTile.getTileColumn());
 				cursorLayer.drawWithoutChecks(newTile.getTextureRegion(), newTile.getTileX(), newTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
-				
 				cursorLayer.submit();
 				
 				TMXLayer pieceLayer = resourcesManager.getGameMap().getTMXLayers().get(2);
@@ -81,25 +80,25 @@ public class CursorSelector implements IOnSceneTouchListener, IUpdateHandler {
 					for (Tile tile : game.getMoves()) {
 						if (tile.getRow() == (int) clickedY && tile.getColumn() == (int) clickedX) {
 							
-							System.out.println(tile.getColumn() + ", " + tile.getRow());
-							System.out.println(game.getMovingPieceTile().getColumn() + ", " + game.getMovingPieceTile().getRow());
-							
 							Piece piece = game.getMovingPieceTile().getPiece();
+							// TODO : Need to check if player walks off enemy HQ also
+							if (game.getMovingPieceTile().getStructureTileID() == TerrainTile.CITY_WHITE.getId()) {
+								piece.setCurrentBuildingHealth(piece.MAX_BUILDING_HEALTH);
+							}
+							
 							TMXTile pieceTile = pieceLayer.getTMXTile(game.getMovingPieceTile().getColumn(), game.getMovingPieceTile().getRow());
 							pieceTile.setGlobalTileID(resourcesManager.getGameMap(), PieceTile.PIECE_NULL.getId());
 							pieceLayer.setIndex(pieceTile.getTileRow() * resourcesManager.getGameMap().getTileColumns() + pieceTile.getTileColumn());
 							pieceLayer.drawWithoutChecks(pieceTile.getTextureRegion(), pieceTile.getTileX(), pieceTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
 							
 							game.getMovingPieceTile().setPiece(null);
-							game.getMovingPieceTile().setPieceTileID(PieceTile.PIECE_NULL.getId());
-							
+							game.getMovingPieceTile().setPieceTileID(PieceTile.PIECE_NULL.getId());			
 							pieceLayer.submit();
 							
 							TMXTile moveTile = pieceLayer.getTMXTile((int) clickedX, (int) clickedY);
 							moveTile.setGlobalTileID(resourcesManager.getGameMap(), piece.getPieceTile().getId());
 							pieceLayer.setIndex(moveTile.getTileRow() * resourcesManager.getGameMap().getTileColumns() + moveTile.getTileColumn());
-							pieceLayer.drawWithoutChecks(moveTile.getTextureRegion(), moveTile.getTileX(), moveTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
-														
+							pieceLayer.drawWithoutChecks(moveTile.getTextureRegion(), moveTile.getTileX(), moveTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);								
 							pieceLayer.submit();
 							
 							game.getMap().getTile(moveTile.getTileColumn(), moveTile.getTileRow()).setPiece(piece);
