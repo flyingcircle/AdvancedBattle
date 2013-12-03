@@ -76,25 +76,25 @@ public class CursorSelector implements IOnSceneTouchListener, IUpdateHandler {
 				cursorLayer.submit();
 				
 				TMXLayer pieceLayer = resourcesManager.getGameMap().getTMXLayers().get(2);
-				if (game.isMoving()) {
-					for (Tile tile : game.getMoves()) {
+				if (game.getMoveManager().isMoving()) {
+					for (Tile tile : game.getMoveManager().getMoves()) {
 						if (tile.getRow() == (int) clickedY && tile.getColumn() == (int) clickedX) {
 							
-							Piece piece = game.getMovingPieceTile().getPiece();
-							if (game.getMovingPieceTile().getStructureTileID() == TerrainTile.CITY_WHITE.getId() || game.getMovingPieceTile().getStructureTileID() == TerrainTile.CITY_BLUE.getId() 
-									|| game.getMovingPieceTile().getStructureTileID() == TerrainTile.CITY_RED.getId() || game.getMovingPieceTile().getStructureTileID() == TerrainTile.FACTORY_BLUE.getId() 
-									|| game.getMovingPieceTile().getStructureTileID() == TerrainTile.FACTORY_RED.getId() || game.getMovingPieceTile().getStructureTileID() == TerrainTile.FACTORY_WHITE.getId() 
-									|| game.getMovingPieceTile().getStructureTileID() == TerrainTile.HQ_BLUE.getId() || game.getMovingPieceTile().getStructureTileID() == TerrainTile.HQ_RED.getId()) {
+							Piece piece = game.getMoveManager().getMovingPieceTile().getPiece();
+							if (game.getMoveManager().getMovingPieceTile().getStructureTileID() == TerrainTile.CITY_WHITE.getId() || game.getMoveManager().getMovingPieceTile().getStructureTileID() == TerrainTile.CITY_BLUE.getId() 
+									|| game.getMoveManager().getMovingPieceTile().getStructureTileID() == TerrainTile.CITY_RED.getId() || game.getMoveManager().getMovingPieceTile().getStructureTileID() == TerrainTile.FACTORY_BLUE.getId() 
+									|| game.getMoveManager().getMovingPieceTile().getStructureTileID() == TerrainTile.FACTORY_RED.getId() || game.getMoveManager().getMovingPieceTile().getStructureTileID() == TerrainTile.FACTORY_WHITE.getId() 
+									|| game.getMoveManager().getMovingPieceTile().getStructureTileID() == TerrainTile.HQ_BLUE.getId() || game.getMoveManager().getMovingPieceTile().getStructureTileID() == TerrainTile.HQ_RED.getId()) {
 								piece.setCurrentBuildingHealth(piece.MAX_BUILDING_HEALTH);
 							}
 							
-							TMXTile pieceTile = pieceLayer.getTMXTile(game.getMovingPieceTile().getColumn(), game.getMovingPieceTile().getRow());
+							TMXTile pieceTile = pieceLayer.getTMXTile(game.getMoveManager().getMovingPieceTile().getColumn(), game.getMoveManager().getMovingPieceTile().getRow());
 							pieceTile.setGlobalTileID(resourcesManager.getGameMap(), PieceTile.PIECE_NULL.getId());
 							pieceLayer.setIndex(pieceTile.getTileRow() * resourcesManager.getGameMap().getTileColumns() + pieceTile.getTileColumn());
 							pieceLayer.drawWithoutChecks(pieceTile.getTextureRegion(), pieceTile.getTileX(), pieceTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
 							
-							game.getMovingPieceTile().setPiece(null);
-							game.getMovingPieceTile().setPieceTileID(PieceTile.PIECE_NULL.getId());			
+							game.getMoveManager().getMovingPieceTile().setPiece(null);
+							game.getMoveManager().getMovingPieceTile().setPieceTileID(PieceTile.PIECE_NULL.getId());			
 							pieceLayer.submit();
 							
 							TMXTile moveTile = pieceLayer.getTMXTile((int) clickedX, (int) clickedY);
@@ -106,7 +106,7 @@ public class CursorSelector implements IOnSceneTouchListener, IUpdateHandler {
 							game.getMap().getTile(moveTile.getTileColumn(), moveTile.getTileRow()).setPiece(piece);
 							game.getMap().getTile(moveTile.getTileColumn(), moveTile.getTileRow()).setPieceTileID(piece.getPieceTile().getId());
 							
-							game.destroyMoveAction(true);
+							game.getMoveManager().destroyMoveAction(true);
 							break;
 						}
 					}
@@ -119,7 +119,7 @@ public class CursorSelector implements IOnSceneTouchListener, IUpdateHandler {
 					game.getHud().getRectangleGroup().setPosition(650, 291);
 				}
 			} else {
-				if (!game.isMoving()) {
+				if (!game.getMoveManager().isMoving()) {
 					game.handleAction();
 				}
 			}

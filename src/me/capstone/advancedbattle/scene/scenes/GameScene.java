@@ -56,8 +56,8 @@ public class GameScene extends BaseScene {
     public void onBackKeyPressed() {
     	if (resourcesManager.getGameManager().hasActionMenu()) {
     		resourcesManager.getGameManager().destroyActionMenu();
-    	} else if (resourcesManager.getGameManager().isMoving()) {
-    		resourcesManager.getGameManager().destroyMoveAction(false);
+    	} else if (resourcesManager.getGameManager().getMoveManager().isMoving()) {
+    		resourcesManager.getGameManager().getMoveManager().destroyMoveAction(false);
     	} else {
     		SceneManager.getInstance().loadMenuScene(resourcesManager.getEngine());
     	}
@@ -67,7 +67,7 @@ public class GameScene extends BaseScene {
     public void onMenuKeyPressed() {
     	if (resourcesManager.getGameManager().hasActionMenu()) {
     		resourcesManager.getGameManager().destroyActionMenu();
-    	} else if (resourcesManager.getGameManager().isMoving()) {
+    	} else if (resourcesManager.getGameManager().getMoveManager().isMoving()) {
     		// Do nothing if the player is moving
     	} else {
     		resourcesManager.getGameManager().handleAction();
