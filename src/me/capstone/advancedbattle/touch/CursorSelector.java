@@ -117,7 +117,9 @@ public class CursorSelector implements IOnSceneTouchListener, IUpdateHandler {
 					game.getRectangleGroup().setPosition(650, 240);
 				}
 			} else {
-				game.handleAction();
+				if (!game.isMoving()) {
+					game.handleAction();
+				}
 			}
 		}
 		
