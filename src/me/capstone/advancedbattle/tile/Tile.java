@@ -2,7 +2,6 @@ package me.capstone.advancedbattle.tile;
 
 import me.capstone.advancedbattle.resources.PieceTile;
 import me.capstone.advancedbattle.tile.piece.Piece;
-import me.capstone.advancedbattle.tile.piece.unit.infantry.Infantry;
 
 public class Tile {
 	private int column;
@@ -18,7 +17,11 @@ public class Tile {
 		this.terrainTileID = terrainTileID;
 		this.structureTileID = structureTileID;
 		this.pieceTileID = pieceTileID;
-		this.piece = createPieceByID(pieceTileID);
+		if (pieceTileID == 170) {
+			this.piece = null;
+		} else {
+			this.piece = createPieceByID(pieceTileID);
+		}
 	}
 	
 	public int getColumn() {
@@ -69,22 +72,13 @@ public class Tile {
 		this.piece = piece;
 	}
 	
-	// TODO : More pieces later
 	public Piece createPieceByID(int id) {
-		if (id == 98) {
-			return new Infantry(this, PieceTile.RED_INFANTRY);
-		} else if (id == 116) {
-			return new Infantry(this, PieceTile.BLUE_INFANTRY);
-		} else if (id == 134) {
-			return new Infantry(this, PieceTile.GREEN_INFANTRY);
-		} else if (id == 152) {
-			return new Infantry(this, PieceTile.YELLOW_INFANTRY);
-		} else if (id == 170) {
-			return null;
-		} else {
-			// Throw an illegal id error
-			return null;
-		}
+		for (PieceTile piece : PieceTile.values()) {
+    		if (piece.getId() == id) {
+    			return new Piece(this, piece);
+    		}
+    	}
+		return null;
 	}
 
 }
