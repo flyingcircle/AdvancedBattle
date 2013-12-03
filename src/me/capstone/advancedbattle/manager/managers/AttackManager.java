@@ -11,6 +11,7 @@ import me.capstone.advancedbattle.resources.ResourcesManager;
 import me.capstone.advancedbattle.resources.tile.CursorTile;
 import me.capstone.advancedbattle.resources.tile.PieceTile;
 import me.capstone.advancedbattle.tile.Tile;
+import me.capstone.advancedbattle.util.Util;
 
 public class AttackManager {
 	private static ResourcesManager resourcesManager = ResourcesManager.getInstance();
@@ -28,42 +29,42 @@ public class AttackManager {
 	public boolean canAttack(Tile tile) {
 		if (tile.getRow() == 0) {
 			Tile sTile = game.getMap().getTile(tile.getColumn(), tile.getRow() + 1);
-			if (sTile.getPiece() != null && game.getPieceColor(sTile.getPiece()) != game.getTurn()) {
+			if (sTile.getPiece() != null && Util.getPieceColor(sTile.getPiece()) != game.getTurn()) {
 				return true;
 			}
 		} else if (tile.getRow() == game.getMap().getRows() - 1) {
 			Tile nTile = game.getMap().getTile(tile.getColumn(), tile.getRow() - 1);
-			if (nTile.getPiece() != null && game.getPieceColor(nTile.getPiece()) != game.getTurn()) {
+			if (nTile.getPiece() != null && Util.getPieceColor(nTile.getPiece()) != game.getTurn()) {
 				return true;
 			}
 		} else if (tile.getColumn() == 0) {
 			Tile eTile = game.getMap().getTile(tile.getColumn() + 1, tile.getRow());
-			if (eTile.getPiece() != null && game.getPieceColor(eTile.getPiece()) != game.getTurn()) {
+			if (eTile.getPiece() != null && Util.getPieceColor(eTile.getPiece()) != game.getTurn()) {
 				return true;
 			}
 		} else if (tile.getColumn() == game.getMap().getColumns() - 1) {
 			Tile wTile = game.getMap().getTile(tile.getColumn() - 1, tile.getRow());
-			if (wTile.getPiece() != null && game.getPieceColor(wTile.getPiece()) != game.getTurn()) {
+			if (wTile.getPiece() != null && Util.getPieceColor(wTile.getPiece()) != game.getTurn()) {
 				return true;
 			}
 		} else {
 			Tile nTile = game.getMap().getTile(tile.getColumn(), tile.getRow() - 1);
-			if (nTile.getPiece() != null && game.getPieceColor(nTile.getPiece()) != game.getTurn()) {
+			if (nTile.getPiece() != null && Util.getPieceColor(nTile.getPiece()) != game.getTurn()) {
 				return true;
 			}
 			
 			Tile sTile = game.getMap().getTile(tile.getColumn(), tile.getRow() + 1);
-			if (sTile.getPiece() != null && game.getPieceColor(sTile.getPiece()) != game.getTurn()) {
+			if (sTile.getPiece() != null && Util.getPieceColor(sTile.getPiece()) != game.getTurn()) {
 				return true;
 			}
 			
 			Tile eTile = game.getMap().getTile(tile.getColumn() + 1, tile.getRow());
-			if (eTile.getPiece() != null && game.getPieceColor(eTile.getPiece()) != game.getTurn()) {
+			if (eTile.getPiece() != null && Util.getPieceColor(eTile.getPiece()) != game.getTurn()) {
 				return true;
 			}
 			
 			Tile wTile = game.getMap().getTile(tile.getColumn() - 1, tile.getRow());
-			if (wTile.getPiece() != null && game.getPieceColor(wTile.getPiece()) != game.getTurn()) {
+			if (wTile.getPiece() != null && Util.getPieceColor(wTile.getPiece()) != game.getTurn()) {
 				return true;
 			}
 		}
@@ -124,56 +125,56 @@ public class AttackManager {
 		
 		if (tile.getRow() == 0) {
 			Tile sTile = game.getMap().getTile(tile.getColumn(), tile.getRow() + 1);
-			if (sTile.getPiece() != null && game.getPieceColor(sTile.getPiece()) != game.getTurn()) {
+			if (sTile.getPiece() != null && Util.getPieceColor(sTile.getPiece()) != game.getTurn()) {
 				if (!attacks.contains(sTile)) {
 					attacks.add(sTile);
 				}
 			}
 		} else if (tile.getRow() == game.getMap().getRows() - 1) {
 			Tile nTile = game.getMap().getTile(tile.getColumn(), tile.getRow() - 1);
-			if (nTile.getPiece() != null && game.getPieceColor(nTile.getPiece()) != game.getTurn()) {
+			if (nTile.getPiece() != null && Util.getPieceColor(nTile.getPiece()) != game.getTurn()) {
 				if (!attacks.contains(nTile)) {
 					attacks.add(nTile);
 				}
 			}
 		} else if (tile.getColumn() == 0) {
 			Tile eTile = game.getMap().getTile(tile.getColumn() + 1, tile.getRow());
-			if (eTile.getPiece() != null && game.getPieceColor(eTile.getPiece()) != game.getTurn()) {
+			if (eTile.getPiece() != null && Util.getPieceColor(eTile.getPiece()) != game.getTurn()) {
 				if (!attacks.contains(eTile)) {
 					attacks.add(eTile);
 				}
 			}
 		} else if (tile.getColumn() == game.getMap().getColumns() - 1) {
 			Tile wTile = game.getMap().getTile(tile.getColumn() - 1, tile.getRow());
-			if (wTile.getPiece() != null && game.getPieceColor(wTile.getPiece()) != game.getTurn()) {
+			if (wTile.getPiece() != null && Util.getPieceColor(wTile.getPiece()) != game.getTurn()) {
 				if (!attacks.contains(wTile)) {
 					attacks.add(wTile);
 				}
 			}
 		} else {
 			Tile nTile = game.getMap().getTile(tile.getColumn(), tile.getRow() - 1);
-			if (nTile.getPiece() != null && game.getPieceColor(nTile.getPiece()) != game.getTurn()) {
+			if (nTile.getPiece() != null && Util.getPieceColor(nTile.getPiece()) != game.getTurn()) {
 				if (!attacks.contains(nTile)) {
 					attacks.add(nTile);
 				}
 			}
 			
 			Tile sTile = game.getMap().getTile(tile.getColumn(), tile.getRow() + 1);
-			if (sTile.getPiece() != null && game.getPieceColor(sTile.getPiece()) != game.getTurn()) {
+			if (sTile.getPiece() != null && Util.getPieceColor(sTile.getPiece()) != game.getTurn()) {
 				if (!attacks.contains(sTile)) {
 					attacks.add(sTile);
 				}
 			}
 			
 			Tile eTile = game.getMap().getTile(tile.getColumn() + 1, tile.getRow());
-			if (eTile.getPiece() != null && game.getPieceColor(eTile.getPiece()) != game.getTurn()) {
+			if (eTile.getPiece() != null && Util.getPieceColor(eTile.getPiece()) != game.getTurn()) {
 				if (!attacks.contains(eTile)) {
 					attacks.add(eTile);
 				}
 			}
 			
 			Tile wTile = game.getMap().getTile(tile.getColumn() - 1, tile.getRow());
-			if (wTile.getPiece() != null && game.getPieceColor(wTile.getPiece()) != game.getTurn()) {
+			if (wTile.getPiece() != null && Util.getPieceColor(wTile.getPiece()) != game.getTurn()) {
 				if (!attacks.contains(wTile)) {
 					attacks.add(wTile);
 				}

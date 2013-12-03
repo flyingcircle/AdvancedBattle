@@ -1,6 +1,5 @@
 package me.capstone.advancedbattle.manager.managers;
 
-import org.andengine.engine.camera.hud.HUD;
 import org.andengine.entity.Entity;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.menu.MenuScene;
@@ -13,10 +12,10 @@ import org.andengine.extension.tmx.TMXTile;
 import org.andengine.util.color.Color;
 
 import me.capstone.advancedbattle.manager.GameManager;
-import me.capstone.advancedbattle.manager.hud.GameHUD;
 import me.capstone.advancedbattle.resources.ResourcesManager;
 import me.capstone.advancedbattle.resources.tile.PieceTile;
 import me.capstone.advancedbattle.tile.Tile;
+import me.capstone.advancedbattle.util.Util;
 
 public class BuyMenuManager implements IOnMenuItemClickListener {
 	
@@ -32,7 +31,7 @@ public class BuyMenuManager implements IOnMenuItemClickListener {
 	
 	public void createBuyMenu(){
 		buyMenu = new Entity(0, 0);
-		int currentFunds = game.getCurrentFunds();
+		int currentFunds = Util.getCurrentFunds();
 		currentTile  = game.getMap().getTile(resourcesManager.getCursorColumn(), resourcesManager.getCursorRow());
 		
 		Rectangle backgroundRect = new Rectangle(0, 0, 800, 480, resourcesManager.getVbom());
@@ -108,7 +107,7 @@ public class BuyMenuManager implements IOnMenuItemClickListener {
 			subtractCost = PieceTile.RED_MECH.getCost();
 			currentTile.setPiece( currentTile.createPieceByID( PieceTile.RED_MECH.getId()));
 		}
-		game.setCurrentFunds(game.getCurrentFunds() - subtractCost);
+		Util.setCurrentFunds(Util.getCurrentFunds() - subtractCost);
 		TMXLayer pieceLayer = resourcesManager.getGameMap().getTMXLayers().get(2);
 		TMXTile pieceTile = pieceLayer.getTMXTile(currentTile.getColumn(), currentTile.getRow());
 		pieceTile.setGlobalTileID(resourcesManager.getGameMap(), PieceTile.RED_INFANTRY.getId());

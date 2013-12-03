@@ -9,12 +9,9 @@ import org.andengine.util.color.Color;
 
 import me.capstone.advancedbattle.manager.managers.ActionMenuManager;
 import me.capstone.advancedbattle.manager.managers.AttackManager;
-<<<<<<< HEAD
+import me.capstone.advancedbattle.manager.managers.BuyMenuManager;
 import me.capstone.advancedbattle.manager.managers.EndTurnManager;
 import me.capstone.advancedbattle.manager.managers.HUDManager;
-=======
-import me.capstone.advancedbattle.manager.managers.BuyMenuManager;
->>>>>>> f63c8e5bf14b402b4cd9b21c0db2ecf115bcde44
 import me.capstone.advancedbattle.manager.managers.LiberateManager;
 import me.capstone.advancedbattle.manager.managers.MoveManager;
 import me.capstone.advancedbattle.map.Map;
@@ -23,7 +20,7 @@ import me.capstone.advancedbattle.resources.data.TeamColor;
 import me.capstone.advancedbattle.resources.tile.CursorTile;
 import me.capstone.advancedbattle.resources.tile.TerrainTile;
 import me.capstone.advancedbattle.tile.Tile;
-import me.capstone.advancedbattle.tile.piece.Piece;
+import me.capstone.advancedbattle.util.Util;
 
 public class GameManager {
 	private static ResourcesManager resourcesManager = ResourcesManager.getInstance();
@@ -35,13 +32,10 @@ public class GameManager {
 	// Managers
 	private ActionMenuManager actionMenuManager;
 	private AttackManager attackManager;
+	private BuyMenuManager buyMenuManager;
 	private LiberateManager liberateManager;
 	private MoveManager moveManager;
-<<<<<<< HEAD
 	private EndTurnManager endTurnManager;
-=======
-	private BuyMenuManager buyMenuManager;
->>>>>>> f63c8e5bf14b402b4cd9b21c0db2ecf115bcde44
 	
 	// Team
 	private int blueFunds;
@@ -97,23 +91,10 @@ public class GameManager {
 		
 		this.actionMenuManager = new ActionMenuManager(this);
 		this.attackManager = new AttackManager(this);
+		this.buyMenuManager = new BuyMenuManager(this);
 		this.liberateManager = new LiberateManager(this);
 		this.moveManager = new MoveManager(this);
-<<<<<<< HEAD
 		this.endTurnManager = new EndTurnManager(this);
-=======
-		this.buyMenuManager = new BuyMenuManager(this);
->>>>>>> f63c8e5bf14b402b4cd9b21c0db2ecf115bcde44
-	}
-	
-	public TeamColor getPieceColor(Piece piece) {
-		if (piece.getPieceTile().getId() >= 98 && piece.getPieceTile().getId() < 116) {
-			return TeamColor.RED;
-		} else if (piece.getPieceTile().getId() >= 116 && piece.getPieceTile().getId() < 134) {
-			return TeamColor.BLUE;
-		} else {
-			return TeamColor.NULL;
-		}
 	}
 	
 	public void handleAction() {
@@ -126,7 +107,7 @@ public class GameManager {
 				return;
 			}
 			
-			if (getPieceColor(tile.getPiece()) != turn) {
+			if (Util.getPieceColor(tile.getPiece()) != turn) {
 				actionMenuManager.createActionMenu(count, false, false, false, false);
 				return;
 			}
@@ -157,63 +138,12 @@ public class GameManager {
 	public void disable(Tile tile) {
 		disabledTiles.add(tile);
 		
-<<<<<<< HEAD
 		TMXLayer statusLayer = resourcesManager.getGameMap().getTMXLayers().get(3);
 		TMXTile disabled = statusLayer.getTMXTile(tile.getColumn(), tile.getRow());
 		disabled.setGlobalTileID(resourcesManager.getGameMap(), CursorTile.DISABLED.getId());
 		statusLayer.setIndex(disabled.getTileRow() * resourcesManager.getGameMap().getTileColumns() + disabled.getTileColumn());
 		statusLayer.drawWithoutChecks(disabled.getTextureRegion(), disabled.getTileX(), disabled.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
 		statusLayer.submit();
-=======
-		Rectangle backgroundRect = new Rectangle(0, 0, 800, 480, resourcesManager.getVbom());
-	    backgroundRect.setColor(1.0F, 1.0F, 1.0F, 0.75F);
-	    actionMenu.attachChild(backgroundRect);
-	    
-	    int size = items * 50;
-	    Rectangle menuRect = new Rectangle(240, 240 - size / 2, 320, size + 10, resourcesManager.getVbom());
-	    menuRect.setColor(0.0F, 0.0F, 0.0F, 0.75F);
-	    
-	    this.actionMenuOptions = new MenuScene(resourcesManager.getCamera());
-	    actionMenuOptions.setPosition(0, 0);
-	    
-	    if (isFactory) {
-	    	final IMenuItem buyMenuItem = new ColorMenuItemDecorator(new TextMenuItem(BUY, resourcesManager.getFont(), "Buy", resourcesManager.getVbom()), new Color(1.0f, 1.0f, 1.0f, 0.75f), new Color(0.7f, 0.7f, 0.7f, 0.75f));
-	    	actionMenuOptions.addMenuItem(buyMenuItem);
-	    } else {
-	    	if (items > 2) {
-	    	    final IMenuItem moveMenuItem = new ColorMenuItemDecorator(new TextMenuItem(MOVE, resourcesManager.getFont(), "Move", resourcesManager.getVbom()), new Color(1.0f, 1.0f, 1.0f, 0.75f), new Color(0.7f, 0.7f, 0.7f, 0.75f));
-	    	    actionMenuOptions.addMenuItem(moveMenuItem);
-	    	    
-	    	    if (canAttack) {
-	    		    final IMenuItem attackMenuItem = new ColorMenuItemDecorator(new TextMenuItem(ATTACK, resourcesManager.getFont(), "Attack", resourcesManager.getVbom()), new Color(1.0f, 1.0f, 1.0f, 0.75f), new Color(0.7f, 0.7f, 0.7f, 0.75f));
-	    		    actionMenuOptions.addMenuItem(attackMenuItem);
-	    	    }
-	    	    
-	    	    if (canLiberate) {
-	    		    final IMenuItem liberateMenuItem = new ColorMenuItemDecorator(new TextMenuItem(LIBERATE, resourcesManager.getFont(), "Liberate", resourcesManager.getVbom()), new Color(1.0f, 1.0f, 1.0f, 0.75f), new Color(0.7f, 0.7f, 0.7f, 0.75f));
-	    		    actionMenuOptions.addMenuItem(liberateMenuItem);
-	    	    }
-	    	}
-	    }
-	    final IMenuItem cancelMenuItem = new ColorMenuItemDecorator(new TextMenuItem(CANCEL, resourcesManager.getFont(), "Cancel", resourcesManager.getVbom()), new Color(1.0f, 1.0f, 1.0f, 0.75f), new Color(0.7f, 0.7f, 0.7f, 0.75f));
-	    final IMenuItem endTurnMenuItem = new ColorMenuItemDecorator(new TextMenuItem(END_TURN, resourcesManager.getFont(), "EndTurn", resourcesManager.getVbom()), new Color(1.0f, 1.0f, 1.0f, 0.75f), new Color(0.7f, 0.7f, 0.7f, 0.75f));
-	    
-	    actionMenuOptions.addMenuItem(cancelMenuItem);
-	    actionMenuOptions.addMenuItem(endTurnMenuItem);
-	    
-	    actionMenuOptions.buildAnimations();
-	    actionMenuOptions.setBackgroundEnabled(false);
-	    
-	    actionMenu.attachChild(menuRect);
-	    
-	    
-	    hud.getHud().attachChild(actionMenu);
-	    hud.getHud().setChildScene(actionMenuOptions);
-	    
-	    actionMenuOptions.setOnMenuItemClickListener(this);
-	    
-	    this.hasActionMenu = true;
->>>>>>> f63c8e5bf14b402b4cd9b21c0db2ecf115bcde44
 	}
 	
 	public void enable(Tile tile) {
@@ -227,41 +157,10 @@ public class GameManager {
 		statusLayer.submit();
 	}
 	
-<<<<<<< HEAD
 	public void enableAllTiles() {
 		Tile[] array = disabledTiles.toArray(new Tile[disabledTiles.size()]);
 		for (int i = 0; i < array.length; i++) {
 			enable(array[i]);
-=======
-	@Override
-	public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
-		switch(pMenuItem.getID()) {
-		case ATTACK:
-			destroyActionMenu();
-			// Attack stuff
-			return true;
-		case LIBERATE:
-			destroyActionMenu();
-			liberateManager.liberate();
-			return true;
-		case MOVE:
-			destroyActionMenu();
-			moveManager.createMoveAction();
-			return true;
-		case BUY:
-			destroyActionMenu();
-			buyMenuManager.createBuyMenu();
-			return true;
-		case CANCEL:
-			destroyActionMenu();
-			return true;
-		case END_TURN:
-			destroyActionMenu();
-			endTurn();
-			return true;
-		default:
-			return false;
->>>>>>> f63c8e5bf14b402b4cd9b21c0db2ecf115bcde44
 		}
 	}
 	
@@ -313,6 +212,14 @@ public class GameManager {
 		this.attackManager = attackManager;
 	}
 
+	public BuyMenuManager getBuyMenuManager() {
+		return buyMenuManager;
+	}
+
+	public void setBuyMenuManager(BuyMenuManager buyMenuManager) {
+		this.buyMenuManager = buyMenuManager;
+	}
+
 	public LiberateManager getLiberateManager() {
 		return liberateManager;
 	}
@@ -353,24 +260,6 @@ public class GameManager {
 		this.redFunds = redFunds;
 	}
 
-	public int getCurrentFunds(){
-		if(turn == TeamColor.RED){
-			return redFunds;
-		}
-		else {
-			return blueFunds;
-		}
-	}
-	
-	public void setCurrentFunds(int newFunds) {
-		if (turn == TeamColor.RED) {
-			setRedFunds(newFunds);
-		}
-		else{
-			setBlueFunds(newFunds);
-		}
-	}
-	
 	public TeamColor getTurn() {
 		return turn;
 	}
