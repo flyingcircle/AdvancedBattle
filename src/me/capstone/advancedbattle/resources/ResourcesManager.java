@@ -67,6 +67,10 @@ public class ResourcesManager {
 	
 	private int cursorRow = 0;
     private int cursorColumn = 0;
+    
+  	private BitmapTextureAtlas victoryTextureAtlas;
+  	private ITextureRegion redVictoryTextureRegion;
+  	private ITextureRegion blueVictoryTextureRegion;
 	
 	// Font
 	private Font font;
@@ -228,6 +232,13 @@ public class ResourcesManager {
     private void unloadLevelAudio() {
     	// TODO : Audio
     }
+    
+    public void createGameGraphics() {
+    	BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/splash/");
+		this.victoryTextureAtlas = new BitmapTextureAtlas(getActivity().getTextureManager(), 256, 256, TextureOptions.BILINEAR);
+    	this.redVictoryTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(victoryTextureAtlas, getActivity(), "RedWins.png", 0, 0);
+    	this.blueVictoryTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(victoryTextureAtlas, getActivity(), "BlueWins.png", 0, 0);
+    }
 
     private void loadGameGraphics(int id) {
     	try {
@@ -243,6 +254,7 @@ public class ResourcesManager {
     }
     
     private void unloadGameGraphics() {
+    	victoryTextureAtlas.unload();
     	this.gameMap = null;
     }
     
@@ -328,6 +340,22 @@ public class ResourcesManager {
 		this.optionsRegion = optionsRegion;
 	}
 
+	public BitmapTextureAtlas getOptionsTextureAtlas() {
+		return optionsTextureAtlas;
+	}
+
+	public void setOptionsTextureAtlas(BitmapTextureAtlas optionsTextureAtlas) {
+		this.optionsTextureAtlas = optionsTextureAtlas;
+	}
+
+	public ITextureRegion getMusicOptionRegion() {
+		return musicOptionRegion;
+	}
+
+	public void setMusicOptionRegion(ITextureRegion musicOptionRegion) {
+		this.musicOptionRegion = musicOptionRegion;
+	}
+
 	public BitmapTextureAtlas getBackgroundTextureAtlas() {
 		return backgroundTextureAtlas;
 	}
@@ -384,6 +412,14 @@ public class ResourcesManager {
 		this.menuRightTextureRegion = menuRightTextureRegion;
 	}
 
+	public List<BitmapTextureAtlas> getLevels() {
+		return levels;
+	}
+
+	public void setLevels(List<BitmapTextureAtlas> levels) {
+		this.levels = levels;
+	}
+
 	public List<TextureRegion> getColumns() {
 		return columns;
 	}
@@ -432,6 +468,30 @@ public class ResourcesManager {
 		this.cursorColumn = cursorColumn;
 	}
 
+	public BitmapTextureAtlas getVictoryTextureAtlas() {
+		return victoryTextureAtlas;
+	}
+
+	public void setVictoryTextureAtlas(BitmapTextureAtlas victoryTextureAtlas) {
+		this.victoryTextureAtlas = victoryTextureAtlas;
+	}
+
+	public ITextureRegion getRedVictoryTextureRegion() {
+		return redVictoryTextureRegion;
+	}
+
+	public void setRedVictoryTextureRegion(ITextureRegion redVictoryTextureRegion) {
+		this.redVictoryTextureRegion = redVictoryTextureRegion;
+	}
+
+	public ITextureRegion getBlueVictoryTextureRegion() {
+		return blueVictoryTextureRegion;
+	}
+
+	public void setBlueVictoryTextureRegion(ITextureRegion blueVictoryTextureRegion) {
+		this.blueVictoryTextureRegion = blueVictoryTextureRegion;
+	}
+
 	public Font getFont() {
 		return font;
 	}
@@ -470,14 +530,6 @@ public class ResourcesManager {
 
 	public void setVbom(VertexBufferObjectManager vbom) {
 		this.vbom = vbom;
-	}
-
-	public ITextureRegion getMusicOptionRegion() {
-		return musicOptionRegion;
-	}
-
-	public void setMusicOptionRegion(ITextureRegion musicOptionRegion) {
-		this.musicOptionRegion = musicOptionRegion;
 	}
     
 }

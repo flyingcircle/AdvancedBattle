@@ -76,6 +76,7 @@ public class SceneManager {
 	    resourcesManager.createMenuGraphics();
 	    resourcesManager.createOptionsGraphics();
 	    resourcesManager.createLevelGraphics();
+	    resourcesManager.createGameGraphics();
 	    resourcesManager.createFonts();
     	
         resourcesManager.loadSplashResources();
