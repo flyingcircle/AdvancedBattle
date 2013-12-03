@@ -54,10 +54,12 @@ public class GameScene extends BaseScene {
 
     @Override
     public void onBackKeyPressed() {
-    	if (resourcesManager.getGameManager().hasActionMenu()) {
-    		resourcesManager.getGameManager().destroyActionMenu();
+    	if (resourcesManager.getGameManager().getActionMenuManager().hasActionMenu()) {
+    		resourcesManager.getGameManager().getActionMenuManager().destroyActionMenu();
     	} else if (resourcesManager.getGameManager().getMoveManager().isMoving()) {
     		resourcesManager.getGameManager().getMoveManager().destroyMoveAction(false);
+    	} else if (resourcesManager.getGameManager().getAttackManager().isAttacking()) {
+    		resourcesManager.getGameManager().getAttackManager().destroyAttackAction(false);
     	} else {
     		SceneManager.getInstance().loadMenuScene(resourcesManager.getEngine());
     	}
@@ -65,8 +67,8 @@ public class GameScene extends BaseScene {
     
     @Override
     public void onMenuKeyPressed() {
-    	if (resourcesManager.getGameManager().hasActionMenu()) {
-    		resourcesManager.getGameManager().destroyActionMenu();
+    	if (resourcesManager.getGameManager().getActionMenuManager().hasActionMenu()) {
+    		resourcesManager.getGameManager().getActionMenuManager().destroyActionMenu();
     	} else if (resourcesManager.getGameManager().getMoveManager().isMoving()) {
     		// Do nothing if the player is moving
     	} else {

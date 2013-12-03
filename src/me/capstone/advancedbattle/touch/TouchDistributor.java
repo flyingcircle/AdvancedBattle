@@ -28,7 +28,7 @@ public class TouchDistributor implements IOnSceneTouchListener {
 	@Override
 	public boolean onSceneTouchEvent(Scene pScene, TouchEvent pSceneTouchEvent) {
 		if (resourcesManager.getGameManager() != null) {
-			if (resourcesManager.getGameManager().hasActionMenu()) {
+			if (resourcesManager.getGameManager().getActionMenuManager().hasActionMenu()) {
 				return false;
 			}
 		}

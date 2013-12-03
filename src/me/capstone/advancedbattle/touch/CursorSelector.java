@@ -4,10 +4,6 @@ import me.capstone.advancedbattle.AdvancedBattleActivity;
 import me.capstone.advancedbattle.manager.GameManager;
 import me.capstone.advancedbattle.resources.ResourcesManager;
 import me.capstone.advancedbattle.resources.tile.CursorTile;
-import me.capstone.advancedbattle.resources.tile.PieceTile;
-import me.capstone.advancedbattle.resources.tile.TerrainTile;
-import me.capstone.advancedbattle.tile.Tile;
-import me.capstone.advancedbattle.tile.piece.Piece;
 
 import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.engine.handler.IUpdateHandler;
@@ -75,41 +71,12 @@ public class CursorSelector implements IOnSceneTouchListener, IUpdateHandler {
 				cursorLayer.drawWithoutChecks(newTile.getTextureRegion(), newTile.getTileX(), newTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
 				cursorLayer.submit();
 				
-				TMXLayer pieceLayer = resourcesManager.getGameMap().getTMXLayers().get(2);
 				if (game.getMoveManager().isMoving()) {
-					for (Tile tile : game.getMoveManager().getMoves()) {
-						if (tile.getRow() == (int) clickedY && tile.getColumn() == (int) clickedX) {
-							
-							Piece piece = game.getMoveManager().getMovingPieceTile().getPiece();
-							if (game.getMoveManager().getMovingPieceTile().getStructureTileID() == TerrainTile.CITY_WHITE.getId() || game.getMoveManager().getMovingPieceTile().getStructureTileID() == TerrainTile.CITY_BLUE.getId() 
-									|| game.getMoveManager().getMovingPieceTile().getStructureTileID() == TerrainTile.CITY_RED.getId() || game.getMoveManager().getMovingPieceTile().getStructureTileID() == TerrainTile.FACTORY_BLUE.getId() 
-									|| game.getMoveManager().getMovingPieceTile().getStructureTileID() == TerrainTile.FACTORY_RED.getId() || game.getMoveManager().getMovingPieceTile().getStructureTileID() == TerrainTile.FACTORY_WHITE.getId() 
-									|| game.getMoveManager().getMovingPieceTile().getStructureTileID() == TerrainTile.HQ_BLUE.getId() || game.getMoveManager().getMovingPieceTile().getStructureTileID() == TerrainTile.HQ_RED.getId()) {
-								piece.setCurrentBuildingHealth(piece.MAX_BUILDING_HEALTH);
-							}
-							
-							TMXTile pieceTile = pieceLayer.getTMXTile(game.getMoveManager().getMovingPieceTile().getColumn(), game.getMoveManager().getMovingPieceTile().getRow());
-							pieceTile.setGlobalTileID(resourcesManager.getGameMap(), PieceTile.PIECE_NULL.getId());
-							pieceLayer.setIndex(pieceTile.getTileRow() * resourcesManager.getGameMap().getTileColumns() + pieceTile.getTileColumn());
-							pieceLayer.drawWithoutChecks(pieceTile.getTextureRegion(), pieceTile.getTileX(), pieceTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
-							
-							game.getMoveManager().getMovingPieceTile().setPiece(null);
-							game.getMoveManager().getMovingPieceTile().setPieceTileID(PieceTile.PIECE_NULL.getId());			
-							pieceLayer.submit();
-							
-							TMXTile moveTile = pieceLayer.getTMXTile((int) clickedX, (int) clickedY);
-							moveTile.setGlobalTileID(resourcesManager.getGameMap(), piece.getPieceTile().getId());
-							pieceLayer.setIndex(moveTile.getTileRow() * resourcesManager.getGameMap().getTileColumns() + moveTile.getTileColumn());
-							pieceLayer.drawWithoutChecks(moveTile.getTextureRegion(), moveTile.getTileX(), moveTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);								
-							pieceLayer.submit();
-							
-							game.getMap().getTile(moveTile.getTileColumn(), moveTile.getTileRow()).setPiece(piece);
-							game.getMap().getTile(moveTile.getTileColumn(), moveTile.getTileRow()).setPieceTileID(piece.getPieceTile().getId());
-							
-							game.getMoveManager().destroyMoveAction(true);
-							break;
-						}
-					}
+					game.getMoveManager().executeMoveAction((int) clickedX, (int) clickedY);
+				}
+				
+				if (game.getAttackManager().isAttacking()) {
+					game.getAttackManager().executeAttackAction((int) clickedX, (int) clickedY);
 				}
 				
 				game.getHud().updateHUD();
@@ -119,7 +86,7 @@ public class CursorSelector implements IOnSceneTouchListener, IUpdateHandler {
 					game.getHud().getRectangleGroup().setPosition(650, 291);
 				}
 			} else {
-				if (!game.getMoveManager().isMoving()) {
+				if (!game.getMoveManager().isMoving() && !game.getAttackManager().isAttacking()) {
 					game.handleAction();
 				}
 			}

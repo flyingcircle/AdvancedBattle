@@ -1,55 +1,55 @@
 package me.capstone.advancedbattle.manager;
 
-import org.andengine.entity.Entity;
-import org.andengine.entity.primitive.Rectangle;
-import org.andengine.entity.scene.menu.MenuScene;
-import org.andengine.entity.scene.menu.MenuScene.IOnMenuItemClickListener;
-import org.andengine.entity.scene.menu.item.IMenuItem;
-import org.andengine.entity.scene.menu.item.TextMenuItem;
-import org.andengine.util.color.Color;
-import org.andengine.entity.scene.menu.item.decorator.ColorMenuItemDecorator;
+import java.util.ArrayList;
+
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.tmx.TMXLayer;
+import org.andengine.extension.tmx.TMXTile;
+import org.andengine.util.color.Color;
 
-import me.capstone.advancedbattle.manager.hud.GameHUD;
+import me.capstone.advancedbattle.manager.managers.ActionMenuManager;
 import me.capstone.advancedbattle.manager.managers.AttackManager;
+<<<<<<< HEAD
+import me.capstone.advancedbattle.manager.managers.EndTurnManager;
+import me.capstone.advancedbattle.manager.managers.HUDManager;
+=======
+import me.capstone.advancedbattle.manager.managers.BuyMenuManager;
+>>>>>>> f63c8e5bf14b402b4cd9b21c0db2ecf115bcde44
 import me.capstone.advancedbattle.manager.managers.LiberateManager;
 import me.capstone.advancedbattle.manager.managers.MoveManager;
 import me.capstone.advancedbattle.map.Map;
 import me.capstone.advancedbattle.resources.ResourcesManager;
 import me.capstone.advancedbattle.resources.data.TeamColor;
+import me.capstone.advancedbattle.resources.tile.CursorTile;
 import me.capstone.advancedbattle.resources.tile.TerrainTile;
 import me.capstone.advancedbattle.tile.Tile;
 import me.capstone.advancedbattle.tile.piece.Piece;
 
-public class GameManager implements IOnMenuItemClickListener{
+public class GameManager {
 	private static ResourcesManager resourcesManager = ResourcesManager.getInstance();
 	
 	private Map map;
 	
-	private GameHUD hud;
-	
-	// Action Menu
-	private Entity actionMenu;
-	private boolean hasActionMenu = false;
-
-	private MenuScene actionMenuOptions;
-	private static final int ATTACK = 0;
-	private static final int LIBERATE = 1;
-	private static final int MOVE = 2;
-	private static final int BUY = 3;
-	private static final int CANCEL = 4;
-	private static final int END_TURN = 5;
+	private HUDManager hud;
 	
 	// Managers
+	private ActionMenuManager actionMenuManager;
 	private AttackManager attackManager;
 	private LiberateManager liberateManager;
 	private MoveManager moveManager;
+<<<<<<< HEAD
+	private EndTurnManager endTurnManager;
+=======
+	private BuyMenuManager buyMenuManager;
+>>>>>>> f63c8e5bf14b402b4cd9b21c0db2ecf115bcde44
 	
 	// Team
 	private int blueFunds;
 	private int redFunds;
 	private TeamColor turn;
+	
+	// Disaled
+	private ArrayList<Tile> disabledTiles = new ArrayList<Tile>();
 	
 	// Victory
 	private Sprite victoryImage;
@@ -93,14 +93,20 @@ public class GameManager implements IOnMenuItemClickListener{
 		this.blueFunds = map.getBlueCities() * 1000;
 		this.redFunds = map.getRedCities() * 1000;
 		
-		this.hud = new GameHUD(this);
+		this.hud = new HUDManager(this);
 		
+		this.actionMenuManager = new ActionMenuManager(this);
 		this.attackManager = new AttackManager(this);
 		this.liberateManager = new LiberateManager(this);
 		this.moveManager = new MoveManager(this);
+<<<<<<< HEAD
+		this.endTurnManager = new EndTurnManager(this);
+=======
+		this.buyMenuManager = new BuyMenuManager(this);
+>>>>>>> f63c8e5bf14b402b4cd9b21c0db2ecf115bcde44
 	}
 	
-	private TeamColor getPieceColor(Piece piece) {
+	public TeamColor getPieceColor(Piece piece) {
 		if (piece.getPieceTile().getId() >= 98 && piece.getPieceTile().getId() < 116) {
 			return TeamColor.RED;
 		} else if (piece.getPieceTile().getId() >= 116 && piece.getPieceTile().getId() < 134) {
@@ -114,148 +120,54 @@ public class GameManager implements IOnMenuItemClickListener{
 		Tile tile = map.getTile(resourcesManager.getCursorColumn(), resourcesManager.getCursorRow());
 		
 		int count = 2;
-		if (tile.getPiece() != null) {
-			Piece piece = tile.getPiece();
-			
-			if (piece.getPieceTile().getId() >= 98 && piece.getPieceTile().getId() < 116 && turn == TeamColor.RED) {
-				// TODO : Has piece been used this turn?
-				
-				count++;
-				
-				boolean canAttack = false;
-				if (tile.getRow() == 0) {
-					Tile sTile = map.getTile(tile.getColumn(), tile.getRow() + 1);
-					if (sTile.getPiece() != null && getPieceColor(sTile.getPiece()) != turn) {
-						canAttack = true;
-					}
-				} else if (tile.getRow() == map.getRows() - 1) {
-					Tile nTile = map.getTile(tile.getColumn(), tile.getRow() - 1);
-					if (nTile.getPiece() != null && getPieceColor(nTile.getPiece()) != turn) {
-						canAttack = true;
-					}
-				} else if (tile.getColumn() == 0) {
-					Tile eTile = map.getTile(tile.getColumn() + 1, tile.getRow());
-					if (eTile.getPiece() != null && getPieceColor(eTile.getPiece()) != turn) {
-						canAttack = true;
-					}
-				} else if (tile.getColumn() == map.getColumns() - 1) {
-					Tile wTile = map.getTile(tile.getColumn() - 1, tile.getRow());
-					if (wTile.getPiece() != null && getPieceColor(wTile.getPiece()) != turn) {
-						canAttack = true;
-					}
-				} else {
-					Tile nTile = map.getTile(tile.getColumn(), tile.getRow() - 1);
-					if (nTile.getPiece() != null && getPieceColor(nTile.getPiece()) != turn) {
-						canAttack = true;
-					}
-					
-					Tile sTile = map.getTile(tile.getColumn(), tile.getRow() + 1);
-					if (sTile.getPiece() != null && getPieceColor(sTile.getPiece()) != turn) {
-						canAttack = true;
-					}
-					
-					Tile eTile = map.getTile(tile.getColumn() + 1, tile.getRow());
-					if (eTile.getPiece() != null && getPieceColor(eTile.getPiece()) != turn) {
-						canAttack = true;
-					}
-					
-					Tile wTile = map.getTile(tile.getColumn() - 1, tile.getRow());
-					if (wTile.getPiece() != null && getPieceColor(wTile.getPiece()) != turn) {
-						canAttack = true;
-					}
-				}
-
-				if (canAttack) {
-					count++;
-				}
-				
-				boolean canLiberate = false;
-				if (piece.getPieceTile().canLiberate()) {
-					if (tile.getStructureTileID() == TerrainTile.FACTORY_BLUE.getId() || tile.getStructureTileID() == TerrainTile.CITY_BLUE.getId() || tile.getStructureTileID() == TerrainTile.HQ_BLUE.getId() || tile.getStructureTileID() == TerrainTile.CITY_WHITE.getId()) {
-						count++;
-						canLiberate = true;
-					}
-				}
-				
-				createActionMenu(count, false, canAttack, canLiberate);
-			} else if (piece.getPieceTile().getId() >= 116 && piece.getPieceTile().getId() < 134 && turn == TeamColor.BLUE) {
-				// TODO : Has piece been used this turn?
-				
-				count++;
-				
-				boolean canAttack = false;
-				if (tile.getRow() == 0) {
-					Tile sTile = map.getTile(tile.getColumn(), tile.getRow() + 1);
-					if (sTile.getPiece() != null && getPieceColor(sTile.getPiece()) != turn) {
-						canAttack = true;
-					}
-				} else if (tile.getRow() == map.getRows() - 1) {
-					Tile nTile = map.getTile(tile.getColumn(), tile.getRow() - 1);
-					if (nTile.getPiece() != null && getPieceColor(nTile.getPiece()) != turn) {
-						canAttack = true;
-					}
-				} else if (tile.getColumn() == 0) {
-					Tile eTile = map.getTile(tile.getColumn() + 1, tile.getRow());
-					if (eTile.getPiece() != null && getPieceColor(eTile.getPiece()) != turn) {
-						canAttack = true;
-					}
-				} else if (tile.getColumn() == map.getColumns() - 1) {
-					Tile wTile = map.getTile(tile.getColumn() - 1, tile.getRow());
-					if (wTile.getPiece() != null && getPieceColor(wTile.getPiece()) != turn) {
-						canAttack = true;
-					}
-				} else {
-					Tile nTile = map.getTile(tile.getColumn(), tile.getRow() - 1);
-					if (nTile.getPiece() != null && getPieceColor(nTile.getPiece()) != turn) {
-						canAttack = true;
-					}
-					
-					Tile sTile = map.getTile(tile.getColumn(), tile.getRow() + 1);
-					if (sTile.getPiece() != null && getPieceColor(sTile.getPiece()) != turn) {
-						canAttack = true;
-					}
-					
-					Tile eTile = map.getTile(tile.getColumn() + 1, tile.getRow());
-					if (eTile.getPiece() != null && getPieceColor(eTile.getPiece()) != turn) {
-						canAttack = true;
-					}
-					
-					Tile wTile = map.getTile(tile.getColumn() - 1, tile.getRow());
-					if (wTile.getPiece() != null && getPieceColor(wTile.getPiece()) != turn) {
-						canAttack = true;
-					}
-				}
-
-				if (canAttack) {
-					count++;
-				}
-				
-				boolean canLiberate = false;	
-				if (tile.getStructureTileID() == TerrainTile.FACTORY_RED.getId() || tile.getStructureTileID() == TerrainTile.CITY_RED.getId() || tile.getStructureTileID() == TerrainTile.HQ_RED.getId() || tile.getStructureTileID() == TerrainTile.CITY_WHITE.getId()) {
-						count++;
-						canLiberate = true;
-				}
-				
-				createActionMenu(count, false, canAttack, canLiberate);
-			} else {
-				createActionMenu(count, false, false, false);
+		if (tile.getPiece() != null) {			
+			if (disabledTiles.contains(tile)) {
+				actionMenuManager.createActionMenu(count, false, false, false, false);
+				return;
 			}
+			
+			if (getPieceColor(tile.getPiece()) != turn) {
+				actionMenuManager.createActionMenu(count, false, false, false, false);
+				return;
+			}
+				
+			count++;
+				
+			boolean canAttack = attackManager.canAttack(tile);
+			if (canAttack) {
+				count++;
+			}
+				
+			boolean canLiberate = liberateManager.canLiberate(tile);			
+			if (canLiberate) {
+				count++;
+			}
+				
+			actionMenuManager.createActionMenu(count, false, canAttack, canLiberate, true);
 		} else {
 			if ((tile.getStructureTileID() == TerrainTile.FACTORY_BLUE.getId() && turn == TeamColor.BLUE) || (tile.getStructureTileID() == TerrainTile.FACTORY_RED.getId() && turn == TeamColor.RED)) {
 				count++;
-				createActionMenu(count, true, false, false);
+				actionMenuManager.createActionMenu(count, true, false, false, true);
 			} else {
-				createActionMenu(count, false, false, false);
+				actionMenuManager.createActionMenu(count, false, false, false, true);
 			}
 		}
 	}
 	
-	public void createActionMenu(int items, boolean isFactory, boolean canAttack, boolean canLiberate) {	
-		this.actionMenu = new Entity(0, 0);
+	public void disable(Tile tile) {
+		disabledTiles.add(tile);
 		
-		Rectangle backGroundRect = new Rectangle(0, 0, 800, 480, resourcesManager.getVbom());
-	    backGroundRect.setColor(1.0F, 1.0F, 1.0F, 0.75F);
-	    actionMenu.attachChild(backGroundRect);
+<<<<<<< HEAD
+		TMXLayer statusLayer = resourcesManager.getGameMap().getTMXLayers().get(3);
+		TMXTile disabled = statusLayer.getTMXTile(tile.getColumn(), tile.getRow());
+		disabled.setGlobalTileID(resourcesManager.getGameMap(), CursorTile.DISABLED.getId());
+		statusLayer.setIndex(disabled.getTileRow() * resourcesManager.getGameMap().getTileColumns() + disabled.getTileColumn());
+		statusLayer.drawWithoutChecks(disabled.getTextureRegion(), disabled.getTileX(), disabled.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
+		statusLayer.submit();
+=======
+		Rectangle backgroundRect = new Rectangle(0, 0, 800, 480, resourcesManager.getVbom());
+	    backgroundRect.setColor(1.0F, 1.0F, 1.0F, 0.75F);
+	    actionMenu.attachChild(backgroundRect);
 	    
 	    int size = items * 50;
 	    Rectangle menuRect = new Rectangle(240, 240 - size / 2, 320, size + 10, resourcesManager.getVbom());
@@ -301,24 +213,26 @@ public class GameManager implements IOnMenuItemClickListener{
 	    actionMenuOptions.setOnMenuItemClickListener(this);
 	    
 	    this.hasActionMenu = true;
+>>>>>>> f63c8e5bf14b402b4cd9b21c0db2ecf115bcde44
 	}
 	
-	public void destroyActionMenu() {
-		hud.getHud().detachChild(actionMenu);
-		hud.getHud().detachChild(actionMenuOptions);
+	public void enable(Tile tile) {
+		disabledTiles.remove(tile);
 		
-		actionMenuOptions.clearMenuItems();
-		actionMenuOptions.clearTouchAreas();
-		actionMenuOptions.closeMenuScene();
-		actionMenuOptions.dispose();
-		this.actionMenuOptions = null;
-		
-		actionMenu.dispose();
-		this.actionMenu = null;
-		
-		this.hasActionMenu = false;
+		TMXLayer statusLayer = resourcesManager.getGameMap().getTMXLayers().get(3);
+		TMXTile enabled = statusLayer.getTMXTile(tile.getColumn(), tile.getRow());
+		enabled.setGlobalTileID(resourcesManager.getGameMap(), CursorTile.CURSOR_NULL.getId());
+		statusLayer.setIndex(enabled.getTileRow() * resourcesManager.getGameMap().getTileColumns() + enabled.getTileColumn());
+		statusLayer.drawWithoutChecks(enabled.getTextureRegion(), enabled.getTileX(), enabled.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
+		statusLayer.submit();
 	}
 	
+<<<<<<< HEAD
+	public void enableAllTiles() {
+		Tile[] array = disabledTiles.toArray(new Tile[disabledTiles.size()]);
+		for (int i = 0; i < array.length; i++) {
+			enable(array[i]);
+=======
 	@Override
 	public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
 		switch(pMenuItem.getID()) {
@@ -336,7 +250,7 @@ public class GameManager implements IOnMenuItemClickListener{
 			return true;
 		case BUY:
 			destroyActionMenu();
-			// Buy stuff
+			buyMenuManager.createBuyMenu();
 			return true;
 		case CANCEL:
 			destroyActionMenu();
@@ -347,6 +261,7 @@ public class GameManager implements IOnMenuItemClickListener{
 			return true;
 		default:
 			return false;
+>>>>>>> f63c8e5bf14b402b4cd9b21c0db2ecf115bcde44
 		}
 	}
 	
@@ -365,24 +280,6 @@ public class GameManager implements IOnMenuItemClickListener{
 		victoryImage.setPosition(400 - victoryImage.getWidth() / 2, 240 - victoryImage.getHeight() / 2);
 		hud.getHud().attachChild(victoryImage);
 	}
-	
-	public void endTurn() {
-		if (turn == TeamColor.RED) {
-			turn = TeamColor.BLUE;
-			blueFunds += map.getBlueCities() * 1000;
-			System.out.println("Blue funds are: " + blueFunds);
-			System.out.println("Blue cities are: " + map.getBlueCities());
-		} else if (turn == TeamColor.BLUE) {
-			turn = TeamColor.RED;
-			redFunds += map.getRedCities() * 1000;
-			System.out.println("Red funds are: " + redFunds);
-			System.out.println("Red cities are: " + map.getRedCities());
-		} else {
-			turn = TeamColor.NULL;
-		}
-		
-		hud.updateHUD();
-	}
 
 	public Map getMap() {
 		return map;
@@ -392,36 +289,20 @@ public class GameManager implements IOnMenuItemClickListener{
 		this.map = map;
 	}
 
-	public GameHUD getHud() {
+	public HUDManager getHud() {
 		return hud;
 	}
 
-	public void setHud(GameHUD hud) {
+	public void setHud(HUDManager hud) {
 		this.hud = hud;
 	}
 
-	public Entity getActionMenu() {
-		return actionMenu;
+	public ActionMenuManager getActionMenuManager() {
+		return actionMenuManager;
 	}
 
-	public void setActionMenu(Entity actionMenu) {
-		this.actionMenu = actionMenu;
-	}
-
-	public boolean hasActionMenu() {
-		return hasActionMenu;
-	}
-
-	public void setHasActionMenu(boolean hasActionMenu) {
-		this.hasActionMenu = hasActionMenu;
-	}
-
-	public MenuScene getActionMenuOptions() {
-		return actionMenuOptions;
-	}
-
-	public void setActionMenuOptions(MenuScene actionMenuOptions) {
-		this.actionMenuOptions = actionMenuOptions;
+	public void setActionMenuManager(ActionMenuManager actionMenuManager) {
+		this.actionMenuManager = actionMenuManager;
 	}
 
 	public AttackManager getAttackManager() {
@@ -448,6 +329,14 @@ public class GameManager implements IOnMenuItemClickListener{
 		this.moveManager = moveManager;
 	}
 
+	public EndTurnManager getEndTurnManager() {
+		return endTurnManager;
+	}
+
+	public void setEndTurnManager(EndTurnManager endTurnManager) {
+		this.endTurnManager = endTurnManager;
+	}
+
 	public int getBlueFunds() {
 		return blueFunds;
 	}
@@ -464,12 +353,38 @@ public class GameManager implements IOnMenuItemClickListener{
 		this.redFunds = redFunds;
 	}
 
+	public int getCurrentFunds(){
+		if(turn == TeamColor.RED){
+			return redFunds;
+		}
+		else {
+			return blueFunds;
+		}
+	}
+	
+	public void setCurrentFunds(int newFunds) {
+		if (turn == TeamColor.RED) {
+			setRedFunds(newFunds);
+		}
+		else{
+			setBlueFunds(newFunds);
+		}
+	}
+	
 	public TeamColor getTurn() {
 		return turn;
 	}
 
 	public void setTurn(TeamColor turn) {
 		this.turn = turn;
+	}
+
+	public ArrayList<Tile> getDisabledTiles() {
+		return disabledTiles;
+	}
+
+	public void setDisabledTiles(ArrayList<Tile> disabledTiles) {
+		this.disabledTiles = disabledTiles;
 	}
 
 	public Sprite getVictoryImage() {
