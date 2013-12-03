@@ -63,8 +63,7 @@ public class CursorSelector implements IOnSceneTouchListener, IUpdateHandler {
 				TMXTile cursorTile = cursorLayer.getTMXTile(resourcesManager.getCursorColumn(), resourcesManager.getCursorRow());		
 				cursorTile.setGlobalTileID(resourcesManager.getGameMap(), CursorTile.CURSOR_NULL.getId());
 				cursorLayer.setIndex(cursorTile.getTileRow() * resourcesManager.getGameMap().getTileColumns() + cursorTile.getTileColumn());
-				cursorLayer.drawWithoutChecks(cursorTile.getTextureRegion(), cursorTile.getTileX(), cursorTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
-				
+				cursorLayer.drawWithoutChecks(cursorTile.getTextureRegion(), cursorTile.getTileX(), cursorTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);			
 				cursorLayer.submit();
 				
 				resourcesManager.setCursorColumn((int) clickedX);
@@ -74,7 +73,6 @@ public class CursorSelector implements IOnSceneTouchListener, IUpdateHandler {
 				newTile.setGlobalTileID(resourcesManager.getGameMap(), CursorTile.CURSOR.getId());
 				cursorLayer.setIndex(newTile.getTileRow() * resourcesManager.getGameMap().getTileColumns() + newTile.getTileColumn());
 				cursorLayer.drawWithoutChecks(newTile.getTextureRegion(), newTile.getTileX(), newTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
-				
 				cursorLayer.submit();
 				
 				TMXLayer pieceLayer = resourcesManager.getGameMap().getTMXLayers().get(2);
@@ -94,15 +92,13 @@ public class CursorSelector implements IOnSceneTouchListener, IUpdateHandler {
 							pieceLayer.drawWithoutChecks(pieceTile.getTextureRegion(), pieceTile.getTileX(), pieceTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
 							
 							game.getMovingPieceTile().setPiece(null);
-							game.getMovingPieceTile().setPieceTileID(PieceTile.PIECE_NULL.getId());
-							
+							game.getMovingPieceTile().setPieceTileID(PieceTile.PIECE_NULL.getId());			
 							pieceLayer.submit();
 							
 							TMXTile moveTile = pieceLayer.getTMXTile((int) clickedX, (int) clickedY);
 							moveTile.setGlobalTileID(resourcesManager.getGameMap(), piece.getPieceTile().getId());
 							pieceLayer.setIndex(moveTile.getTileRow() * resourcesManager.getGameMap().getTileColumns() + moveTile.getTileColumn());
-							pieceLayer.drawWithoutChecks(moveTile.getTextureRegion(), moveTile.getTileX(), moveTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
-														
+							pieceLayer.drawWithoutChecks(moveTile.getTextureRegion(), moveTile.getTileX(), moveTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);								
 							pieceLayer.submit();
 							
 							game.getMap().getTile(moveTile.getTileColumn(), moveTile.getTileRow()).setPiece(piece);
