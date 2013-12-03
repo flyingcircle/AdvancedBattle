@@ -366,10 +366,11 @@ public class GameManager implements IOnMenuItemClickListener{
 	}
 	
 	public void createVictoryImage() {
-		resourcesManager.getVictoryTextureAtlas().load();
 		if (turn == TeamColor.RED) {
+			resourcesManager.getRedVictoryTextureAtlas().load();
 			this.victoryImage = new Sprite(0, 0, resourcesManager.getRedVictoryTextureRegion(), resourcesManager.getVbom());
 		} else if (turn == TeamColor.BLUE) {
+			resourcesManager.getBlueVictoryTextureAtlas().load();
 			this.victoryImage = new Sprite(0, 0, resourcesManager.getBlueVictoryTextureRegion(), resourcesManager.getVbom());
 		} else {
 			this.victoryImage = null;

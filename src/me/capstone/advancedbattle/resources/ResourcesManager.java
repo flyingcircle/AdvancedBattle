@@ -68,7 +68,8 @@ public class ResourcesManager {
 	private int cursorRow = 0;
     private int cursorColumn = 0;
     
-  	private BitmapTextureAtlas victoryTextureAtlas;
+  	private BitmapTextureAtlas redVictoryTextureAtlas;
+  	private BitmapTextureAtlas blueVictoryTextureAtlas;
   	private ITextureRegion redVictoryTextureRegion;
   	private ITextureRegion blueVictoryTextureRegion;
 	
@@ -191,9 +192,7 @@ public class ResourcesManager {
     	
     	this.backgroundTextureAtlas = new BitmapTextureAtlas(getActivity().getTextureManager(), 1024, 1024, TextureOptions.BILINEAR);
     	this.backgroundTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(backgroundTextureAtlas, getActivity(), "levelBackground.png", 0, 0);
-    	
-    	// TODO : Title stuff
-    	    	
+    	    	    	
     	for (int i = 0; i < LEVEL_ITEMS; i++) {
     		BitmapTextureAtlas levelAtlas = new BitmapTextureAtlas(getActivity().getTextureManager(), 1024, 1024, TextureOptions.BILINEAR);
     		TextureRegion texture = BitmapTextureAtlasTextureRegionFactory.createFromAsset(levelAtlas, getActivity(), "level" + i + ".png", 0, 0);
@@ -235,9 +234,10 @@ public class ResourcesManager {
     
     public void createGameGraphics() {
     	BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/splash/");
-		this.victoryTextureAtlas = new BitmapTextureAtlas(getActivity().getTextureManager(), 256, 256, TextureOptions.BILINEAR);
-    	this.redVictoryTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(victoryTextureAtlas, getActivity(), "RedWins.png", 0, 0);
-    	this.blueVictoryTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(victoryTextureAtlas, getActivity(), "BlueWins.png", 0, 0);
+		this.redVictoryTextureAtlas = new BitmapTextureAtlas(getActivity().getTextureManager(), 256, 256, TextureOptions.BILINEAR);
+    	this.redVictoryTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(redVictoryTextureAtlas, getActivity(), "RedWins.png", 0, 0);
+    	this.blueVictoryTextureAtlas = new BitmapTextureAtlas(getActivity().getTextureManager(), 256, 256, TextureOptions.BILINEAR);
+    	this.blueVictoryTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(blueVictoryTextureAtlas, getActivity(), "BlueWins.png", 0, 0);
     }
 
     private void loadGameGraphics(int id) {
@@ -254,7 +254,8 @@ public class ResourcesManager {
     }
     
     private void unloadGameGraphics() {
-    	victoryTextureAtlas.unload();
+    	redVictoryTextureAtlas.unload();
+    	blueVictoryTextureAtlas.unload();
     	this.gameMap = null;
     }
     
@@ -468,12 +469,20 @@ public class ResourcesManager {
 		this.cursorColumn = cursorColumn;
 	}
 
-	public BitmapTextureAtlas getVictoryTextureAtlas() {
-		return victoryTextureAtlas;
+	public BitmapTextureAtlas getRedVictoryTextureAtlas() {
+		return redVictoryTextureAtlas;
 	}
 
-	public void setVictoryTextureAtlas(BitmapTextureAtlas victoryTextureAtlas) {
-		this.victoryTextureAtlas = victoryTextureAtlas;
+	public void setRedVictoryTextureAtlas(BitmapTextureAtlas redVictoryTextureAtlas) {
+		this.redVictoryTextureAtlas = redVictoryTextureAtlas;
+	}
+	
+	public BitmapTextureAtlas getBlueVictoryTextureAtlas() {
+		return blueVictoryTextureAtlas;
+	}
+
+	public void setBlueVictoryTextureAtlas(BitmapTextureAtlas blueVictoryTextureAtlas) {
+		this.blueVictoryTextureAtlas = blueVictoryTextureAtlas;
 	}
 
 	public ITextureRegion getRedVictoryTextureRegion() {

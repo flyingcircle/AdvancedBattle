@@ -81,7 +81,6 @@ public class CursorSelector implements IOnSceneTouchListener, IUpdateHandler {
 						if (tile.getRow() == (int) clickedY && tile.getColumn() == (int) clickedX) {
 							
 							Piece piece = game.getMovingPieceTile().getPiece();
-							// TODO : Need to check if player walks off enemy HQ also
 							if (game.getMovingPieceTile().getStructureTileID() == TerrainTile.CITY_WHITE.getId() || game.getMovingPieceTile().getStructureTileID() == TerrainTile.CITY_BLUE.getId() 
 									|| game.getMovingPieceTile().getStructureTileID() == TerrainTile.CITY_RED.getId() || game.getMovingPieceTile().getStructureTileID() == TerrainTile.FACTORY_BLUE.getId() 
 									|| game.getMovingPieceTile().getStructureTileID() == TerrainTile.FACTORY_RED.getId() || game.getMovingPieceTile().getStructureTileID() == TerrainTile.FACTORY_WHITE.getId() 
