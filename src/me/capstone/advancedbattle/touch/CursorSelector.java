@@ -76,7 +76,9 @@ public class CursorSelector implements IOnSceneTouchListener, IUpdateHandler {
 				}
 				
 				if (game.getAttackManager().isAttacking()) {
-					game.getAttackManager().executeAttackAction((int) clickedX, (int) clickedY);
+					if (game.getAttackManager().getAttacks().contains(game.getMap().getTile((int) clickedX, (int) clickedY))) {
+							game.getAttackManager().executeAttackAction(game.getMap().getTile((int) clickedX, (int) clickedY));
+					}
 				}
 				
 				game.getHud().updateHUD();

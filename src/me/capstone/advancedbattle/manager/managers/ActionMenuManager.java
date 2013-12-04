@@ -86,7 +86,7 @@ public class ActionMenuManager implements IOnMenuItemClickListener {
 	    game.getHud().getHud().setChildScene(actionMenuOptions);
 	    
 	    final IOnMenuItemClickListener click = this;
-	    actionMenuOptions.registerUpdateHandler(new TimerHandler(1.0F, true, new ITimerCallback() {
+	    actionMenuOptions.registerUpdateHandler(new TimerHandler(0.5F, true, new ITimerCallback() {
 	    	@Override
 	    	public void onTimePassed(final TimerHandler pTimerHandler) {
 	    		actionMenuOptions.setOnMenuItemClickListener(click);
@@ -133,6 +133,9 @@ public class ActionMenuManager implements IOnMenuItemClickListener {
 			return true;
 		case CANCEL:
 			destroyActionMenu();
+			if (game.getMoveManager().isMoving()) {
+				game.disable(game.getMap().getTile(resourcesManager.getCursorColumn(), resourcesManager.getCursorRow()));
+			}
 			return true;
 		case END_TURN:
 			destroyActionMenu();

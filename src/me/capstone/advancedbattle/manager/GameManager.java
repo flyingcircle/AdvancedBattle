@@ -22,7 +22,6 @@ import me.capstone.advancedbattle.resources.data.TeamColor;
 import me.capstone.advancedbattle.resources.tile.CursorTile;
 import me.capstone.advancedbattle.resources.tile.TerrainTile;
 import me.capstone.advancedbattle.scene.SceneManager;
-import me.capstone.advancedbattle.scene.scenes.GameScene;
 import me.capstone.advancedbattle.tile.Tile;
 import me.capstone.advancedbattle.util.Util;
 
@@ -183,11 +182,10 @@ public class GameManager {
 		victoryImage.setPosition(400 - victoryImage.getWidth() / 2, 240 - victoryImage.getHeight() / 2);
 		hud.getHud().attachChild(victoryImage);
 		
-		final GameScene gameScene = (GameScene) SceneManager.getInstance().getCurrentScene();
-		gameScene.registerUpdateHandler(new TimerHandler(5.0F, true, new ITimerCallback() {
+		SceneManager.getInstance().getCurrentScene().registerUpdateHandler(new TimerHandler(5.0F, true, new ITimerCallback() {
 	    	@Override
 	    	public void onTimePassed(final TimerHandler pTimerHandler) {
-	    		gameScene.disposeScene();
+	    		SceneManager.getInstance().loadMenuScene(resourcesManager.getEngine());
 	    	}
 	    }));
 	}

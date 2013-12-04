@@ -101,14 +101,13 @@ public class AttackManager {
 		}
 	}
 	
-	public void executeAttackAction(int clickedX, int clickedY) {
+	public void executeAttackAction(Tile target) {
 		PieceTile attacker = attackingPieceTile.getPiece().getPieceTile();
-		PieceTile target = game.getMap().getTile(clickedX, clickedY).getPiece().getPieceTile();
 		
 		if (attacker.getId() == PieceTile.RED_INFANTRY.getId() || attacker.getId() == PieceTile.BLUE_INFANTRY.getId()) {
-			if (target.getId() == PieceTile.RED_INFANTRY.getId() || target.getId() == PieceTile.BLUE_INFANTRY.getId()) {
+			//if (target.getId() == PieceTile.RED_INFANTRY.getId() || target.getId() == PieceTile.BLUE_INFANTRY.getId()) {
 
-			}
+			//}
 		} else if (attacker.getId() == PieceTile.RED_MECH.getId() || attacker.getId() == PieceTile.BLUE_MECH.getId()) {
 			
 		} else if (attacker.getId() == PieceTile.RED_RECON.getId() || attacker.getId() == PieceTile.BLUE_RECON.getId()) {

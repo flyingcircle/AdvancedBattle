@@ -46,7 +46,6 @@ public class MoveManager {
 	
 	public void destroyMoveAction(boolean successful) {
 		Tile tile = game.getMap().getTile(resourcesManager.getCursorColumn(), resourcesManager.getCursorRow());
-		this.isMoving = false;
 		
 		if (!moves.isEmpty()) {
 			hide(moves);
@@ -66,6 +65,8 @@ public class MoveManager {
 				game.disable(tile);
 			}
 		}
+		
+		this.isMoving = false;
 	}
 	
 	public void executeMoveAction(int clickedX, int clickedY) {
