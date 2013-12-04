@@ -86,9 +86,7 @@ public class AttackManager {
 	
 	public void destroyAttackAction(boolean successful) {
 		Tile tile = attackingPieceTile;
-		
-		this.isAttacking = false;
-		
+				
 		if (!attacks.isEmpty()) {
 			hide(attacks);
 		}
@@ -99,6 +97,8 @@ public class AttackManager {
 		if (successful) {
 			game.disable(tile);
 		}
+		
+		this.isAttacking = false;
 	}
 	
 	public void executeAttackAction(Tile target) {
@@ -117,6 +117,8 @@ public class AttackManager {
 		} else {
 			// Do nothing. Something went wrong if we made it here.
 		}
+		
+		destroyAttackAction(true);
 	}
 	
 	private ArrayList<Tile> getNearbyAttacks(Tile tile) {
