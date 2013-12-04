@@ -15,7 +15,8 @@ public class EndTurnManager {
 
 	public void endTurn() {
 		if (game.getTurn() == TeamColor.RED) {
-			resourcesManager.getRedMusic().stop();
+			resourcesManager.unloadGameAudio();
+			resourcesManager.loadGameAudio();
 			resourcesManager.getBlueMusic().play();
 			game.setTurn(TeamColor.BLUE);
 			game.setBlueFunds(game.getBlueFunds() + game.getMap().getBlueCities() * 1000);

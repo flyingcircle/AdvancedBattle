@@ -31,11 +31,19 @@ public class ActionMenuManager implements IOnMenuItemClickListener {
 	private static final int CANCEL = 4;
 	private static final int END_TURN = 5;
 	
+	private boolean canMove;
+	
 	public ActionMenuManager(GameManager game) {
 		this.game = game;
 	}
 	
 	public void createActionMenu(int items, boolean isFactory, boolean canAttack, boolean canLiberate, boolean canMove) {	
+		if (canMove) {
+			this.canMove = true;
+		} else {
+			this.canMove = false;
+		}
+		
 		this.actionMenu = new Entity(0, 0);
 		
 		Rectangle backgroundRect = new Rectangle(0, 0, 800, 480, resourcesManager.getVbom());
@@ -133,7 +141,7 @@ public class ActionMenuManager implements IOnMenuItemClickListener {
 			return true;
 		case CANCEL:
 			destroyActionMenu();
-			if (game.getMoveManager().isMoving()) {
+			if (!canMove) {
 				game.disable(game.getMap().getTile(resourcesManager.getCursorColumn(), resourcesManager.getCursorRow()));
 			}
 			return true;

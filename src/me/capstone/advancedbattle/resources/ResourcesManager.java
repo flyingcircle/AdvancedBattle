@@ -44,10 +44,12 @@ public class ResourcesManager {
 	private Music menuMusic;
 	
 	//OptionsScene
-	private BitmapTextureAtlas optionsTextureAtlas;
-	private ITextureRegion musicOptionRegion;
+	private BitmapTextureAtlas optionsOnTextureAtlas;
+	private BitmapTextureAtlas optionsOffTextureAtlas;
+	private ITextureRegion musicOnRegion;
+	private ITextureRegion musicOffRegion;
 	
-	private float volume = 1.0F;
+	private boolean musicOn = true;
 	
 	// Level selector scene
 	private static int LEVEL_ITEMS = 2;
@@ -177,32 +179,40 @@ public class ResourcesManager {
     	menuTextureAtlas.unload();
     }
     
-    private void loadMenuAudio() {        
-        try {
-        	this.menuMusic = MusicFactory.createMusicFromAsset(getEngine().getMusicManager(), getActivity().getApplicationContext(), "sfx/Advance_Wars_2_Opening.mp3");
-        	menuMusic.setLooping(true);
-        } catch (IOException e) {
-        	e.printStackTrace();
-        }
+    private void loadMenuAudio() {
+    	if (musicOn){
+    		 try {
+    	        	this.menuMusic = MusicFactory.createMusicFromAsset(getEngine().getMusicManager(), getActivity().getApplicationContext(), "sfx/Advance_Wars_2_Opening.mp3");
+    	        	menuMusic.setLooping(true);
+    	        } catch (IOException e) {
+    	        	e.printStackTrace();
+    	        }
+    	}
     }
     
     private void unloadMenuAudio() {
-    	menuMusic.stop();
+    	if (menuMusic.isPlaying()) {
+        	menuMusic.stop();
+    	}
     }
     
     public void createOptionsGraphics(){
     	BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/options/");
     	
-    	this.optionsTextureAtlas = new BitmapTextureAtlas(getActivity().getTextureManager(), 1024, 1024, TextureOptions.BILINEAR);
-    	this.setMusicOptionRegion(BitmapTextureAtlasTextureRegionFactory.createFromAsset(optionsTextureAtlas, getActivity(), "musicOptionOn.png", 200, 0));
+    	this.optionsOnTextureAtlas = new BitmapTextureAtlas(getActivity().getTextureManager(), 1024, 1024, TextureOptions.BILINEAR);
+    	this.optionsOffTextureAtlas = new BitmapTextureAtlas(getActivity().getTextureManager(), 1024, 1024, TextureOptions.BILINEAR);
+    	this.musicOnRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(optionsOnTextureAtlas, getActivity(), "musicOptionOn.png", 0, 0);
+    	this.musicOffRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(optionsOffTextureAtlas, getActivity(), "musicOptionOff.png", 0, 0);
     }
     
     private void loadOptionsGraphics(){
-    	optionsTextureAtlas.load();
+    	optionsOnTextureAtlas.load();
+    	optionsOffTextureAtlas.load();
     }
     
     private void unloadOptionsGraphics(){
-    	optionsTextureAtlas.unload();
+    	optionsOnTextureAtlas.unload();
+    	optionsOffTextureAtlas.unload();
     }
     
     public void createLevelGraphics() {
@@ -243,16 +253,20 @@ public class ResourcesManager {
     }
     
     private void loadLevelAudio() {
-    	try {
-        	this.levelMusic = MusicFactory.createMusicFromAsset(getEngine().getMusicManager(), getActivity().getApplicationContext(), "sfx/Nell's_Theme.mp3");
-        	levelMusic.setLooping(true);
-        } catch (IOException e) {
-        	e.printStackTrace();
-        }
+    	if (musicOn) {
+    		try {
+            	this.levelMusic = MusicFactory.createMusicFromAsset(getEngine().getMusicManager(), getActivity().getApplicationContext(), "sfx/Nell's_Theme.mp3");
+            	levelMusic.setLooping(true);
+            } catch (IOException e) {
+            	e.printStackTrace();
+            }
+    	}
     }
     
     private void unloadLevelAudio() {
-    	levelMusic.stop();
+    	if (levelMusic.isPlaying()) {
+    		levelMusic.stop();
+    	}
     }
     
     public void createGameGraphics() {
@@ -283,21 +297,31 @@ public class ResourcesManager {
     }
     
     public void loadGameAudio() {
-    	try {
-        	this.redMusic = MusicFactory.createMusicFromAsset(getEngine().getMusicManager(), getActivity().getApplicationContext(), "sfx/Andy's_Theme.mp3");
-        	redMusic.setLooping(true);
-        	this.blueMusic = MusicFactory.createMusicFromAsset(getEngine().getMusicManager(), getActivity().getApplicationContext(), "sfx/Max's_Theme.mp3");
-        	blueMusic.setLooping(true);
-        	this.victoryMusic = MusicFactory.createMusicFromAsset(getEngine().getMusicManager(), getActivity().getApplicationContext(), "sfx/Success.mp3");
-        } catch (IOException e) {
-        	e.printStackTrace();
-        }
+    	if (musicOn) {
+    		try {
+            	this.redMusic = MusicFactory.createMusicFromAsset(getEngine().getMusicManager(), getActivity().getApplicationContext(), "sfx/Andy's_Theme.mp3");
+            	redMusic.setLooping(true);
+            	this.blueMusic = MusicFactory.createMusicFromAsset(getEngine().getMusicManager(), getActivity().getApplicationContext(), "sfx/Max's_Theme.mp3");
+            	blueMusic.setLooping(true);
+            	this.victoryMusic = MusicFactory.createMusicFromAsset(getEngine().getMusicManager(), getActivity().getApplicationContext(), "sfx/Success.mp3");
+            } catch (IOException e) {
+            	e.printStackTrace();
+            }
+    	}
     }
     
     public void unloadGameAudio() {
-    	redMusic.stop();
-    	blueMusic.stop();
-    	victoryMusic.stop();
+    	if (redMusic.isPlaying()) {
+    		redMusic.stop();
+    	}
+
+    	if (blueMusic.isPlaying()) {
+    		blueMusic.stop();
+    	}
+    	
+    	if (victoryMusic.isPlaying()) {
+    		victoryMusic.stop();
+    	}
     }
     
     public void createFonts() {
@@ -378,36 +402,59 @@ public class ResourcesManager {
 		this.menuMusic = menuMusic;
 	}
 
-	public BitmapTextureAtlas getOptionsTextureAtlas() {
-		return optionsTextureAtlas;
+	public BitmapTextureAtlas getOptionsOnTextureAtlas() {
+		return optionsOnTextureAtlas;
 	}
 
-	public void setOptionsTextureAtlas(BitmapTextureAtlas optionsTextureAtlas) {
-		this.optionsTextureAtlas = optionsTextureAtlas;
+	public void setOptionsOnTextureAtlas(BitmapTextureAtlas optionsOnTextureAtlas) {
+		this.optionsOnTextureAtlas = optionsOnTextureAtlas;
+	}
+	
+	public BitmapTextureAtlas getOptionsOffTextureAtlas() {
+		return optionsOffTextureAtlas;
 	}
 
-	public ITextureRegion getMusicOptionRegion() {
-		return musicOptionRegion;
+	public void setOptionsOffTextureAtlas(BitmapTextureAtlas optionsOffTextureAtlas) {
+		this.optionsOffTextureAtlas = optionsOffTextureAtlas;
 	}
 
-	public void setMusicOptionRegion(ITextureRegion musicOptionRegion) {
-		this.musicOptionRegion = musicOptionRegion;
+	public ITextureRegion getMusicOnRegion() {
+		return musicOnRegion;
 	}
 
-	public float getVolume() {
-		return volume;
+	public void setMusicOnRegion(ITextureRegion musicOnRegion) {
+		this.musicOnRegion = musicOnRegion;
 	}
 
-	public void setVolume(float volume) {
-		this.volume = volume;
+	public ITextureRegion getMusicOffRegion() {
+		return musicOffRegion;
+	}
+
+	public void setMusicOffRegion(ITextureRegion musicOffRegion) {
+		this.musicOffRegion = musicOffRegion;
+	}
+
+	public boolean isMusicOn() {
+		return musicOn;
+	}
+
+	public void setMusicOn(boolean musicOn) {
+		this.musicOn = musicOn;
+	}
+	
+	public void toggleMusic() {
+		if (musicOn) {
+			this.musicOn = false;
+		} else {
+			this.musicOn = true;
+		}
 	}
 
 	public BitmapTextureAtlas getBackgroundTextureAtlas() {
 		return backgroundTextureAtlas;
 	}
 
-	public void setBackgroundTextureAtlas(
-			BitmapTextureAtlas backgroundTextureAtlas) {
+	public void setBackgroundTextureAtlas(BitmapTextureAtlas backgroundTextureAtlas) {
 		this.backgroundTextureAtlas = backgroundTextureAtlas;
 	}
 
@@ -527,8 +574,7 @@ public class ResourcesManager {
 		return redVictoryTextureAtlas;
 	}
 
-	public void setRedVictoryTextureAtlas(
-			BitmapTextureAtlas redVictoryTextureAtlas) {
+	public void setRedVictoryTextureAtlas(BitmapTextureAtlas redVictoryTextureAtlas) {
 		this.redVictoryTextureAtlas = redVictoryTextureAtlas;
 	}
 
@@ -553,8 +599,7 @@ public class ResourcesManager {
 		return blueVictoryTextureRegion;
 	}
 
-	public void setBlueVictoryTextureRegion(
-			ITextureRegion blueVictoryTextureRegion) {
+	public void setBlueVictoryTextureRegion(ITextureRegion blueVictoryTextureRegion) {
 		this.blueVictoryTextureRegion = blueVictoryTextureRegion;
 	}
 

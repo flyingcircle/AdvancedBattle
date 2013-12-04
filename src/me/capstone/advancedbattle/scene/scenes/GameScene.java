@@ -5,7 +5,6 @@ import org.andengine.extension.tmx.TMXLayer;
 import me.capstone.advancedbattle.manager.GameManager;
 import me.capstone.advancedbattle.resources.ResourcesManager;
 import me.capstone.advancedbattle.scene.BaseScene;
-import me.capstone.advancedbattle.scene.SceneManager;
 import me.capstone.advancedbattle.scene.SceneManager.SceneType;
 import me.capstone.advancedbattle.touch.CursorSelector;
 import me.capstone.advancedbattle.touch.MapScroller;
@@ -62,8 +61,6 @@ public class GameScene extends BaseScene {
     		resourcesManager.getGameManager().getAttackManager().destroyAttackAction(false);
     	} else if (resourcesManager.getGameManager().getBuyMenuManager().hasBuyMenu()) {
     		resourcesManager.getGameManager().getBuyMenuManager().destroyBuyMenu();
-    	} else {
-    		SceneManager.getInstance().loadMenuScene(resourcesManager.getEngine());
     	}
     }
     
@@ -85,6 +82,7 @@ public class GameScene extends BaseScene {
 
     @Override
     public void disposeScene() {
+    	resourcesManager.getCamera().setZoomFactor(1.0F);
     	resourcesManager.getCamera().setHUD(null);
     	resourcesManager.getCamera().setBoundsEnabled(false);
     	resourcesManager.getCamera().setCenter(400, 240);

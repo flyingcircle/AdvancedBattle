@@ -78,9 +78,6 @@ public class GameManager {
 	    	}
 	    }
 	    
-	    System.out.println(map.getBlueCities());
-	    System.out.println(map.getRedCities());
-	    
 	    map.setMap(arrayMap);
 	}
 	

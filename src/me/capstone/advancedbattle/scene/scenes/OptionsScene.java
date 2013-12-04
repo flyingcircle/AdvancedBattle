@@ -1,11 +1,9 @@
 package me.capstone.advancedbattle.scene.scenes;
 
+import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.background.Background;
-import org.andengine.entity.scene.menu.MenuScene;
-import org.andengine.entity.scene.menu.MenuScene.IOnMenuItemClickListener;
-import org.andengine.entity.scene.menu.item.IMenuItem;
-import org.andengine.entity.scene.menu.item.SpriteMenuItem;
-import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
+import org.andengine.entity.sprite.Sprite;
+import org.andengine.input.touch.TouchEvent;
 import org.andengine.util.color.Color;
 
 import me.capstone.advancedbattle.resources.ResourcesManager;
@@ -13,11 +11,10 @@ import me.capstone.advancedbattle.scene.BaseScene;
 import me.capstone.advancedbattle.scene.SceneManager;
 import me.capstone.advancedbattle.scene.SceneManager.SceneType;
 
-public class OptionsScene extends BaseScene implements IOnMenuItemClickListener{
+public class OptionsScene extends BaseScene {
 
 	private ResourcesManager resourcesManager;
-	private MenuScene optionsChildScene;
-	private final int MUSIC_OPTION = 0;
+	private Scene optionsChildScene;
 	
 	@Override
 	public void createScene() {
@@ -25,32 +22,62 @@ public class OptionsScene extends BaseScene implements IOnMenuItemClickListener{
 		createBackground();
 		createOptionsChildScene();
 	}
-
-	@Override
-	public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem,
-			float pMenuItemLocalX, float pMenuItemLocalY) {
-		switch(pMenuItem.getID()){
-		case MUSIC_OPTION:
-			//set music option off
-			return true;
-		default:
-			return false;
-		}
-	}
 	
 	private void createBackground() {
 		setBackground(new Background(Color.BLACK));
 	}
 
 	private void createOptionsChildScene() {
-		optionsChildScene = new MenuScene(resourcesManager.getCamera());
+		optionsChildScene = new Scene();
 		optionsChildScene.setPosition(0,0);
 		
-		final IMenuItem musicOption = new ScaleMenuItemDecorator(new SpriteMenuItem(MUSIC_OPTION, resourcesManager.getMusicOptionRegion(), resourcesManager.getVbom()), 1.2f, 1);
-		
-		optionsChildScene.addMenuItem(musicOption);
-		optionsChildScene.buildAnimations();
-		optionsChildScene.setOnMenuItemClickListener(this);
+		if (!resourcesManager.isMusicOn()) {
+			final Sprite off = new Sprite(0, 0, resourcesManager.getMusicOffRegion(), resourcesManager.getVbom());
+			final Sprite on = new Sprite(0, 0, resourcesManager.getMusicOnRegion(), resourcesManager.getVbom()) {
+				@Override
+				public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+					if (pSceneTouchEvent.isActionUp()) {
+						resourcesManager.toggleMusic();
+						setVisible(!resourcesManager.isMusicOn());
+						off.setVisible(resourcesManager.isMusicOn());
+					}
+					return true;
+				}
+			};
+			
+			off.setVisible(false);
+			
+			on.setPosition(400 - on.getWidth() / 2, 240 - on.getHeight() / 2);
+			off.setPosition(400 - off.getWidth() / 2, 240 - off.getHeight() / 2);
+			
+			optionsChildScene.attachChild(on);
+			optionsChildScene.attachChild(off);
+					
+			optionsChildScene.registerTouchArea(on);
+		} else {
+			final Sprite on = new Sprite(0, 0, resourcesManager.getMusicOnRegion(), resourcesManager.getVbom());
+			final Sprite off = new Sprite(0, 0, resourcesManager.getMusicOffRegion(), resourcesManager.getVbom()) {
+				@Override
+				public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+					if (pSceneTouchEvent.isActionUp()) {
+						resourcesManager.toggleMusic();
+						setVisible(resourcesManager.isMusicOn());
+						on.setVisible(!resourcesManager.isMusicOn());
+					}
+					return true;
+				}
+			};
+			
+			on.setVisible(false);
+			
+			on.setPosition(400 - on.getWidth() / 2, 240 - on.getHeight() / 2);
+			off.setPosition(400 - off.getWidth() / 2, 240 - off.getHeight() / 2);
+			
+			optionsChildScene.attachChild(on);
+			optionsChildScene.attachChild(off);
+					
+			optionsChildScene.registerTouchArea(off);
+		}
 		
 		setChildScene(optionsChildScene);
 	}
