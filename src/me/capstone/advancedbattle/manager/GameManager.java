@@ -2,6 +2,8 @@ package me.capstone.advancedbattle.manager;
 
 import java.util.ArrayList;
 
+import org.andengine.engine.handler.timer.ITimerCallback;
+import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.tmx.TMXLayer;
 import org.andengine.extension.tmx.TMXTile;
@@ -19,6 +21,8 @@ import me.capstone.advancedbattle.resources.ResourcesManager;
 import me.capstone.advancedbattle.resources.data.TeamColor;
 import me.capstone.advancedbattle.resources.tile.CursorTile;
 import me.capstone.advancedbattle.resources.tile.TerrainTile;
+import me.capstone.advancedbattle.scene.SceneManager;
+import me.capstone.advancedbattle.scene.scenes.GameScene;
 import me.capstone.advancedbattle.tile.Tile;
 import me.capstone.advancedbattle.util.Util;
 
@@ -178,6 +182,14 @@ public class GameManager {
 		victoryImage.setScale(2F);
 		victoryImage.setPosition(400 - victoryImage.getWidth() / 2, 240 - victoryImage.getHeight() / 2);
 		hud.getHud().attachChild(victoryImage);
+		
+		final GameScene gameScene = (GameScene) SceneManager.getInstance().getCurrentScene();
+		gameScene.registerUpdateHandler(new TimerHandler(5.0F, true, new ITimerCallback() {
+	    	@Override
+	    	public void onTimePassed(final TimerHandler pTimerHandler) {
+	    		gameScene.disposeScene();
+	    	}
+	    }));
 	}
 
 	public Map getMap() {

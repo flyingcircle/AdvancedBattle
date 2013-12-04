@@ -3,6 +3,8 @@ package me.capstone.advancedbattle.manager.managers;
 import me.capstone.advancedbattle.manager.GameManager;
 import me.capstone.advancedbattle.resources.ResourcesManager;
 
+import org.andengine.engine.handler.timer.ITimerCallback;
+import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.Entity;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.menu.MenuScene;
@@ -83,7 +85,13 @@ public class ActionMenuManager implements IOnMenuItemClickListener {
 	    game.getHud().getHud().attachChild(actionMenu);
 	    game.getHud().getHud().setChildScene(actionMenuOptions);
 	    
-	    actionMenuOptions.setOnMenuItemClickListener(this);
+	    final IOnMenuItemClickListener click = this;
+	    actionMenuOptions.registerUpdateHandler(new TimerHandler(1.0F, true, new ITimerCallback() {
+	    	@Override
+	    	public void onTimePassed(final TimerHandler pTimerHandler) {
+	    		actionMenuOptions.setOnMenuItemClickListener(click);
+	    	}
+	    }));
 	    
 	    this.hasActionMenu = true;
 	}
