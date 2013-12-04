@@ -17,7 +17,6 @@ public class ActionMenuManager implements IOnMenuItemClickListener {
 	
 	private GameManager game;
 	
-	// Action Menu
 	private Entity actionMenu;
 
 	private boolean hasActionMenu = false;

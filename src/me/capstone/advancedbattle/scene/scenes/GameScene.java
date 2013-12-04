@@ -60,6 +60,8 @@ public class GameScene extends BaseScene {
     		resourcesManager.getGameManager().getMoveManager().destroyMoveAction(false);
     	} else if (resourcesManager.getGameManager().getAttackManager().isAttacking()) {
     		resourcesManager.getGameManager().getAttackManager().destroyAttackAction(false);
+    	} else if (resourcesManager.getGameManager().getBuyMenuManager().hasBuyMenu()) {
+    		resourcesManager.getGameManager().getBuyMenuManager().destroyBuyMenu();
     	} else {
     		SceneManager.getInstance().loadMenuScene(resourcesManager.getEngine());
     	}

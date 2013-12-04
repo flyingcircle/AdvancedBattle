@@ -17,52 +17,58 @@ import me.capstone.advancedbattle.resources.tile.PieceTile;
 import me.capstone.advancedbattle.tile.Tile;
 import me.capstone.advancedbattle.util.Util;
 
-public class BuyMenuManager implements IOnMenuItemClickListener {
-	
+public class BuyMenuManager implements IOnMenuItemClickListener {	
 	private static ResourcesManager resourcesManager = ResourcesManager.getInstance();
+	
 	private GameManager game;
+	
 	private Entity buyMenu;
+	
+	private boolean hasBuyMenu = false;	
 	private MenuScene buyMenuOptions;
-	private Tile currentTile;
 	
 	public BuyMenuManager(GameManager game) {
 		this.game = game;
 	}
 	
-	public void createBuyMenu(){
-		buyMenu = new Entity(0, 0);
-		int currentFunds = Util.getCurrentFunds();
-		currentTile  = game.getMap().getTile(resourcesManager.getCursorColumn(), resourcesManager.getCursorRow());
+	public void createBuyMenu() {
+		int items = Util.getBuyAmount();
+		
+		this.buyMenu = new Entity(0, 0);
 		
 		Rectangle backgroundRect = new Rectangle(0, 0, 800, 480, resourcesManager.getVbom());
 	    backgroundRect.setColor(1.0F, 1.0F, 1.0F, 0.75F);
 	    buyMenu.attachChild(backgroundRect);
 	    
-	    Rectangle menuRect = new Rectangle(240, 240, 320, 10, resourcesManager.getVbom());
+	    int size = items * 50;
+	    Rectangle menuRect = new Rectangle(140, 240 - size / 2, 520, size + 10, resourcesManager.getVbom());
 	    menuRect.setColor(0.0F, 0.0F, 0.0F, 0.75F);
 	    
-	    buyMenuOptions = new MenuScene(resourcesManager.getCamera());
+	    this.buyMenuOptions = new MenuScene(resourcesManager.getCamera());
 	    buyMenuOptions.setPosition(0, 0);
 	    
-	    if(currentFunds >= PieceTile.RED_INFANTRY.getCost()){
-	    	final IMenuItem infantryMenuItem = new ColorMenuItemDecorator(new TextMenuItem(PieceTile.RED_INFANTRY.getId(), resourcesManager.getFont(), "Infantry $" + Integer.toString(PieceTile.RED_INFANTRY.getCost()) , resourcesManager.getVbom()), new Color(1.0f, 1.0f, 1.0f, 0.75f), new Color(0.7f, 0.7f, 0.7f, 0.75f));
+	    if (items >= 2) {
+	    	final IMenuItem infantryMenuItem = new ColorMenuItemDecorator(new TextMenuItem(Util.getTurnInfantry().getId(), resourcesManager.getFont(), Util.getTurnInfantry().getName() + " - " + Integer.toString(Util.getTurnInfantry().getCost()) , resourcesManager.getVbom()), new Color(1.0f, 1.0f, 1.0f, 0.75f), new Color(0.7f, 0.7f, 0.7f, 0.75f));
 	    	buyMenuOptions.addMenuItem(infantryMenuItem);
 	    }
+	    
+	    if (items >= 3) {
+	    	final IMenuItem mechMenuItem = new ColorMenuItemDecorator(new TextMenuItem(Util.getTurnMech().getId(), resourcesManager.getFont(), Util.getTurnMech().getName() + " - " + Integer.toString(Util.getTurnMech().getCost()) , resourcesManager.getVbom()), new Color(1.0f, 1.0f, 1.0f, 0.75f), new Color(0.7f, 0.7f, 0.7f, 0.75f));
+	    	buyMenuOptions.addMenuItem(mechMenuItem);
+	    }
     	
-	    if(currentFunds >= PieceTile.RED_TANK.getCost()) {
-	    	final IMenuItem tankMenuItem = new ColorMenuItemDecorator(new TextMenuItem(PieceTile.RED_TANK.getId(), resourcesManager.getFont(), "Tank $" + Integer.toString(PieceTile.RED_TANK.getCost()), resourcesManager.getVbom()), new Color(1.0f, 1.0f, 1.0f, 0.75f), new Color(0.7f, 0.7f, 0.7f, 0.75f));
+	    if (items >= 4) {
+	    	final IMenuItem reconMenuItem = new ColorMenuItemDecorator(new TextMenuItem(Util.getTurnRecon().getId(), resourcesManager.getFont(), Util.getTurnRecon().getName() + " - " + Integer.toString(Util.getTurnRecon().getCost()), resourcesManager.getVbom()), new Color(1.0f, 1.0f, 1.0f, 0.75f), new Color(0.7f, 0.7f, 0.7f, 0.75f));
+	    	buyMenuOptions.addMenuItem(reconMenuItem);
+	    }
+	    
+	    if (items >= 5) {
+	    	final IMenuItem tankMenuItem = new ColorMenuItemDecorator(new TextMenuItem(Util.getTurnTank().getId(), resourcesManager.getFont(), Util.getTurnTank().getName() + " - " + Integer.toString(Util.getTurnTank().getCost()), resourcesManager.getVbom()), new Color(1.0f, 1.0f, 1.0f, 0.75f), new Color(0.7f, 0.7f, 0.7f, 0.75f));
 	    	buyMenuOptions.addMenuItem(tankMenuItem);
 	    }
 	    
-	    if(currentFunds >= PieceTile.RED_RECON.getCost()){
-	    	final IMenuItem reconMenuItem = new ColorMenuItemDecorator(new TextMenuItem(PieceTile.RED_RECON.getId(), resourcesManager.getFont(), "Recon $" + Integer.toString(PieceTile.RED_RECON.getCost()), resourcesManager.getVbom()), new Color(1.0f, 1.0f, 1.0f, 0.75f), new Color(0.7f, 0.7f, 0.7f, 0.75f));
-	    	buyMenuOptions.addMenuItem(reconMenuItem);
-	    }
-    	
-	    if(currentFunds >= PieceTile.RED_MECH.getCost()){
-	    	final IMenuItem mechMenuItem = new ColorMenuItemDecorator(new TextMenuItem(PieceTile.RED_MECH.getId(), resourcesManager.getFont(), "Mech $" + Integer.toString(PieceTile.RED_MECH.getCost()), resourcesManager.getVbom()), new Color(1.0f, 1.0f, 1.0f, 0.75f), new Color(0.7f, 0.7f, 0.7f, 0.75f));
-	    	buyMenuOptions.addMenuItem(mechMenuItem);
-	    }
+	    final IMenuItem cancelMenuItem = new ColorMenuItemDecorator(new TextMenuItem(0, resourcesManager.getFont(), "Cancel", resourcesManager.getVbom()), new Color(1.0f, 1.0f, 1.0f, 0.75f), new Color(0.7f, 0.7f, 0.7f, 0.75f));
+	    buyMenuOptions.addMenuItem(cancelMenuItem);
 	    
 	    buyMenuOptions.buildAnimations();
 	    buyMenuOptions.setBackgroundEnabled(false);
@@ -75,48 +81,95 @@ public class BuyMenuManager implements IOnMenuItemClickListener {
 	    buyMenuOptions.setOnMenuItemClickListener(this);
 	}
 
-	private void destroyBuyMenu(){
+	public void destroyBuyMenu(){
 		game.getHud().getHud().detachChild(buyMenu);
 		game.getHud().getHud().detachChild(buyMenuOptions);
+		
 		buyMenuOptions.clearMenuItems();
-		//buyMenuOptions.clearTouchAreas();
-		//buyMenuOptions.closeMenuScene();
+		buyMenuOptions.clearTouchAreas();
+		buyMenuOptions.closeMenuScene();
 		buyMenuOptions.dispose();
 		this.buyMenuOptions = null;
+		
 		buyMenu.dispose();
 		this.buyMenu = null;
+		
+		this.hasBuyMenu = false;
 	}
 	
 	@Override
-	public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem,
-			float pMenuItemLocalX, float pMenuItemLocalY) {
+	public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
 		int subtractCost = 0;
-		if(pMenuItem.getID() == PieceTile.RED_INFANTRY.getId()){
-			subtractCost = PieceTile.RED_INFANTRY.getCost();
-			currentTile.setPiece( currentTile.createPieceByID( PieceTile.RED_INFANTRY.getId()));
+		int id = pMenuItem.getID();
+		if (id == Util.getTurnInfantry().getId()) {
+			PieceTile infantry = Util.getTurnInfantry();
+			subtractCost = infantry.getCost();
+			createPiece(infantry);
+			destroyBuyMenu();
+		} else if (id == Util.getTurnMech().getId()) {
+			PieceTile mech = Util.getTurnMech();
+			subtractCost = mech.getCost();
+			createPiece(mech);
+			destroyBuyMenu();
+		} else if (id == Util.getTurnRecon().getId()) {
+			PieceTile recon = Util.getTurnRecon();
+			subtractCost = recon.getCost();
+			createPiece(recon);
+			destroyBuyMenu();
+		} else if (id == Util.getTurnTank().getId()) {
+			PieceTile tank = Util.getTurnTank();
+			subtractCost = tank.getCost();
+			createPiece(tank);
+			destroyBuyMenu();
+		} else if (id == 0) {
+			destroyBuyMenu();
+		} else {
+			return false;
 		}
-		else if(pMenuItem.getID() == PieceTile.RED_TANK.getId()){
-			subtractCost = PieceTile.RED_TANK.getCost();
-			currentTile.setPiece( currentTile.createPieceByID( PieceTile.RED_TANK.getId()));
-		}
-		else if(pMenuItem.getID() == PieceTile.RED_RECON.getId()){
-			subtractCost = PieceTile.RED_RECON.getCost();
-			currentTile.setPiece( currentTile.createPieceByID( PieceTile.RED_RECON.getId()));
-		}
-		else if(pMenuItem.getID() == PieceTile.RED_MECH.getId()){
-			subtractCost = PieceTile.RED_MECH.getCost();
-			currentTile.setPiece( currentTile.createPieceByID( PieceTile.RED_MECH.getId()));
-		}
+		
 		Util.setCurrentFunds(Util.getCurrentFunds() - subtractCost);
-		TMXLayer pieceLayer = resourcesManager.getGameMap().getTMXLayers().get(2);
-		TMXTile pieceTile = pieceLayer.getTMXTile(currentTile.getColumn(), currentTile.getRow());
-		pieceTile.setGlobalTileID(resourcesManager.getGameMap(), PieceTile.RED_INFANTRY.getId());
-		pieceLayer.setIndex(pieceTile.getTileRow() * resourcesManager.getGameMap().getTileColumns() + pieceTile.getTileColumn());
-		pieceLayer.drawWithoutChecks(pieceTile.getTextureRegion(), pieceTile.getTileX(), pieceTile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
-		pieceLayer.submit();
+		
 		game.getHud().updateHUD();
-		destroyBuyMenu();
-		return false;
+		return true;
+	}
+	
+	private void createPiece(PieceTile pieceTile) {
+		TMXLayer pieceLayer = resourcesManager.getGameMap().getTMXLayers().get(2);
+		TMXTile tile = pieceLayer.getTMXTile(resourcesManager.getCursorColumn(), resourcesManager.getCursorRow());
+		tile.setGlobalTileID(resourcesManager.getGameMap(), pieceTile.getId());
+		pieceLayer.setIndex(tile.getTileRow() * resourcesManager.getGameMap().getTileColumns() + tile.getTileColumn());
+		pieceLayer.drawWithoutChecks(tile.getTextureRegion(), tile.getTileX(), tile.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
+		pieceLayer.submit();
+		
+		Tile newTile = game.getMap().getTile(tile.getTileColumn(), tile.getTileRow());
+		newTile.setPieceTileID(pieceTile.getId());
+		newTile.setPiece(newTile.createPieceByID(newTile.getPieceTileID()));
+		
+		game.disable(newTile);
+	}
+
+	public Entity getBuyMenu() {
+		return buyMenu;
+	}
+
+	public void setBuyMenu(Entity buyMenu) {
+		this.buyMenu = buyMenu;
+	}
+
+	public boolean hasBuyMenu() {
+		return hasBuyMenu;
+	}
+
+	public void setHasBuyMenu(boolean hasBuyMenu) {
+		this.hasBuyMenu = hasBuyMenu;
+	}
+
+	public MenuScene getBuyMenuOptions() {
+		return buyMenuOptions;
+	}
+
+	public void setBuyMenuOptions(MenuScene buyMenuOptions) {
+		this.buyMenuOptions = buyMenuOptions;
 	}
 
 }
