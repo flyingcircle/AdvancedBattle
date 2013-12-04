@@ -98,6 +98,8 @@ public class GameManager {
 		this.liberateManager = new LiberateManager(this);
 		this.moveManager = new MoveManager(this);
 		this.endTurnManager = new EndTurnManager(this);
+		
+		resourcesManager.getRedMusic().play();
 	}
 	
 	public void handleAction() {
@@ -168,6 +170,9 @@ public class GameManager {
 	}
 	
 	public void createVictoryImage() {
+		resourcesManager.unloadGameAudio();
+		resourcesManager.loadGameAudio();
+		resourcesManager.getVictoryMusic().play();
 		if (turn == TeamColor.RED) {
 			resourcesManager.getRedVictoryTextureAtlas().load();
 			this.victoryImage = new Sprite(0, 0, resourcesManager.getRedVictoryTextureRegion(), resourcesManager.getVbom());
@@ -182,7 +187,7 @@ public class GameManager {
 		victoryImage.setPosition(400 - victoryImage.getWidth() / 2, 240 - victoryImage.getHeight() / 2);
 		hud.getHud().attachChild(victoryImage);
 		
-		SceneManager.getInstance().getCurrentScene().registerUpdateHandler(new TimerHandler(5.0F, true, new ITimerCallback() {
+		SceneManager.getInstance().getCurrentScene().registerUpdateHandler(new TimerHandler(8.0F, true, new ITimerCallback() {
 	    	@Override
 	    	public void onTimePassed(final TimerHandler pTimerHandler) {
 	    		SceneManager.getInstance().loadMenuScene(resourcesManager.getEngine());

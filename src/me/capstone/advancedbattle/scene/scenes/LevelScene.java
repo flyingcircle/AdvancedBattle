@@ -34,9 +34,9 @@ public class LevelScene extends BaseScene {
 	public void createScene() {
 		this.resourcesManager = ResourcesManager.getInstance();
 		createBackground();
-		// TODO : Title stuff?
 		createTouchListeners();
 		createLevelBoxes();
+		createMusic();
 	}
 	
 	private void createBackground() {
@@ -102,6 +102,10 @@ public class LevelScene extends BaseScene {
 				}
 			});
 		}
+	}
+	
+	private void createMusic() {
+		resourcesManager.getLevelMusic().play();
 	}
 	
 	@Override

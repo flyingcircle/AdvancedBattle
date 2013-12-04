@@ -1,6 +1,7 @@
 package me.capstone.advancedbattle.manager.managers;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.andengine.extension.tmx.TMXLayer;
 import org.andengine.extension.tmx.TMXTile;
@@ -10,7 +11,9 @@ import me.capstone.advancedbattle.manager.GameManager;
 import me.capstone.advancedbattle.resources.ResourcesManager;
 import me.capstone.advancedbattle.resources.tile.CursorTile;
 import me.capstone.advancedbattle.resources.tile.PieceTile;
+import me.capstone.advancedbattle.resources.tile.TerrainTile;
 import me.capstone.advancedbattle.tile.Tile;
+import me.capstone.advancedbattle.tile.piece.Piece;
 import me.capstone.advancedbattle.util.Util;
 
 public class AttackManager {
@@ -101,24 +104,137 @@ public class AttackManager {
 		this.isAttacking = false;
 	}
 	
-	public void executeAttackAction(Tile target) {
-		PieceTile attacker = attackingPieceTile.getPiece().getPieceTile();
+	public void executeAttackAction(Tile tile) {
+		Piece attacker = attackingPieceTile.getPiece();
+		Piece target = tile.getPiece();
 		
-		if (attacker.getId() == PieceTile.RED_INFANTRY.getId() || attacker.getId() == PieceTile.BLUE_INFANTRY.getId()) {
-			//if (target.getId() == PieceTile.RED_INFANTRY.getId() || target.getId() == PieceTile.BLUE_INFANTRY.getId()) {
-
-			//}
-		} else if (attacker.getId() == PieceTile.RED_MECH.getId() || attacker.getId() == PieceTile.BLUE_MECH.getId()) {
-			
-		} else if (attacker.getId() == PieceTile.RED_RECON.getId() || attacker.getId() == PieceTile.BLUE_RECON.getId()) {
-			
-		} else if (attacker.getId() == PieceTile.RED_TANK.getId() || attacker.getId() == PieceTile.BLUE_TANK.getId()) {
-			
-		} else {
-			// Do nothing. Something went wrong if we made it here.
+		if (Util.isInfantry(attacker.getPieceTile())) {
+			if (Util.isInfantry(target.getPieceTile())) {
+				dealDamage(attackingPieceTile, tile, 0.55);
+			} else if (Util.isMech(target.getPieceTile())) {
+				dealDamage(attackingPieceTile, tile, 0.45);
+			} else if (Util.isRecon(target.getPieceTile())) {
+				dealDamage(attackingPieceTile, tile, 0.12);
+			} else if (Util.isTank(target.getPieceTile())) {
+				dealDamage(attackingPieceTile, tile, 0.05);
+			}
+		} else if (Util.isMech(attacker.getPieceTile())) {
+			if (Util.isInfantry(target.getPieceTile())) {
+				dealDamage(attackingPieceTile, tile, 0.65);
+			} else if (Util.isMech(target.getPieceTile())) {
+				dealDamage(attackingPieceTile, tile, 0.55);
+			} else if (Util.isRecon(target.getPieceTile())) {
+				dealDamage(attackingPieceTile, tile, 0.85);
+			} else if (Util.isTank(target.getPieceTile())) {
+				dealDamage(attackingPieceTile, tile, 0.55);
+			}
+		} else if (Util.isRecon(attacker.getPieceTile())) {
+			if (Util.isInfantry(target.getPieceTile())) {
+				dealDamage(attackingPieceTile, tile, 0.70);
+			} else if (Util.isMech(target.getPieceTile())) {
+				dealDamage(attackingPieceTile, tile, 0.65);
+			} else if (Util.isRecon(target.getPieceTile())) {
+				dealDamage(attackingPieceTile, tile, 0.35);
+			} else if (Util.isTank(target.getPieceTile())) {
+				dealDamage(attackingPieceTile, tile, 0.06);
+			}
+		} else if (Util.isTank(attacker.getPieceTile())) {
+			if (Util.isInfantry(target.getPieceTile())) {
+				dealDamage(attackingPieceTile, tile, 0.75);
+			} else if (Util.isMech(target.getPieceTile())) {
+				dealDamage(attackingPieceTile, tile, 0.70);
+			} else if (Util.isRecon(target.getPieceTile())) {
+				dealDamage(attackingPieceTile, tile, 0.85);
+			} else if (Util.isTank(target.getPieceTile())) {
+				dealDamage(attackingPieceTile, tile, 0.55);
+			}
 		}
 		
 		destroyAttackAction(true);
+	}
+	
+	private void dealDamage(Tile attackerTile, Tile targetTile, double damage) {
+		Piece attacker = attackerTile.getPiece();
+		Piece target = targetTile.getPiece();
+		
+		int targetDefense = 0;
+		if (targetTile.getStructureTileID() != TerrainTile.STRUCTURE_NULL.getId() && targetTile.getStructureTileID() != TerrainTile.HQ_BLUE_TOP.getId() && targetTile.getStructureTileID() != TerrainTile.HQ_RED_TOP.getId()) {
+    		for (TerrainTile terrain : TerrainTile.values()) {
+    			if (terrain.getId() == targetTile.getStructureTileID()) {
+    				targetDefense = terrain.getDefense();
+    				break;
+    			}
+    		}
+    	} else {
+    		for (TerrainTile terrain : TerrainTile.values()) {
+    			if (terrain.getId() == targetTile.getTerrainTileID()) {
+    				targetDefense = terrain.getDefense();
+    				break;
+    			}
+    		}
+    	}
+		
+		int attackerDefense = 0;
+		if (attackerTile.getStructureTileID() != TerrainTile.STRUCTURE_NULL.getId() && attackerTile.getStructureTileID() != TerrainTile.HQ_BLUE_TOP.getId() && attackerTile.getStructureTileID() != TerrainTile.HQ_RED_TOP.getId()) {
+    		for (TerrainTile terrain : TerrainTile.values()) {
+    			if (terrain.getId() == attackerTile.getStructureTileID()) {
+    				attackerDefense = terrain.getDefense();
+    				break;
+    			}
+    		}
+    	} else {
+    		for (TerrainTile terrain : TerrainTile.values()) {
+    			if (terrain.getId() == attackerTile.getTerrainTileID()) {
+    				attackerDefense = terrain.getDefense();
+    				break;
+    			}
+    		}
+    	}
+		
+		Random rand = new Random();
+		int x;
+		
+		int oDamage;
+		x = rand.nextInt(1);
+		if (x == 0) {
+			double temp = attacker.getHealth() * damage;
+			oDamage  = (int) Math.floor(temp - temp * (targetDefense / 10));
+		} else {
+			double temp = attacker.getHealth() * damage;
+			oDamage = (int) Math.floor(temp - temp * (targetDefense / 10)) + 1;
+		}
+				
+		target.setHealth(target.getHealth() - oDamage);			
+		if (target.getHealth() == 0) {
+			destroy(targetTile);
+		} else {
+			int dDamage;
+			x = rand.nextInt(1);
+			if (x == 0) {
+				double temp = target.getHealth() * damage;
+				dDamage = (int) Math.floor(temp - temp * (attackerDefense / 10));
+			} else {
+				double temp = target.getHealth() * damage;
+				dDamage = (int) Math.floor(temp - temp * (attackerDefense / 10)) + 1;
+			}
+			
+			attacker.setHealth(attacker.getHealth() - dDamage);
+			if (attacker.getHealth() == 0) {
+				destroy(attackerTile);
+			}
+		}
+	}
+	
+	private void destroy(Tile tile) {
+		tile.setPiece(null);
+		tile.setPieceTileID(PieceTile.PIECE_NULL.getId());
+		
+		TMXLayer pieceLayer = resourcesManager.getGameMap().getTMXLayers().get(2);
+		TMXTile destroyed = pieceLayer.getTMXTile(tile.getColumn(), tile.getRow());
+		destroyed.setGlobalTileID(resourcesManager.getGameMap(), PieceTile.PIECE_NULL.getId());
+		pieceLayer.setIndex(destroyed.getTileRow() * resourcesManager.getGameMap().getTileColumns() + destroyed.getTileColumn());
+		pieceLayer.drawWithoutChecks(destroyed.getTextureRegion(), destroyed.getTileX(), destroyed.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
+		pieceLayer.submit();
 	}
 	
 	private ArrayList<Tile> getNearbyAttacks(Tile tile) {
@@ -185,10 +301,10 @@ public class AttackManager {
 		return attacks;
 	}
 
-	private void display(ArrayList<Tile> moves) {
+	private void display(ArrayList<Tile> attacks) {
 		TMXLayer statusLayer = resourcesManager.getGameMap().getTMXLayers().get(3);
-		for (Tile move : moves) {
-			TMXTile targeted = statusLayer.getTMXTile(move.getColumn(), move.getRow());
+		for (Tile attack : attacks) {
+			TMXTile targeted = statusLayer.getTMXTile(attack.getColumn(), attack.getRow());
 			targeted.setGlobalTileID(resourcesManager.getGameMap(), CursorTile.TARGET.getId());
 			statusLayer.setIndex(targeted.getTileRow() * resourcesManager.getGameMap().getTileColumns() + targeted.getTileColumn());
 			statusLayer.drawWithoutChecks(targeted.getTextureRegion(), targeted.getTileX(), targeted.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);
@@ -196,10 +312,10 @@ public class AttackManager {
 		}
 	}
 	
-	private void hide(ArrayList<Tile> moves) {
+	private void hide(ArrayList<Tile> attacks) {
 		TMXLayer statusLayer = resourcesManager.getGameMap().getTMXLayers().get(3);
-		for (Tile move : moves) {
-			TMXTile targeted = statusLayer.getTMXTile(move.getColumn(), move.getRow());
+		for (Tile attack : attacks) {
+			TMXTile targeted = statusLayer.getTMXTile(attack.getColumn(), attack.getRow());
 			targeted.setGlobalTileID(resourcesManager.getGameMap(), CursorTile.CURSOR_NULL.getId());
 			statusLayer.setIndex(targeted.getTileRow() * resourcesManager.getGameMap().getTileColumns() + targeted.getTileColumn());
 			statusLayer.drawWithoutChecks(targeted.getTextureRegion(), targeted.getTileX(), targeted.getTileY(), resourcesManager.getGameMap().getTileWidth(), resourcesManager.getGameMap().getTileHeight(), Color.WHITE_ABGR_PACKED_FLOAT);

@@ -39,7 +39,67 @@ public class Util {
 		}
 	}
 	
-	public static final PieceTile getTurnInfantry() {
+	public static boolean isInfantry(PieceTile pieceTile) {
+		switch (pieceTile.getId()) {
+		case 98:
+			return true;
+		case 116:
+			return true;
+		case 134:
+			return true;
+		case 152:
+			return true;
+		default:
+			return false;
+		}
+	}
+	
+	public static boolean isMech(PieceTile pieceTile) {
+		switch (pieceTile.getId()) {
+		case 99:
+			return true;
+		case 117:
+			return true;
+		case 135:
+			return true;
+		case 153:
+			return true;
+		default:
+			return false;
+		}
+	}
+	
+	public static boolean isRecon(PieceTile pieceTile) {
+		switch (pieceTile.getId()) {
+		case 102:
+			return true;
+		case 120:
+			return true;
+		case 138:
+			return true;
+		case 156:
+			return true;
+		default:
+			return false;
+		}
+	}
+	
+	public static boolean isTank(PieceTile pieceTile) {
+		switch (pieceTile.getId()) {
+		case 101:
+			return true;
+		case 119:
+			return true;
+		case 137:
+			return true;
+		case 155:
+			return true;
+		default:
+			return false;
+		}
+	}
+	
+	public static PieceTile getTurnInfantry() {
 		GameManager game = resourcesManager.getGameManager();
 		
 		if (game.getTurn() == TeamColor.RED) {
@@ -49,7 +109,7 @@ public class Util {
 		}
 	}
 	
-	public static final PieceTile getTurnMech() {
+	public static PieceTile getTurnMech() {
 		GameManager game = resourcesManager.getGameManager();
 		
 		if (game.getTurn() == TeamColor.RED) {
@@ -59,7 +119,7 @@ public class Util {
 		}
 	}
 	
-	public static final PieceTile getTurnRecon() {
+	public static PieceTile getTurnRecon() {
 		GameManager game = resourcesManager.getGameManager();
 		
 		if (game.getTurn() == TeamColor.RED) {
@@ -69,7 +129,7 @@ public class Util {
 		}
 	}
 	
-	public static final PieceTile getTurnTank() {
+	public static PieceTile getTurnTank() {
 		GameManager game = resourcesManager.getGameManager();
 		
 		if (game.getTurn() == TeamColor.RED) {

@@ -1,11 +1,14 @@
 package me.capstone.advancedbattle.resources;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import me.capstone.advancedbattle.AdvancedBattleActivity;
 import me.capstone.advancedbattle.manager.GameManager;
 
+import org.andengine.audio.music.Music;
+import org.andengine.audio.music.MusicFactory;
 import org.andengine.engine.Engine;
 import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.extension.tmx.TMXLoader;
@@ -38,9 +41,13 @@ public class ResourcesManager {
 	private ITextureRegion playRegion;
 	private ITextureRegion optionsRegion;
 	
+	private Music menuMusic;
+	
 	//OptionsScene
 	private BitmapTextureAtlas optionsTextureAtlas;
 	private ITextureRegion musicOptionRegion;
+	
+	private float volume = 1.0F;
 	
 	// Level selector scene
 	private static int LEVEL_ITEMS = 2;
@@ -58,6 +65,8 @@ public class ResourcesManager {
 	private List<BitmapTextureAtlas> levels = new ArrayList<BitmapTextureAtlas>();
 	private List<TextureRegion> columns = new ArrayList<TextureRegion>();
 	
+	private Music levelMusic;
+	
 	// Game scene
 	private TiledTextureRegion playerTextureRegion;
 	
@@ -72,7 +81,11 @@ public class ResourcesManager {
   	private BitmapTextureAtlas blueVictoryTextureAtlas;
   	private ITextureRegion redVictoryTextureRegion;
   	private ITextureRegion blueVictoryTextureRegion;
-	
+  	
+  	private Music redMusic;
+  	private Music blueMusic;
+	private Music victoryMusic;
+  	
 	// Font
 	private Font font;
 	    
@@ -164,12 +177,17 @@ public class ResourcesManager {
     	menuTextureAtlas.unload();
     }
     
-    private void loadMenuAudio() {
-        // TODO : Audio
+    private void loadMenuAudio() {        
+        try {
+        	this.menuMusic = MusicFactory.createMusicFromAsset(getEngine().getMusicManager(), getActivity().getApplicationContext(), "sfx/Advance_Wars_2_Opening.mp3");
+        	menuMusic.setLooping(true);
+        } catch (IOException e) {
+        	e.printStackTrace();
+        }
     }
     
     private void unloadMenuAudio() {
-    	// TODO : Audio
+    	menuMusic.stop();
     }
     
     public void createOptionsGraphics(){
@@ -225,11 +243,16 @@ public class ResourcesManager {
     }
     
     private void loadLevelAudio() {
-    	// TODO : Audio
+    	try {
+        	this.levelMusic = MusicFactory.createMusicFromAsset(getEngine().getMusicManager(), getActivity().getApplicationContext(), "sfx/Nell's_Theme.mp3");
+        	levelMusic.setLooping(true);
+        } catch (IOException e) {
+        	e.printStackTrace();
+        }
     }
     
     private void unloadLevelAudio() {
-    	// TODO : Audio
+    	levelMusic.stop();
     }
     
     public void createGameGraphics() {
@@ -259,12 +282,22 @@ public class ResourcesManager {
     	this.gameMap = null;
     }
     
-    private void loadGameAudio() {
-    	// TODO : Audio
+    public void loadGameAudio() {
+    	try {
+        	this.redMusic = MusicFactory.createMusicFromAsset(getEngine().getMusicManager(), getActivity().getApplicationContext(), "sfx/Andy's_Theme.mp3");
+        	redMusic.setLooping(true);
+        	this.blueMusic = MusicFactory.createMusicFromAsset(getEngine().getMusicManager(), getActivity().getApplicationContext(), "sfx/Max's_Theme.mp3");
+        	blueMusic.setLooping(true);
+        	this.victoryMusic = MusicFactory.createMusicFromAsset(getEngine().getMusicManager(), getActivity().getApplicationContext(), "sfx/Success.mp3");
+        } catch (IOException e) {
+        	e.printStackTrace();
+        }
     }
     
-    private void unloadGameAudio() {
-    	// TODO : Audio
+    public void unloadGameAudio() {
+    	redMusic.stop();
+    	blueMusic.stop();
+    	victoryMusic.stop();
     }
     
     public void createFonts() {
@@ -276,10 +309,6 @@ public class ResourcesManager {
     
     private void loadFonts() {
     	font.load();
-    }
-    
-    private void unloadFonts() {
-    	font.unload();
     }
     
     public static void prepareManager(Engine engine, AdvancedBattleActivity activity, ZoomCamera camera, VertexBufferObjectManager vbom) {
@@ -341,6 +370,14 @@ public class ResourcesManager {
 		this.optionsRegion = optionsRegion;
 	}
 
+	public Music getMenuMusic() {
+		return menuMusic;
+	}
+
+	public void setMenuMusic(Music menuMusic) {
+		this.menuMusic = menuMusic;
+	}
+
 	public BitmapTextureAtlas getOptionsTextureAtlas() {
 		return optionsTextureAtlas;
 	}
@@ -357,11 +394,20 @@ public class ResourcesManager {
 		this.musicOptionRegion = musicOptionRegion;
 	}
 
+	public float getVolume() {
+		return volume;
+	}
+
+	public void setVolume(float volume) {
+		this.volume = volume;
+	}
+
 	public BitmapTextureAtlas getBackgroundTextureAtlas() {
 		return backgroundTextureAtlas;
 	}
 
-	public void setBackgroundTextureAtlas(BitmapTextureAtlas backgroundTextureAtlas) {
+	public void setBackgroundTextureAtlas(
+			BitmapTextureAtlas backgroundTextureAtlas) {
 		this.backgroundTextureAtlas = backgroundTextureAtlas;
 	}
 
@@ -429,6 +475,14 @@ public class ResourcesManager {
 		this.columns = columns;
 	}
 
+	public Music getLevelMusic() {
+		return levelMusic;
+	}
+
+	public void setLevelMusic(Music levelMusic) {
+		this.levelMusic = levelMusic;
+	}
+
 	public TiledTextureRegion getPlayerTextureRegion() {
 		return playerTextureRegion;
 	}
@@ -473,15 +527,17 @@ public class ResourcesManager {
 		return redVictoryTextureAtlas;
 	}
 
-	public void setRedVictoryTextureAtlas(BitmapTextureAtlas redVictoryTextureAtlas) {
+	public void setRedVictoryTextureAtlas(
+			BitmapTextureAtlas redVictoryTextureAtlas) {
 		this.redVictoryTextureAtlas = redVictoryTextureAtlas;
 	}
-	
+
 	public BitmapTextureAtlas getBlueVictoryTextureAtlas() {
 		return blueVictoryTextureAtlas;
 	}
 
-	public void setBlueVictoryTextureAtlas(BitmapTextureAtlas blueVictoryTextureAtlas) {
+	public void setBlueVictoryTextureAtlas(
+			BitmapTextureAtlas blueVictoryTextureAtlas) {
 		this.blueVictoryTextureAtlas = blueVictoryTextureAtlas;
 	}
 
@@ -497,8 +553,33 @@ public class ResourcesManager {
 		return blueVictoryTextureRegion;
 	}
 
-	public void setBlueVictoryTextureRegion(ITextureRegion blueVictoryTextureRegion) {
+	public void setBlueVictoryTextureRegion(
+			ITextureRegion blueVictoryTextureRegion) {
 		this.blueVictoryTextureRegion = blueVictoryTextureRegion;
+	}
+
+	public Music getRedMusic() {
+		return redMusic;
+	}
+
+	public void setRedMusic(Music redMusic) {
+		this.redMusic = redMusic;
+	}
+
+	public Music getBlueMusic() {
+		return blueMusic;
+	}
+
+	public void setBlueMusic(Music blueMusic) {
+		this.blueMusic = blueMusic;
+	}
+
+	public Music getVictoryMusic() {
+		return victoryMusic;
+	}
+
+	public void setVictoryMusic(Music victoryMusic) {
+		this.victoryMusic = victoryMusic;
 	}
 
 	public Font getFont() {

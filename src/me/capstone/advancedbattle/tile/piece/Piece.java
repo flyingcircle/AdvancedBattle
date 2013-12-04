@@ -23,10 +23,13 @@ public class Piece {
 	}
 
 	public void setHealth(int health) {
-		if(health > MAX_HEALTH)
+		if (health > MAX_HEALTH) {
 			this.health = MAX_HEALTH;
-		else
+		} else if (health <= 0) {
+			this.health = 0;
+		} else {
 			this.health = health;
+		}
 	}
 	
 	public int getCurrentBuildingHealth() {
